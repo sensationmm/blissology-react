@@ -18,9 +18,10 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+		"baseUrl": "./src",
   },
   "include": [
-    "src"
+    "src", "src/types/index.d.ts", "src/types/wp-rest-api.d.ts", "src/types/StyledComponents.d.ts"
   ]
 }
