@@ -9,11 +9,7 @@ import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Container from '@mui/material/Container';
-import {
-  Menu as MenuIcon,
-  ChevronLeft as ChevronLeftIcon,
-  Notifications as NotificationsIcon,
-} from '@mui/icons-material';
+import { Menu as MenuIcon, ChevronLeft as ChevronLeftIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
 import { mainListItems } from '../../listItems';
 import Footer from '../Footer/Footer';
 import * as Styled from './styles';
@@ -37,31 +33,29 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     <ThemeProvider theme={theme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <Styled.Header position='absolute' open={open}>
+        <Styled.Header position="absolute" open={open}>
           <Toolbar
             sx={{
-              pr: '24px', // keep right padding when drawer closed
-            }}
-          >
+              pr: '24px' // keep right padding when drawer closed
+            }}>
             {isLoggedIn && (
               <IconButton
-                edge='start'
-                color='inherit'
-                aria-label='open drawer'
+                edge="start"
+                color="inherit"
+                aria-label="open drawer"
                 onClick={toggleDrawer}
                 sx={{
                   marginRight: '36px',
-                  ...(open && { display: 'none' }),
-                }}
-              >
+                  ...(open && { display: 'none' })
+                }}>
                 <MenuIcon />
               </IconButton>
             )}
-            <Typography component='h1' variant='h6' color='inherit' noWrap sx={{ flexGrow: 1 }}>
+            <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
               {siteConfig.siteTitle}
             </Typography>
-            <IconButton color='inherit'>
-              <Badge badgeContent={4} color='secondary'>
+            <IconButton color="inherit">
+              <Badge badgeContent={4} color="secondary">
                 <NotificationsIcon />
               </Badge>
             </IconButton>
@@ -69,21 +63,20 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         </Styled.Header>
 
         {isLoggedIn && (
-          <Styled.Drawer variant='permanent' open={open}>
+          <Styled.Drawer variant="permanent" open={open}>
             <Toolbar
               sx={{
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'flex-end',
-                px: [1],
-              }}
-            >
+                px: [1]
+              }}>
               <IconButton onClick={toggleDrawer}>
                 <ChevronLeftIcon />
               </IconButton>
             </Toolbar>
             <Divider />
-            <List component='nav'>
+            <List component="nav">
               {mainListItems}
               <Divider sx={{ my: 1 }} />
             </List>
@@ -91,17 +84,15 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         )}
 
         <Box
-          component='main'
+          component="main"
           sx={{
-            backgroundColor: (theme) =>
-              theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900],
+            backgroundColor: (theme) => (theme.palette.mode === 'light' ? theme.palette.grey[100] : theme.palette.grey[900]),
             flexGrow: 1,
             height: '100vh',
-            overflow: 'auto',
-          }}
-        >
+            overflow: 'auto'
+          }}>
           <Toolbar />
-          <Container maxWidth='lg' sx={{ mt: 4, mb: 4 }}>
+          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             {children}
             <Footer sx={{ pt: 4 }} />
           </Container>

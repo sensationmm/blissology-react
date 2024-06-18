@@ -12,9 +12,7 @@ export function bakeCookie(name: string, value: any, date?: Date | string | null
     const expiry = !!date ? `expires=${date};` : '';
     const domain = process.env.LOCAL || process.env.STAGING ? '' : `domain=pmidf-hub.com`;
 
-    document.cookie = `${format ? getHostname(name) : name}=${
-      isValidStringify(value) ? JSON.stringify(value) : value
-    };${expiry}path=/;${domain}`;
+    document.cookie = `${format ? getHostname(name) : name}=${isValidStringify(value) ? JSON.stringify(value) : value};${expiry}path=/;${domain}`;
   }
 }
 

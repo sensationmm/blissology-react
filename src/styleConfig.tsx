@@ -10,14 +10,14 @@ type ISiteConfig = {
 
 const colorPalette: IColorPalette = {
   primary: '#a519df',
-  secondary: '#da85fd',
+  secondary: '#da85fd'
 };
 
 const siteTitle = 'Blissology';
 
 const siteConfig: ISiteConfig = {
   siteTitle,
-  colorPalette,
+  colorPalette
 };
 
 export default siteConfig;

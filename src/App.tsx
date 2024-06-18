@@ -9,8 +9,8 @@ const App: React.FC = () => (
     <Layout>
       <BrowserRouter>
         <Routes>
-          <Route path='/' element={<Login />} />
-          <Route path='posts' element={<Posts />} />
+          <Route path="/" element={<Login />} />
+          <Route path="posts" element={<Posts />} />
         </Routes>
       </BrowserRouter>
     </Layout>

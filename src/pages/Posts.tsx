@@ -8,8 +8,6 @@ import useFetch from 'hooks/useFetch';
 const Posts = () => {
   const posts: Array<any> = useFetch('http://hydehouse.blissology.local:50011/wp-json/wp/v2/menu') || [];
 
-
-  
   return (
     <Grid container spacing={2}>
       {posts &&
@@ -17,21 +15,9 @@ const Posts = () => {
           <Grid item xs={4} key={index}>
             <Card>
               <CardContent>
-                <Typography
-                  color='textSecondary'
-                  gutterBottom
-                  dangerouslySetInnerHTML={{ __html: post.title.rendered }}
-                />
-                <Typography
-                  variant='body2'
-                  component='p'
-                  dangerouslySetInnerHTML={{ __html: post.content?.rendered }}
-                />
-                <Typography
-                  variant='body2'
-                  component='p'
-                  dangerouslySetInnerHTML={{ __html: post?.acf?.dietary_information }}
-                />
+                <Typography color="textSecondary" gutterBottom dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
+                <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: post.content?.rendered }} />
+                <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: post?.acf?.dietary_information }} />
               </CardContent>
             </Card>
           </Grid>

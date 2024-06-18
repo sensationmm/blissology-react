@@ -20,12 +20,12 @@ const Login = () => {
     const doAuth = await fetch('http://hydehouse.blissology.local:50011/wp-json/jwt-auth/v1/token', {
       method: 'post',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
         username: username,
-        password: password,
-      }),
+        password: password
+      })
     });
 
     const auth: WPAuthReponse = await doAuth.json();
@@ -36,26 +36,13 @@ const Login = () => {
   return (
     <Grid container spacing={2}>
       <Grid item xs={4}>
-        <TextField
-          id='username1'
-          label='Username'
-          variant='outlined'
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
+        <TextField id="username1" label="Username" variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)} />
       </Grid>
       <Grid item xs={4}>
-        <TextField
-          id='password1'
-          type='password'
-          label='Password'
-          variant='outlined'
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <TextField id="password1" type="password" label="Password" variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} />
       </Grid>
       <Grid item xs={4}>
-        <Button variant='contained' onClick={HandleLogin}>
+        <Button variant="contained" onClick={HandleLogin}>
           Log In
         </Button>
       </Grid>
