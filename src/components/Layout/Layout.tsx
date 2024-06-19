@@ -1,21 +1,23 @@
 import * as React from 'react';
-import { ThemeProvider } from '@mui/material/styles';
-import CssBaseline from '@mui/material/CssBaseline';
+import Footer from 'components/Footer/Footer';
+import { useAuthContext } from 'contexts/authContext';
+import { mainListItems } from 'listItems';
+import siteConfig from 'styleConfig';
+
+import { ChevronLeft as ChevronLeftIcon, Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
+import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import List from '@mui/material/List';
-import Typography from '@mui/material/Typography';
+import Container from '@mui/material/Container';
+import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import Badge from '@mui/material/Badge';
-import Container from '@mui/material/Container';
-import { Menu as MenuIcon, ChevronLeft as ChevronLeftIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
-import { mainListItems } from '../../listItems';
-import Footer from '../Footer/Footer';
+import List from '@mui/material/List';
+import { ThemeProvider } from '@mui/material/styles';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+
 import * as Styled from './styles';
-import { useAuthContext } from '../../contexts/authContext';
 import { theme } from './theme';
-import siteConfig from '../../styleConfig';
 
 type LayoutProps = {
   children: JSX.Element;

@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import Grid from '@mui/material/Grid';
+import { useEffect, useState } from 'react';
+import { useAuthContext } from 'contexts/authContext';
 import { useNavigate } from 'react-router-dom';
-import { Button, TextField } from '@mui/material';
 import { WPAuthReponse } from 'types/wp-rest-api';
 
-import { useAuthContext } from 'contexts/authContext';
+import { Button, TextField } from '@mui/material';
+import Grid from '@mui/material/Grid';
 
 const Login = () => {
   const [username, setUsername] = useState('brianandkevin');
@@ -14,7 +14,7 @@ const Login = () => {
 
   useEffect(() => {
     isLoggedIn && navigate('/posts');
-  }, []);
+  }, [isLoggedIn]);
 
   const HandleLogin = async () => {
     const doAuth = await fetch('http://hydehouse.blissology.local:50011/wp-json/jwt-auth/v1/token', {

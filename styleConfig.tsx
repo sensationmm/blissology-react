@@ -5,7 +5,7 @@ type IColorPalette = {
 
 const colorPalette = {
   primary: '#a519df',
-  secondary: '#787878',
+  secondary: '#787878'
 } as IColorPalette;
 
 export default colorPalette;

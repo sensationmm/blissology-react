@@ -9,6 +9,6 @@ export function isValidJSON(string: string) {
   );
 }
 
-export const isValidStringify = (value: any) => {
+export const isValidStringify = (value: string) => {
   return (typeof value === 'object' && value !== null) || Array.isArray(value);
 };

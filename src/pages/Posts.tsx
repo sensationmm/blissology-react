@@ -1,9 +1,10 @@
-import React from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import useFetch from 'hooks/useFetch';
+
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import Typography from '@mui/material/Typography';
 import Grid from '@mui/material/Grid';
-import useFetch from 'hooks/useFetch';
+import Typography from '@mui/material/Typography';
 
 const Posts = () => {
   const posts: Array<any> = useFetch('http://hydehouse.blissology.local:50011/wp-json/wp/v2/menu') || [];
@@ -18,6 +19,7 @@ const Posts = () => {
                 <Typography color="textSecondary" gutterBottom dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
                 <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: post.content?.rendered }} />
                 <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: post?.acf?.dietary_information }} />
+                {post.post_title}
               </CardContent>
             </Card>
           </Grid>

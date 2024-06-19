@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
-import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
+import MuiDrawer from '@mui/material/Drawer';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
