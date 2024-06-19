@@ -1,8 +1,11 @@
-import Layout from 'components/Layout/Layout';
-import { AuthProvider } from 'contexts/authContext';
-import Login from 'pages/Login';
-import Posts from 'pages/Posts';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+
+import Login from 'src/pages/Login';
+import Posts from 'src/pages/Posts';
+
+import Layout from 'src/components/Layout/Layout';
+
+import { AuthProvider } from 'src/contexts/authContext';
 
 const App: React.FC = () => (
   <AuthProvider>

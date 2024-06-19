@@ -1,8 +1,6 @@
 import * as React from 'react';
-import Footer from 'components/Footer/Footer';
-import { useAuthContext } from 'contexts/authContext';
-import { mainListItems } from 'listItems';
-import siteConfig from 'styleConfig';
+import { mainListItems } from 'src/listItems';
+import siteConfig from 'src/styleConfig';
 
 import { ChevronLeft as ChevronLeftIcon, Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
 import Badge from '@mui/material/Badge';
@@ -15,6 +13,10 @@ import List from '@mui/material/List';
 import { ThemeProvider } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
+
+import Footer from 'src/components/Footer/Footer';
+
+import { useAuthContext } from 'src/contexts/authContext';
 
 import * as Styled from './styles';
 import { theme } from './theme';

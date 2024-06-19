@@ -34,18 +34,13 @@
           "error",
           {
             "groups": [
-              // `react` first, `next` second, then packages starting with a character
-              ["^react$", "^next", "^[a-z]"],
-              // Packages starting with `@`
-              ["^@"],
-              // Packages starting with `~`
-              ["^~"],
-              // Imports starting with `../`
-              ["^\\.\\.(?!/?$)", "^\\.\\./?$"],
-              // Imports starting with `./`
-              ["^\\./(?=.*/)(?!/?$)", "^\\.(?!/?$)", "^\\./?$"],
-              // Style imports
-              ["^styles"]
+              ["^react$", "^[a-z]"],
+              ["^@mui","^@emotion","^@"],
+              ["^src/pages"],
+              ["^src/components"],
+              ["^src/contexts","^src/hooks","^src/utils"],
+              ["^src/types"],
+              ["^./"]
             ]
           }
         ]

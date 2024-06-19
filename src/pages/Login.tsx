@@ -1,10 +1,12 @@
 import { useEffect, useState } from 'react';
-import { useAuthContext } from 'contexts/authContext';
 import { useNavigate } from 'react-router-dom';
-import { WPAuthReponse } from 'types/wp-rest-api';
 
 import { Button, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
+
+import { useAuthContext } from 'src/contexts/authContext';
+
+import { WPAuthReponse } from 'src/types/wp-rest-api';
 
 const Login = () => {
   const [username, setUsername] = useState('brianandkevin');

@@ -1,4 +1,4 @@
-import { isValidJSON, isValidStringify } from 'utils/common';
+import { isValidJSON, isValidStringify } from 'src/utils/common';
 
 export function getHostname(name: string) {
   const prefix = `play_retail_hub`;

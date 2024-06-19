@@ -3,9 +3,19 @@ type IColorPalette = {
   secondary: string;
 };
 
-const colorPalette = {
+const colorPalette: IColorPalette = {
   primary: '#a519df',
   secondary: '#787878'
-} as IColorPalette;
+};
 
-export default colorPalette;
+type SiteConfig = {
+  siteTitle: string;
+  colorPalette: IColorPalette;
+};
+
+const siteConfig: SiteConfig = {
+  siteTitle: 'Blissology',
+  colorPalette
+};
+
+export default siteConfig;
