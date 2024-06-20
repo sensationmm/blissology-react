@@ -1,54 +1,52 @@
 import { useEffect, useState } from 'react';
+import { addMonths } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
 import { Button, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
-import { useAuthContext } from 'src/contexts/authContext';
+import AuthClass from 'src/api/Auth';
 
-import { WPAuthReponse } from 'src/types/wp-rest-api';
+import Layout from 'src/components/Layout/Layout';
+
+import { useAuthContext } from 'src/contexts/authContext';
+import { bakeCookie } from 'src/utils/cookie';
 
 const Login = () => {
   const [username, setUsername] = useState('brianandkevin');
   const [password, setPassword] = useState('Bruno319!');
-  const { isLoggedIn, setToken } = useAuthContext();
+  const { isLoggedIn, setAccountName } = useAuthContext();
   const navigate = useNavigate();
 
   useEffect(() => {
-    isLoggedIn && navigate('/posts');
+    isLoggedIn && navigate('/menu');
   }, [isLoggedIn]);
 
   const HandleLogin = async () => {
-    const doAuth = await fetch('http://hydehouse.blissology.local:50011/wp-json/jwt-auth/v1/token', {
-      method: 'post',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username: username,
-        password: password
-      })
-    });
+    const auth = await AuthClass.Login(username, password);
 
-    const auth: WPAuthReponse = await doAuth.json();
+    bakeCookie('auth_token', auth.token, addMonths(new Date(), 1));
+    bakeCookie('username', auth.user_nicename, addMonths(new Date(), 1));
 
-    setToken(auth.token);
+    setAccountName(auth.user_nicename);
   };
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={4}>
-        <TextField id="username1" label="Username" variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)} />
+    <Layout>
+      <Grid container spacing={2}>
+        <Grid item xs={4}>
+          <TextField id="username1" label="Username" variant="outlined" value={username} onChange={(e) => setUsername(e.target.value)} />
+        </Grid>
+        <Grid item xs={4}>
+          <TextField id="password1" type="password" label="Password" variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} />
+        </Grid>
+        <Grid item xs={4}>
+          <Button variant="contained" onClick={HandleLogin}>
+            Log In
+          </Button>
+        </Grid>
       </Grid>
-      <Grid item xs={4}>
-        <TextField id="password1" type="password" label="Password" variant="outlined" value={password} onChange={(e) => setPassword(e.target.value)} />
-      </Grid>
-      <Grid item xs={4}>
-        <Button variant="contained" onClick={HandleLogin}>
-          Log In
-        </Button>
-      </Grid>
-    </Grid>
+    </Layout>
   );
 };
 

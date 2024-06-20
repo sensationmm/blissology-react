@@ -5,6 +5,7 @@ type IColorPalette = {
 
 type ISiteConfig = {
   siteTitle: string;
+  cmsDomain: string;
   colorPalette: IColorPalette;
 };
 
@@ -15,8 +16,11 @@ const colorPalette: IColorPalette = {
 
 const siteTitle = 'Blissology';
 
+const cmsDomain = 'http://hydehouse.blissology.local:50011';
+
 const siteConfig: ISiteConfig = {
   siteTitle,
+  cmsDomain,
   colorPalette
 };
 

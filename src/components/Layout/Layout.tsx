@@ -1,8 +1,10 @@
-import * as React from 'react';
-import { mainListItems } from 'src/listItems';
-import siteConfig from 'src/styleConfig';
+import { FC, useState } from 'react';
+import { Navigate, useLocation, useNavigate } from 'react-router-dom';
+import siteConfig from 'src/siteConfig';
 
 import { ChevronLeft as ChevronLeftIcon, Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -19,28 +21,45 @@ import Footer from 'src/components/Footer/Footer';
 import { useAuthContext } from 'src/contexts/authContext';
 
 import * as Styled from './styles';
-import { theme } from './theme';
+import { blissologyTheme } from './theme';
 
 type LayoutProps = {
   children: JSX.Element;
 };
 
-const Layout: React.FC<LayoutProps> = ({ children }) => {
-  const { isLoggedIn } = useAuthContext();
-  const [open, setOpen] = React.useState(isLoggedIn);
+const Layout: FC<LayoutProps> = ({ children }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { isLoggedIn, accountName } = useAuthContext();
+  const [open, setOpen] = useState(isLoggedIn);
+
+  if (!isLoggedIn && location.pathname !== '/') return <Navigate to="/" replace={true} />;
 
   const toggleDrawer = () => {
     setOpen(!open);
   };
 
+  const navigation = [
+    {
+      icon: DashboardIcon,
+      label: 'Menu',
+      url: '/menu'
+    },
+    {
+      icon: DashboardIcon,
+      label: 'Accommodation',
+      url: '/accommodation'
+    }
+  ];
+
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={blissologyTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <Styled.Header position="absolute" open={open}>
           <Toolbar
             sx={{
-              pr: '24px' // keep right padding when drawer closed
+              pr: '36px' // keep right padding when drawer closed
             }}>
             {isLoggedIn && (
               <IconButton
@@ -55,8 +74,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
                 <MenuIcon />
               </IconButton>
             )}
-            <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1 }}>
-              {siteConfig.siteTitle}
+            <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1, textAlign: accountName ? 'right' : 'left' }}>
+              {accountName || siteConfig.siteTitle}
             </Typography>
             <IconButton color="inherit">
               <Badge badgeContent={4} color="secondary">
@@ -81,7 +100,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             </Toolbar>
             <Divider />
             <List component="nav">
-              {mainListItems}
+              {navigation.map((item, count) => {
+                return (
+                  <ListItemButton key={`nav-${count}`} onClick={() => navigate(item.url)} selected={location.pathname === item.url}>
+                    <ListItemIcon>
+                      <item.icon />
+                    </ListItemIcon>
+                    <ListItemText primary={item.label} />
+                  </ListItemButton>
+                );
+              })}
               <Divider sx={{ my: 1 }} />
             </List>
           </Styled.Drawer>

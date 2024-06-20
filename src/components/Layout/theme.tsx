@@ -1,8 +1,8 @@
 import { createTheme } from '@mui/material/styles';
 
-import siteConfig from '../../styleConfig';
+import siteConfig from '../../siteConfig';
 
-export const theme = createTheme({
+export const blissologyTheme = createTheme({
   palette: {
     primary: {
       main: siteConfig.colorPalette.primary

@@ -1,7 +1,7 @@
 import { isValidJSON, isValidStringify } from 'src/utils/common';
 
 export function getHostname(name: string) {
-  const prefix = `play_retail_hub`;
+  const prefix = `blissology`;
   const environment = process.env.LOCAL ? 'local' : process.env.STAGING ? 'staging' : '';
 
   return `${prefix}${environment ? `_${environment}` : ''}_${name}`;
@@ -10,7 +10,7 @@ export function getHostname(name: string) {
 export function bakeCookie(name: string, value: string, date?: Date | string | null, format = true) {
   if (typeof window !== 'undefined') {
     const expiry = date ? `expires=${date};` : '';
-    const domain = process.env.LOCAL || process.env.STAGING ? '' : `domain=pmidf-hub.com`;
+    const domain = process.env.REACT_APP_LOCAL || process.env.REACT_APP_STAGING ? '' : `domain=pmidf-hub.com`;
 
     document.cookie = `${format ? getHostname(name) : name}=${isValidStringify(value) ? JSON.stringify(value) : value};${expiry}path=/;${domain}`;
   }

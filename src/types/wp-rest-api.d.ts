@@ -1,7 +1,7 @@
 type WPAuthSuccessCode = 'jwt_auth_valid_token';
 type WPAuthErrorCode = 'jwt_auth_failed' | 'jwt_auth_invalid_token';
 
-export type WPAuthReponse = {
+export type WPLoginReponse = {
   token: string;
   user_display_name: string;
   user_email: string;
