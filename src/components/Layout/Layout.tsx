@@ -4,6 +4,8 @@ import siteConfig from 'src/siteConfig';
 
 import { ChevronLeft as ChevronLeftIcon, Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import HotelIcon from '@mui/icons-material/Hotel';
+import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
@@ -42,11 +44,16 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   const navigation = [
     {
       icon: DashboardIcon,
+      label: 'Dashboard',
+      url: '/dashboard'
+    },
+    {
+      icon: RestaurantMenuIcon,
       label: 'Menu',
       url: '/menu'
     },
     {
-      icon: DashboardIcon,
+      icon: HotelIcon,
       label: 'Accommodation',
       url: '/accommodation'
     }

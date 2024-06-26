@@ -9,20 +9,19 @@ import Layout from 'src/components/Layout/Layout';
 import useFetch from 'src/hooks/useFetch';
 
 const Menu = () => {
-  const posts: Array<any> = useFetch('http://hydehouse.blissology.local:50011/wp-json/wp/v2/menu') || [];
+  const posts: Array<any> = useFetch('http://hydehouse.blissology.local:50011/wp-json/wp/v2/menu?_embed=wp:term&_fields=id,title,_links,_embedded,acf') || [];
 
   return (
     <Layout>
       <Grid container spacing={2}>
         {posts &&
           posts.map((post: any, index: number) => (
-            <Grid item xs={4} key={index}>
+            <Grid item xs={3} key={index}>
               <Card>
                 <CardContent>
                   <Typography color="textSecondary" gutterBottom dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
-                  <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: post.content?.rendered }} />
+                  <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: post.acf?.description }} />
                   <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: post?.acf?.dietary_information }} />
-                  {post.post_title}
                 </CardContent>
               </Card>
             </Grid>
