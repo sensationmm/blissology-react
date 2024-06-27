@@ -19,9 +19,15 @@ const Menu = () => {
             <Grid item xs={3} key={index}>
               <Card>
                 <CardContent>
-                  <Typography color="textSecondary" gutterBottom dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
-                  <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: post.acf?.description }} />
-                  <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: post?.acf?.dietary_information }} />
+                  <Typography color="textSecondary" gutterBottom>
+                    {post.title.rendered}
+                  </Typography>
+                  <Typography variant="body2" component="p">
+                    {post.acf?.description}
+                  </Typography>
+                  <Typography variant="body2" component="p">
+                    {post?.acf?.dietary_information}
+                  </Typography>
                 </CardContent>
               </Card>
             </Grid>

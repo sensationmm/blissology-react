@@ -19,9 +19,15 @@ const Accommodation = () => {
             <Grid item xs={4} key={index}>
               <Card>
                 <CardContent>
-                  <Typography color="textSecondary" gutterBottom dangerouslySetInnerHTML={{ __html: post.title.rendered }} />
-                  <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: post.content?.rendered }} />
-                  <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: post?.acf?.dietary_information }} />
+                  <Typography color="textSecondary" gutterBottom>
+                    {post.title.rendered}
+                  </Typography>
+                  <Typography variant="body2" component="p">
+                    {post.content?.rendered}
+                  </Typography>
+                  <Typography variant="body2" component="p">
+                    {post?.acf?.dietary_information}
+                  </Typography>
                   {post.post_title}
                 </CardContent>
               </Card>

@@ -26,7 +26,7 @@ const Dashboard = () => {
     return <CircularProgress />;
   }
 
-  const MyWedding: IWedding = useFetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/wedding?author=${userID}`) || {};
+  const MyWedding: IWedding = useFetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/wedding?author=${userID}`)?.[0] || {};
 
   return (
     <Layout>
@@ -43,9 +43,15 @@ const Dashboard = () => {
                 <Grid item xs={12} key={`deadline-${index}`}>
                   <Card>
                     <CardContent>
-                      <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: `Due in ${differenceInDays(wpDateToTimestamp(deadline.date), new Date())} days` }} />
-                      <Typography color="textSecondary" gutterBottom dangerouslySetInnerHTML={{ __html: deadline.name }} />
-                      <Typography variant="body2" component="p" dangerouslySetInnerHTML={{ __html: formatDate(wpDateToTimestamp(deadline.date), 'd MMMM yyyy') }} />
+                      <Typography variant="body2" component="p">
+                        Due in {differenceInDays(wpDateToTimestamp(deadline.date), new Date())} days
+                      </Typography>
+                      <Typography color="textSecondary" gutterBottom>
+                        {deadline.name}
+                      </Typography>
+                      <Typography variant="body2" component="p">
+                        {formatDate(wpDateToTimestamp(deadline.date), 'd MMMM yyyy')}
+                      </Typography>
                     </CardContent>
                   </Card>
                 </Grid>
