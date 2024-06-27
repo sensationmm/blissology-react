@@ -4,6 +4,8 @@ interface AuthContextInterface {
   isLoggedIn: boolean;
   userID: string | undefined;
   setUserID: (value: AuthContextInterface['userID']) => void;
+  weddingID: string | undefined;
+  setWeddingID: (value: AuthContextInterface['weddingID']) => void;
   accountName: string | undefined;
   setAccountName: (value: AuthContextInterface['accountName']) => void;
 }

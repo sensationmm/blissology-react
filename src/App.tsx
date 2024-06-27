@@ -15,9 +15,26 @@ import { readCookie } from './utils/cookie';
 const App: React.FC = () => {
   const [accountName, setAccountName] = useState<string | undefined>(undefined);
   const [userID, setUserID] = useState<string | undefined>(undefined);
+  const [weddingID, setWeddingID] = useState<string | undefined>(undefined);
   const [loading, setIsLoading] = useState<boolean>(false);
 
   const isLoggedIn = !!accountName;
+
+  const getMe = async () => {
+    if (accountName !== undefined) {
+      const response = await fetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/users/?search=${accountName}`);
+      const user = await response.json();
+      setUserID(user[0].id);
+    }
+  };
+
+  const getMyWedding = async () => {
+    if (accountName !== undefined) {
+      const response = await fetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/wedding?author=${userID}`);
+      const wedding = await response.json();
+      setWeddingID(wedding[0].id);
+    }
+  };
 
   const validateUser = async () => {
     setIsLoading(true);
@@ -31,9 +48,7 @@ const App: React.FC = () => {
         const username = readCookie('username');
         setAccountName(username);
 
-        const response = await fetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/users/?search=${username}`);
-        const user = await response.json();
-        setUserID(user[0].id);
+        getMe();
       }
     }
     setIsLoading(false);
@@ -42,6 +57,14 @@ const App: React.FC = () => {
   useEffect(() => {
     validateUser();
   }, []);
+
+  useEffect(() => {
+    isLoggedIn && getMe();
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    !weddingID && getMyWedding();
+  }, [userID]);
 
   if (loading) {
     return (
@@ -52,7 +75,7 @@ const App: React.FC = () => {
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userID, setUserID, accountName, setAccountName }}>
+    <AuthContext.Provider value={{ isLoggedIn, userID, setUserID, weddingID, setWeddingID, accountName, setAccountName }}>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
