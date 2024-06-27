@@ -4,14 +4,12 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { CircularProgress } from '@mui/material';
 
 import Login from 'src/pages/Login';
-import Menu from 'src/pages/Menu';
 
 import AuthContext from 'src/contexts/authContext';
 
 import AuthClass from './api/Auth';
 import * as Styled from './App.styles';
-import Accommodation from './pages/Accommodation';
-import Dashboard from './pages/Dashboard';
+import navigation from './config/navigation';
 import { readCookie } from './utils/cookie';
 
 const App: React.FC = () => {
@@ -58,9 +56,9 @@ const App: React.FC = () => {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/menu" element={<Menu />} />
-          <Route path="/accommodation" element={<Accommodation />} />
+          {navigation.map((item) => (
+            <Route key={`route-${item.url}`} path={item.url} element={<item.Component />} />
+          ))}
         </Routes>
       </BrowserRouter>
     </AuthContext.Provider>

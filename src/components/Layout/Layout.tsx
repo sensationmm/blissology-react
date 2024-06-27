@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import siteConfig from 'src/siteConfig';
 
-import { ChevronLeft as ChevronLeftIcon, Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
+import { ChevronLeft as ChevronLeftIcon, Groups as GroupsIcon, Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import HotelIcon from '@mui/icons-material/Hotel';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
@@ -17,8 +17,6 @@ import List from '@mui/material/List';
 import { ThemeProvider } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-
-import Footer from 'src/components/Footer/Footer';
 
 import { useAuthContext } from 'src/contexts/authContext';
 
@@ -46,6 +44,11 @@ const Layout: FC<LayoutProps> = ({ children }) => {
       icon: DashboardIcon,
       label: 'Dashboard',
       url: '/dashboard'
+    },
+    {
+      icon: GroupsIcon,
+      label: 'Guests',
+      url: '/guests'
     },
     {
       icon: RestaurantMenuIcon,
@@ -133,7 +136,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
             {children}
-            <Footer sx={{ pt: 4 }} />
+            {/* <Footer sx={{ pt: 4 }} /> */}
           </Container>
         </Box>
       </Box>
