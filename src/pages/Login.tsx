@@ -19,7 +19,7 @@ const Login = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    isLoggedIn && navigate('/menu');
+    isLoggedIn && navigate('/dashboard');
   }, [isLoggedIn]);
 
   const HandleLogin = async () => {

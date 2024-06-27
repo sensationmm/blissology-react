@@ -36,3 +36,11 @@ export const routeMatches = (route: Route | undefined) => {
   if (route.match) return true;
   if (route?.children?.some(routeMatches)) return true;
 };
+
+export const wpDateToTimestamp = (date: string) => {
+  const year = date.substring(0, 4);
+  const month = date.substring(4, 6);
+  const day = date.substring(6, 8);
+
+  return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+};

@@ -2,6 +2,8 @@ import { createContext, useContext } from 'react';
 
 interface AuthContextInterface {
   isLoggedIn: boolean;
+  userID: string | undefined;
+  setUserID: (value: AuthContextInterface['userID']) => void;
   accountName: string | undefined;
   setAccountName: (value: AuthContextInterface['accountName']) => void;
 }
