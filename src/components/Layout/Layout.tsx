@@ -1,8 +1,11 @@
 import { FC, useState } from 'react';
+import { formatDate } from 'date-fns';
+import { useSelector } from 'react-redux';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { ChevronLeft as ChevronLeftIcon, Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
-import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Grid, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -16,8 +19,10 @@ import Typography from '@mui/material/Typography';
 
 import navigation from 'src/config/navigation';
 import siteConfig from 'src/siteConfig';
+import store, { RootState } from 'src/store';
 
-import { useAuthContext } from 'src/contexts/authContext';
+import { wpDateToTimestamp } from 'src/utils/common';
+import { deleteCookie } from 'src/utils/cookie';
 
 import * as Styled from './styles';
 import { blissologyTheme } from './theme';
@@ -27,15 +32,24 @@ type LayoutProps = {
 };
 
 const Layout: FC<LayoutProps> = ({ children }) => {
+  const authState = (state: RootState['auth']) => state.auth;
+  const weddingState = (state: RootState['wedding']) => state.wedding;
   const navigate = useNavigate();
   const location = useLocation();
-  const { isLoggedIn, accountName } = useAuthContext();
+  const { isLoggedIn } = useSelector(authState);
+  const { weddingName, date } = useSelector(weddingState);
   const [open, setOpen] = useState(isLoggedIn);
 
   if (!isLoggedIn && location.pathname !== '/') return <Navigate to="/" replace={true} />;
 
   const toggleDrawer = () => {
     setOpen(!open);
+  };
+
+  const logout = () => {
+    store.dispatch({ type: 'auth/logout' });
+    deleteCookie('auth_token');
+    deleteCookie('username');
   };
 
   return (
@@ -45,6 +59,10 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         <Styled.Header position="absolute" open={open}>
           <Toolbar
             sx={{
+              width: '100%',
+              minHeight: '100px',
+              display: 'flex',
+              alignItems: 'space-between',
               pr: '36px' // keep right padding when drawer closed
             }}>
             {isLoggedIn && (
@@ -60,14 +78,32 @@ const Layout: FC<LayoutProps> = ({ children }) => {
                 <MenuIcon />
               </IconButton>
             )}
-            <Typography component="h1" variant="h6" color="inherit" noWrap sx={{ flexGrow: 1, textAlign: accountName ? 'right' : 'left' }}>
-              {accountName || siteConfig.siteTitle}
-            </Typography>
-            <IconButton color="inherit">
-              <Badge badgeContent={4} color="secondary">
-                <NotificationsIcon />
-              </Badge>
-            </IconButton>
+            <Grid container sx={{ justifyContent: weddingName ? 'flex-end' : 'flex-start', alignItems: 'center' }}>
+              <Grid item>
+                <Typography component="h1" variant="h6" color="inherit" noWrap>
+                  {weddingName || siteConfig.siteTitle}
+                </Typography>
+                {date && (
+                  <Typography variant="body1" component="p" noWrap textAlign={'right'}>
+                    {formatDate(wpDateToTimestamp(date), 'd MMMM yyyy')}
+                  </Typography>
+                )}
+              </Grid>
+
+              {isLoggedIn && (
+                <Grid item sx={{ pl: '20px' }}>
+                  <IconButton color="inherit">
+                    <Badge badgeContent={4} color="secondary">
+                      <NotificationsIcon />
+                    </Badge>
+                  </IconButton>
+
+                  <IconButton color="inherit" onClick={logout}>
+                    <LogoutIcon />
+                  </IconButton>
+                </Grid>
+              )}
+            </Grid>
           </Toolbar>
         </Styled.Header>
 

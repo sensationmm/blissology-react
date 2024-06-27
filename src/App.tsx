@@ -1,39 +1,45 @@
 import { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { CircularProgress } from '@mui/material';
 
+import * as Styled from 'src/App.styles';
+import navigation from 'src/config/navigation';
+import store, { RootState } from 'src/store';
+
 import Login from 'src/pages/Login';
+import AuthClass from 'src/api/Auth';
 
-import AuthContext from 'src/contexts/authContext';
-
-import AuthClass from './api/Auth';
-import * as Styled from './App.styles';
-import navigation from './config/navigation';
-import { readCookie } from './utils/cookie';
+import { readCookie } from 'src/utils/cookie';
 
 const App: React.FC = () => {
-  const [accountName, setAccountName] = useState<string | undefined>(undefined);
-  const [userID, setUserID] = useState<string | undefined>(undefined);
-  const [weddingID, setWeddingID] = useState<string | undefined>(undefined);
-  const [loading, setIsLoading] = useState<boolean>(false);
+  const authState = (state: RootState['auth']) => state.auth;
+  const { isLoggedIn, userName } = useSelector(authState);
+  const [loading, setIsLoading] = useState<boolean>(true);
 
-  const isLoggedIn = !!accountName;
-
-  const getMe = async () => {
-    if (accountName !== undefined) {
-      const response = await fetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/users/?search=${accountName}`);
-      const user = await response.json();
-      setUserID(user[0].id);
-    }
+  const getMe = async (username: string) => {
+    const response = await fetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/users/?search=${username}`);
+    const user = await response.json();
+    await getMyWedding(user[0].id);
+    store.dispatch({
+      type: 'auth/login',
+      payload: { userID: user[0].id, userName: username }
+    });
   };
 
-  const getMyWedding = async () => {
-    if (accountName !== undefined) {
-      const response = await fetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/wedding?author=${userID}`);
-      const wedding = await response.json();
-      setWeddingID(wedding[0].id);
-    }
+  const getMyWedding = async (user: string) => {
+    const response = await fetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/wedding?author=${user}`);
+    const wedding = await response.json();
+    store.dispatch({
+      type: 'wedding/set',
+      payload: {
+        weddingID: wedding[0].id,
+        weddingName: wedding[0].title.rendered,
+        deadlines: wedding[0]?.acf?.deadlines,
+        date: wedding[0]?.acf?.wedding_date
+      }
+    });
   };
 
   const validateUser = async () => {
@@ -42,13 +48,12 @@ const App: React.FC = () => {
     const validate = authToken && (await AuthClass.Validate(authToken));
 
     if (!authToken || !validate.isValidUser) {
-      setAccountName(undefined);
+      store.dispatch({ type: 'auth/logout' });
     } else {
       if (!isLoggedIn) {
         const username = readCookie('username');
-        setAccountName(username);
 
-        getMe();
+        await getMe(username);
       }
     }
     setIsLoading(false);
@@ -59,12 +64,8 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    isLoggedIn && getMe();
-  }, [isLoggedIn]);
-
-  useEffect(() => {
-    !weddingID && getMyWedding();
-  }, [userID]);
+    isLoggedIn && getMe(userName);
+  }, [userName]);
 
   if (loading) {
     return (
@@ -75,16 +76,14 @@ const App: React.FC = () => {
   }
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, userID, setUserID, weddingID, setWeddingID, accountName, setAccountName }}>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Login />} />
-          {navigation.map((item) => (
-            <Route key={`route-${item.url}`} path={item.url} element={<item.Component />} />
-          ))}
-        </Routes>
-      </BrowserRouter>
-    </AuthContext.Provider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        {navigation.map((item) => (
+          <Route key={`route-${item.url}`} path={item.url} element={<item.Component />} />
+        ))}
+      </Routes>
+    </BrowserRouter>
   );
 };
 

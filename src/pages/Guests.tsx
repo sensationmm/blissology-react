@@ -1,13 +1,16 @@
+import { useSelector } from 'react-redux';
+
 import { CircularProgress } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
+import { RootState } from 'src/store';
+
 import Layout from 'src/components/Layout/Layout';
 
-import { useAuthContext } from 'src/contexts/authContext';
-
 const Guests = () => {
-  const { userID } = useAuthContext();
+  const authState = (state: RootState['auth']) => state.auth;
+  const { userID } = useSelector(authState);
 
   if (userID === null) {
     return <CircularProgress />;

@@ -1,21 +1,25 @@
 import { useEffect, useState } from 'react';
 import { addMonths } from 'date-fns';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Button, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
+import store, { RootState } from 'src/store';
+
 import AuthClass from 'src/api/Auth';
 
 import Layout from 'src/components/Layout/Layout';
 
-import { useAuthContext } from 'src/contexts/authContext';
 import { bakeCookie } from 'src/utils/cookie';
+
+const authState = (state: RootState['auth']) => state.auth;
 
 const Login = () => {
   const [username, setUsername] = useState('brianandkevin');
   const [password, setPassword] = useState('Bruno319!');
-  const { isLoggedIn, setAccountName } = useAuthContext();
+  const { isLoggedIn } = useSelector(authState);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,7 +32,7 @@ const Login = () => {
     bakeCookie('auth_token', auth.token, addMonths(new Date(), 1));
     bakeCookie('username', auth.user_nicename, addMonths(new Date(), 1));
 
-    setAccountName(auth.user_nicename);
+    store.dispatch({ type: 'auth/setUserName', payload: { userName: auth.user_nicename } });
   };
 
   return (
