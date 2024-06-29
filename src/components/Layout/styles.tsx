@@ -49,3 +49,17 @@ export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
     })
   }
 }));
+
+export const LoadingMask = styled('div')(({ theme }) => ({
+  position: 'fixed',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%',
+  background: theme.palette.tertiary.main,
+  opacity: 0.7,
+  zIndex: 10000,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center'
+}));

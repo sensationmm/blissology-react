@@ -1,11 +1,11 @@
-import { FC, useState } from 'react';
+import { FC } from 'react';
 import { formatDate } from 'date-fns';
 import { useSelector } from 'react-redux';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { ChevronLeft as ChevronLeftIcon, Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Grid, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { CircularProgress, Grid, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -32,18 +32,19 @@ type LayoutProps = {
 };
 
 const Layout: FC<LayoutProps> = ({ children }) => {
+  const appState = (state: RootState['app']) => state.app;
   const authState = (state: RootState['auth']) => state.auth;
   const weddingState = (state: RootState['wedding']) => state.wedding;
   const navigate = useNavigate();
   const location = useLocation();
+  const { menuOpen, isLoading } = useSelector(appState);
   const { isLoggedIn } = useSelector(authState);
   const { weddingName, date } = useSelector(weddingState);
-  const [open, setOpen] = useState(isLoggedIn ? true : false);
 
   if (!isLoggedIn && location.pathname !== '/') return <Navigate to="/" replace={true} />;
 
   const toggleDrawer = () => {
-    setOpen(!open);
+    store.dispatch({ type: `app/toggleMenu` });
   };
 
   const logout = () => {
@@ -56,7 +57,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
     <ThemeProvider theme={blissologyTheme}>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <Styled.Header position="absolute" open={open}>
+        <Styled.Header position="absolute" open={menuOpen}>
           <Toolbar
             sx={{
               width: '100%',
@@ -73,7 +74,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
                 onClick={toggleDrawer}
                 sx={{
                   marginRight: '36px',
-                  ...(open && { display: 'none' })
+                  ...(menuOpen && { display: 'none' })
                 }}>
                 <MenuIcon />
               </IconButton>
@@ -108,7 +109,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
         </Styled.Header>
 
         {isLoggedIn && (
-          <Styled.Drawer variant="permanent" open={open}>
+          <Styled.Drawer variant="permanent" open={menuOpen}>
             <Toolbar
               sx={{
                 display: 'flex',
@@ -152,6 +153,11 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           </Container>
         </Box>
       </Box>
+      {isLoading && (
+        <Styled.LoadingMask>
+          <CircularProgress />
+        </Styled.LoadingMask>
+      )}
     </ThemeProvider>
   );
 };

@@ -47,6 +47,10 @@ const Guests = () => {
   };
 
   const saveGuestNumbers = () => {
+    store.dispatch({
+      type: 'ui/setLoading',
+      payload: { isLoading: true }
+    });
     wpRestApiHandler(
       `wedding/${weddingID}`,
       {
@@ -56,12 +60,20 @@ const Guests = () => {
       },
       'POST',
       token
-    ).then((resp) => {
-      if (resp.ok) {
-        return resp.json();
-      }
-      return false;
-    });
+    )
+      .then((resp) => {
+        if (resp.ok) {
+          return resp.json();
+        }
+
+        return false;
+      })
+      .then(() => {
+        store.dispatch({
+          type: 'ui/setLoading',
+          payload: { isLoading: false }
+        });
+      });
   };
 
   const resetGuestNumbers = () => {
