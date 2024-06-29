@@ -32,7 +32,7 @@ const Login = () => {
     bakeCookie('auth_token', auth.token, addMonths(new Date(), 1));
     bakeCookie('username', auth.user_nicename, addMonths(new Date(), 1));
 
-    store.dispatch({ type: 'auth/setUserName', payload: { userName: auth.user_nicename } });
+    store.dispatch({ type: 'auth/setUserName', payload: { userName: auth.user_nicename, token: auth.token } });
   };
 
   return (

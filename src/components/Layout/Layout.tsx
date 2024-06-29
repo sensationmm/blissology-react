@@ -28,7 +28,7 @@ import * as Styled from './styles';
 import { blissologyTheme } from './theme';
 
 type LayoutProps = {
-  children: JSX.Element;
+  children: JSX.Element | JSX.Element[];
 };
 
 const Layout: FC<LayoutProps> = ({ children }) => {
@@ -38,7 +38,7 @@ const Layout: FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const { isLoggedIn } = useSelector(authState);
   const { weddingName, date } = useSelector(weddingState);
-  const [open, setOpen] = useState(isLoggedIn);
+  const [open, setOpen] = useState(isLoggedIn ? true : false);
 
   if (!isLoggedIn && location.pathname !== '/') return <Navigate to="/" replace={true} />;
 

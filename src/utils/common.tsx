@@ -44,3 +44,8 @@ export const wpDateToTimestamp = (date: string) => {
 
   return new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
 };
+
+export const capitalize = (sentence: string): string => {
+  const parts = sentence.split(' ').map((word) => word[0].toUpperCase() + word.substring(1));
+  return parts.join('');
+};

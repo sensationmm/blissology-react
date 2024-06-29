@@ -13,18 +13,20 @@ import AuthClass from 'src/api/Auth';
 
 import { readCookie } from 'src/utils/cookie';
 
+import { formatWeddingGuestsResponse } from './utils/wordpress/wedding';
+
 const App: React.FC = () => {
   const authState = (state: RootState['auth']) => state.auth;
-  const { isLoggedIn, userName } = useSelector(authState);
+  const { isLoggedIn, token, userName } = useSelector(authState);
   const [loading, setIsLoading] = useState<boolean>(true);
 
-  const getMe = async (username: string) => {
+  const getMe = async (username: string, authToken: string) => {
     const response = await fetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/users/?search=${username}`);
     const user = await response.json();
     await getMyWedding(user[0].id);
     store.dispatch({
       type: 'auth/login',
-      payload: { userID: user[0].id, userName: username }
+      payload: { userID: user[0].id, userName: username, token: authToken }
     });
   };
 
@@ -40,6 +42,11 @@ const App: React.FC = () => {
         date: wedding[0]?.acf?.wedding_date
       }
     });
+
+    store.dispatch({
+      type: 'guests/set',
+      payload: formatWeddingGuestsResponse(wedding[0]?.acf?.guests)
+    });
   };
 
   const validateUser = async () => {
@@ -53,7 +60,7 @@ const App: React.FC = () => {
       if (!isLoggedIn) {
         const username = readCookie('username');
 
-        await getMe(username);
+        await getMe(username, authToken);
       }
     }
     setIsLoading(false);
@@ -64,7 +71,7 @@ const App: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    isLoggedIn && getMe(userName);
+    isLoggedIn && getMe(userName, token);
   }, [userName]);
 
   if (loading) {

@@ -1,16 +1,21 @@
 import { createTheme } from '@mui/material/styles';
 
-import siteConfig from '../../siteConfig';
+import siteConfig from 'src/siteConfig';
+
+const palette = {
+  primary: {
+    main: siteConfig.colorPalette.primary
+  },
+  secondary: {
+    main: siteConfig.colorPalette.secondary
+  },
+  tertiary: {
+    main: '#c4c4c4'
+  }
+};
 
 export const blissologyTheme = createTheme({
-  palette: {
-    primary: {
-      main: siteConfig.colorPalette.primary
-    },
-    secondary: {
-      main: siteConfig.colorPalette.secondary
-    }
-  },
+  palette: palette,
   components: {
     MuiToolbar: {
       styleOverrides: {
