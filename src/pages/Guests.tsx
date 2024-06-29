@@ -56,15 +56,12 @@ const Guests = () => {
       },
       'POST',
       token
-    )
-      .then((resp) => {
-        console.log(resp);
-        if (resp.ok) {
-          return resp.json();
-        }
-        return false;
-      })
-      .then((json) => console.log(json));
+    ).then((resp) => {
+      if (resp.ok) {
+        return resp.json();
+      }
+      return false;
+    });
   };
 
   const resetGuestNumbers = () => {
