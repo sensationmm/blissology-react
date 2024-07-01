@@ -13,9 +13,9 @@ const AddCard: FC<IAddCard> = ({ label, onClick }) => {
   return (
     <Styled.Container onClick={onClick}>
       <Styled.CardIcon>
-        <AddIcon color="primary" fontSize="inherit" />
+        <AddIcon color="secondary" fontSize="inherit" />
       </Styled.CardIcon>
-      <Styled.AddLabel variant="body1" color="primary" sx={{}}>
+      <Styled.AddLabel variant="body1" color="secondary" sx={{}}>
         {label}
       </Styled.AddLabel>
     </Styled.Container>

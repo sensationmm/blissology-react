@@ -78,6 +78,7 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
         <CssBaseline />
         <Styled.Header position="absolute" open={menuOpen}>
           <Toolbar
+            className="bliss"
             sx={{
               width: '100%',
               minHeight: '100px',
@@ -100,11 +101,11 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
             )}
             <Grid container sx={{ justifyContent: weddingName ? 'flex-end' : 'flex-start', alignItems: 'center' }}>
               <Grid item>
-                <Typography variant="body1" color="inherit" noWrap>
+                <Typography variant="body1" color="inherit" noWrap sx={{ fontSize: '1.6rem', fontWeight: 400 }}>
                   {weddingName || siteConfig.siteTitle}
                 </Typography>
                 {date && (
-                  <Typography variant="body2" noWrap textAlign={'right'}>
+                  <Typography variant="body2" noWrap textAlign={'right'} sx={{ fontSize: '1.2rem', fontWeight: 400 }}>
                     {formatDate(wpDateToTimestamp(date), 'd MMMM yyyy')}
                   </Typography>
                 )}
@@ -128,7 +129,7 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
         </Styled.Header>
 
         {isLoggedIn && (
-          <Styled.Drawer variant="permanent" open={menuOpen}>
+          <Styled.Drawer className="bliss" variant="permanent" open={menuOpen}>
             <Toolbar
               sx={{
                 display: 'flex',

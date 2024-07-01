@@ -17,8 +17,10 @@ const uiReducer = (state = initialState, action: any) => {
         ...state,
         menuOpen: !state.menuOpen
       };
+    case 'auth/login':
+      return { ...state, menuOpen: true };
     case 'auth/logout':
-      return initialState;
+      return { ...initialState, menuOpen: false };
     default:
       return state;
   }

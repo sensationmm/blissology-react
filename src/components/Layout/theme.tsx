@@ -24,16 +24,47 @@ export const blissologyTheme = createTheme({
     },
     h2: {
       fontSize: '2rem',
-      color: palette.primary.main,
+      color: palette.secondary.main,
       fontWeight: 400
     }
   },
   components: {
-    MuiToolbar: {
+    MuiDrawer: {
       styleOverrides: {
-        regular: {
-          height: 80,
-          minHeight: 80
+        root: {
+          '&.bliss': {
+            background: palette.primary.main,
+            '.MuiPaper-root': {
+              backgroundColor: 'transparent'
+            },
+            '.MuiDivider-root': {
+              display: 'none'
+            },
+            '.MuiSvgIcon-root': {
+              fill: '#fff'
+            },
+            '.MuiButtonBase-root': {
+              color: '#fff'
+            },
+            '.MuiListItemIcon-root': {
+              justifyContent: 'center'
+            },
+            '.MuiListItemButton-root': {
+              paddingLeft: '8px'
+            },
+            '.MuiListItemText-primary': {
+              paddingLeft: '8px'
+            },
+            '.MuiListItemButton-root.Mui-selected': {
+              background: palette.secondary.main
+            },
+            '.MuiDrawer-paper': {
+              borderRight: 0
+            },
+            'nav.MuiList-root': {
+              paddingTop: 0
+            }
+          }
         }
       }
     },
@@ -53,6 +84,14 @@ export const blissologyTheme = createTheme({
               }
             }
           }
+        }
+      }
+    },
+    MuiToolbar: {
+      styleOverrides: {
+        regular: {
+          height: 80,
+          minHeight: 80
         }
       }
     }
