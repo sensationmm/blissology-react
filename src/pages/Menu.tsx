@@ -22,12 +22,8 @@ const Menu = () => {
                   <Typography color="textSecondary" gutterBottom>
                     {post.title.rendered}
                   </Typography>
-                  <Typography variant="body2" component="p">
-                    {post.acf?.description}
-                  </Typography>
-                  <Typography variant="body2" component="p">
-                    {post?.acf?.dietary_information}
-                  </Typography>
+                  <Typography variant="body1">{post.acf?.description}</Typography>
+                  <Typography variant="body1">{post?.acf?.dietary_information}</Typography>
                 </CardContent>
               </Card>
             </Grid>

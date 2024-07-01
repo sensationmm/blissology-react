@@ -5,7 +5,7 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
 import { ChevronLeft as ChevronLeftIcon, Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { CircularProgress, Grid, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Alert, CircularProgress, Grid, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -20,37 +20,56 @@ import Typography from '@mui/material/Typography';
 import navigation from 'src/config/navigation';
 import siteConfig from 'src/siteConfig';
 import store, { RootState } from 'src/store';
+import { IWeddingDeadline } from 'src/store/reducers/wedding';
 
-import { wpDateToTimestamp } from 'src/utils/common';
+import { blissDate, wpDateToTimestamp } from 'src/utils/common';
 import { deleteCookie } from 'src/utils/cookie';
 
 import * as Styled from './styles';
 import { blissologyTheme } from './theme';
 
 type LayoutProps = {
+  title?: string;
   children: JSX.Element | JSX.Element[];
 };
 
-const Layout: FC<LayoutProps> = ({ children }) => {
-  const appState = (state: RootState['app']) => state.app;
+const Layout: FC<LayoutProps> = ({ title, children }) => {
+  const uiState = (state: RootState['ui']) => state.ui;
   const authState = (state: RootState['auth']) => state.auth;
   const weddingState = (state: RootState['wedding']) => state.wedding;
   const navigate = useNavigate();
   const location = useLocation();
-  const { menuOpen, isLoading } = useSelector(appState);
+  const { menuOpen, isLoading } = useSelector(uiState);
   const { isLoggedIn } = useSelector(authState);
-  const { weddingName, date } = useSelector(weddingState);
+  const { weddingName, date, deadlines } = useSelector(weddingState);
+  const page = location.pathname.split('/')[1];
 
   if (!isLoggedIn && location.pathname !== '/') return <Navigate to="/" replace={true} />;
 
   const toggleDrawer = () => {
-    store.dispatch({ type: `app/toggleMenu` });
+    store.dispatch({ type: `ui/toggleMenu` });
   };
 
   const logout = () => {
     store.dispatch({ type: 'auth/logout' });
     deleteCookie('auth_token');
     deleteCookie('username');
+  };
+
+  const getAlert = () => {
+    const nextDeadline = deadlines
+      .slice()
+      .filter((dl: IWeddingDeadline) => dl.attach_to.includes(page))
+      .sort((a: IWeddingDeadline, b: IWeddingDeadline) => (a.date > b.date ? 1 : -1))
+      .map((dl: IWeddingDeadline) => dl);
+
+    return (
+      nextDeadline.length > 0 && (
+        <Alert severity="info">
+          {nextDeadline[0].name} due {blissDate(nextDeadline[0].date)}
+        </Alert>
+      )
+    );
   };
 
   return (
@@ -81,11 +100,11 @@ const Layout: FC<LayoutProps> = ({ children }) => {
             )}
             <Grid container sx={{ justifyContent: weddingName ? 'flex-end' : 'flex-start', alignItems: 'center' }}>
               <Grid item>
-                <Typography component="h1" variant="h6" color="inherit" noWrap>
+                <Typography variant="body1" color="inherit" noWrap>
                   {weddingName || siteConfig.siteTitle}
                 </Typography>
                 {date && (
-                  <Typography variant="body1" component="p" noWrap textAlign={'right'}>
+                  <Typography variant="body2" noWrap textAlign={'right'}>
                     {formatDate(wpDateToTimestamp(date), 'd MMMM yyyy')}
                   </Typography>
                 )}
@@ -148,6 +167,14 @@ const Layout: FC<LayoutProps> = ({ children }) => {
           }}>
           <Toolbar />
           <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+            {title && (
+              <Styled.HeaderBar>
+                <>
+                  <Typography variant="h1">{title}</Typography>
+                  {getAlert()}
+                </>
+              </Styled.HeaderBar>
+            )}
             {children}
             {/* <Footer sx={{ pt: 4 }} /> */}
           </Container>

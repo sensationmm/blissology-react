@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { differenceInDays, formatDate } from 'date-fns';
+import { differenceInDays } from 'date-fns';
 import { useSelector } from 'react-redux';
 
 import { CircularProgress } from '@mui/material';
@@ -9,12 +9,11 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
 import { RootState } from 'src/store';
+import { IWeddingDeadline } from 'src/store/reducers/wedding';
 
 import Layout from 'src/components/Layout/Layout';
 
-import { wpDateToTimestamp } from 'src/utils/common';
-
-type IDeadline = { [key: string]: any };
+import { blissDate, wpDateToTimestamp } from 'src/utils/common';
 
 // type IWedding = {
 //   acf?: IDeadline;
@@ -34,27 +33,23 @@ const Dashboard = () => {
     <Layout>
       <Grid container spacing={2}>
         <Grid item xs={8}>
-          <Typography component="h1">Welcome!</Typography>
+          <Typography variant="h1">Welcome!</Typography>
         </Grid>
         <Grid item xs={4}>
-          <Typography component="h2">Upcoming Deadlines</Typography>
+          <Typography variant="h2">Upcoming Deadlines</Typography>
           <Grid container spacing={2} sx={{ marginTop: '0px' }}>
             {deadlines
               .slice()
-              .sort((a: IDeadline, b: IDeadline) => (a.date > b.date ? 1 : -1))
+              .sort((a: IWeddingDeadline, b: IWeddingDeadline) => (a.date > b.date ? 1 : -1))
               .map((deadline: any, index: number) => (
                 <Grid item xs={12} key={`deadline-${index}`}>
                   <Card>
                     <CardContent>
-                      <Typography variant="body2" component="p">
-                        Due in {differenceInDays(wpDateToTimestamp(deadline.date), new Date())} days
-                      </Typography>
+                      <Typography variant="body1">Due in {differenceInDays(wpDateToTimestamp(deadline.date), new Date())} days</Typography>
                       <Typography color="textSecondary" gutterBottom>
                         {deadline.name}
                       </Typography>
-                      <Typography variant="body2" component="p">
-                        {formatDate(wpDateToTimestamp(deadline.date), 'd MMMM yyyy')}
-                      </Typography>
+                      <Typography variant="body1">{blissDate(deadline.date)}</Typography>
                     </CardContent>
                   </Card>
                 </Grid>

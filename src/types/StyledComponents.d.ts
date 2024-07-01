@@ -1,4 +1,5 @@
 import { StyledComponentProps } from '@material-ui/core/styles';
+import "@mui/material/Slider";
 
 declare module 'react' {
   interface Attributes {
@@ -12,5 +13,11 @@ declare module '@mui/material/styles/createPalette' {
   }
   interface PaletteOptions {
     tertiary: PaletteOptions['primary'];
+  }
+}
+
+declare module "@mui/material/SvgIcon" {
+  interface SvgIconPropsColorOverrides {
+    tertiary: true;
   }
 }

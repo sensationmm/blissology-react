@@ -84,15 +84,14 @@ const Guests = () => {
   };
 
   return (
-    <Layout>
-      <Typography component="h1">Guest List</Typography>
+    <Layout title="Guest List">
       <div>
         {Object.keys(Guests).map((guestsType) => (
           <Card key={`guests-${guestsType}`} sx={{ mt: '20px', p: '15px' }}>
             <Grid container spacing={2}>
               {guestsType !== 'total' && (
                 <Grid item xs={12}>
-                  <Typography component="h2">{capitalize(guestsType)} Guests</Typography>
+                  <Typography variant="h2">{capitalize(guestsType)} Guests</Typography>
                 </Grid>
               )}
               {guestsType !== 'total' ? (
@@ -114,7 +113,7 @@ const Guests = () => {
               ) : (
                 <>
                   <Grid key={`guests-${guestsType}-1`} item xs={3} sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography component="h2">Total Guests</Typography>
+                    <Typography variant="h2">Total Guests</Typography>
                   </Grid>
                   <Grid key={`guests-${guestsType}-2`} item xs={3}></Grid>
                   <Grid key={`guests-${guestsType}-3`} item xs={3}></Grid>

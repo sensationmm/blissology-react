@@ -1,5 +1,19 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-const initialState = {
+export type IWeddingDeadline = {
+  name: string;
+  date: string;
+  payment_deadline: boolean;
+  attach_to: Array<string>;
+};
+
+export type IWeddingState = {
+  weddingID: number | undefined;
+  weddingName: string | undefined;
+  date: string | undefined;
+  deadlines: IWeddingDeadline[];
+};
+
+const initialState: IWeddingState = {
   weddingID: undefined,
   weddingName: undefined,
   date: undefined,

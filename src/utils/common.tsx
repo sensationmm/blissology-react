@@ -1,3 +1,5 @@
+import { formatDate } from 'date-fns';
+
 export function isValidJSON(string: string) {
   return /^[\],:{}\s]*$/.test(
     /* eslint-disable */
@@ -48,4 +50,9 @@ export const wpDateToTimestamp = (date: string) => {
 export const capitalize = (sentence: string): string => {
   const parts = sentence.split(' ').map((word) => word[0].toUpperCase() + word.substring(1));
   return parts.join('');
+};
+
+export const blissDate = (date: string, isWordpressDate = true) => {
+  const blissDate = isWordpressDate ? wpDateToTimestamp(date) : new Date(date);
+  return formatDate(blissDate, 'd MMMM yyyy');
 };

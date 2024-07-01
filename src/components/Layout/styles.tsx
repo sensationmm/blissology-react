@@ -50,6 +50,13 @@ export const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 
   }
 }));
 
+export const HeaderBar = styled('header')(() => ({
+  display: 'flex',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  marginBottom: '20px'
+}));
+
 export const LoadingMask = styled('div')(({ theme }) => ({
   position: 'fixed',
   top: 0,

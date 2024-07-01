@@ -12,7 +12,7 @@ const Accommodation = () => {
   const posts: Array<any> = useFetch('http://hydehouse.blissology.local:50011/wp-json/wp/v2/accommodation') || [];
 
   return (
-    <Layout>
+    <Layout title="Accommodation">
       <Grid container spacing={2}>
         {posts &&
           posts.map((post: any, index: number) => (
@@ -22,12 +22,8 @@ const Accommodation = () => {
                   <Typography color="textSecondary" gutterBottom>
                     {post.title.rendered}
                   </Typography>
-                  <Typography variant="body2" component="p">
-                    {post.content?.rendered}
-                  </Typography>
-                  <Typography variant="body2" component="p">
-                    {post?.acf?.dietary_information}
-                  </Typography>
+                  <Typography variant="body1">{post.content?.rendered}</Typography>
+                  <Typography variant="body1">{post?.acf?.dietary_information}</Typography>
                   {post.post_title}
                 </CardContent>
               </Card>
