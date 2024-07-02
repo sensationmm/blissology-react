@@ -29,40 +29,52 @@ export const blissologyTheme = createTheme({
     }
   },
   components: {
+    MuiAlert: {
+      styleOverrides: {
+        standardInfo: {
+          backgroundColor: palette.secondary.main,
+          color: '#fff',
+          fontWeight: 'bold',
+          '.MuiAlert-icon': {
+            color: '#fff'
+          }
+        }
+      }
+    },
     MuiDrawer: {
       styleOverrides: {
         root: {
           '&.bliss': {
             background: palette.primary.main,
-            '.MuiPaper-root': {
-              backgroundColor: 'transparent'
+            '.MuiButtonBase-root': {
+              color: '#fff'
             },
             '.MuiDivider-root': {
               display: 'none'
             },
-            '.MuiSvgIcon-root': {
-              fill: '#fff'
+            '.MuiDrawer-paper': {
+              borderRight: 0
             },
-            '.MuiButtonBase-root': {
-              color: '#fff'
+            '.MuiPaper-root': {
+              backgroundColor: 'transparent'
+            },
+            'nav.MuiList-root': {
+              paddingTop: 0
+            },
+            '.MuiListItemButton-root': {
+              padding: '16px 16px 16px 8px',
+              '&.Mui-selected': {
+                background: palette.secondary.main
+              }
             },
             '.MuiListItemIcon-root': {
               justifyContent: 'center'
             },
-            '.MuiListItemButton-root': {
-              paddingLeft: '8px'
-            },
             '.MuiListItemText-primary': {
               paddingLeft: '8px'
             },
-            '.MuiListItemButton-root.Mui-selected': {
-              background: palette.secondary.main
-            },
-            '.MuiDrawer-paper': {
-              borderRight: 0
-            },
-            'nav.MuiList-root': {
-              paddingTop: 0
+            '.MuiSvgIcon-root': {
+              fill: '#fff'
             }
           }
         }

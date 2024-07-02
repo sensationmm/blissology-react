@@ -48,11 +48,28 @@ export const wpDateToTimestamp = (date: string) => {
 };
 
 export const capitalize = (sentence: string): string => {
-  const parts = sentence.split(' ').map((word) => word[0].toUpperCase() + word.substring(1));
-  return parts.join('');
+  if (sentence === '') return sentence;
+
+  const parts = sentence
+    .replace(/([a-z])([A-Z])/g, '$1 $2')
+    .split(' ')
+    .map((word) => word[0].toUpperCase() + word.substring(1));
+  return parts.join(' ');
 };
 
 export const blissDate = (date: string, isWordpressDate = true) => {
   const blissDate = isWordpressDate ? wpDateToTimestamp(date) : new Date(date);
   return formatDate(blissDate, 'd MMMM yyyy');
+};
+
+export const hexToRgb = (hex: string) => {
+  if (!hex || hex === null) return;
+
+  const rgb = hex.replace(/^#?([a-f\d])([a-f\d])([a-f\d])$/i, (m, r, g, b) => '#' + r + r + g + g + b + b);
+  return rgb
+    ? rgb
+        .substring(1)
+        .match(/.{2}/g)
+        ?.map((x) => parseInt(x, 16))
+    : '';
 };
