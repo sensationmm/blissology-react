@@ -19,6 +19,12 @@ export const Subtitle = styled(Typography)(({ theme }) => ({
   color: theme.palette.tertiary.main
 }));
 
+export const SubContent = styled('div')(({ theme }) => ({
+  paddingTop: '10px',
+  borderTop: `1px solid ${theme.palette.tertiary.main}`,
+  marginTop: '10px'
+}));
+
 export const Controls = styled('div')<{ show: boolean }>(({ show, theme }) => ({
   display: 'flex',
   flexDirection: 'column',
@@ -29,7 +35,7 @@ export const Controls = styled('div')<{ show: boolean }>(({ show, theme }) => ({
   left: 0,
   width: '100%',
   height: '100%',
-  background: `rgba(${hexToRgb(theme.palette.tertiary.main)}, 0.7)`,
+  background: `rgba(${hexToRgb(theme.palette.tertiary.main)}, 0.8)`,
   '> .MuiButtonBase-root': {
     margin: '5px 0'
   },

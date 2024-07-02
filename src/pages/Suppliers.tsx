@@ -230,8 +230,15 @@ const Suppliers = () => {
                 <EditCard
                   title={supplier.name}
                   subtitle={supplier.type}
-                  content={[{ text: supplier.contactName }, { text: supplier.contactTelephone, isSmall: true }, { text: supplier.contactEmail, isSmall: true }]}
+                  content={[
+                    { text: supplier.contactName },
+                    { text: supplier.contactTelephone, isSmall: true },
+                    { text: supplier.contactEmail, isSmall: true },
+                    { text: '', isSmall: true }
+                  ]}
+                  subContent={supplier.notes !== '' ? [{ text: supplier.notes, isSmall: true }] : undefined}
                   icon={SupplierIcons(supplier.type)}
+                  context="Supplier"
                   onEdit={() => handleEditSupplier(supplier)}
                   onDelete={() => deleteSupplier(supplier.id as number)}
                 />

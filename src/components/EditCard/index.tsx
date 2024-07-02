@@ -16,12 +16,15 @@ type IEditCard = {
   subtitle?: string;
   icon: JSX.Element;
   content: ICardContent[];
+  subContent?: ICardContent[];
   onEdit?: () => void;
   onDelete?: () => void;
+  context?: string;
 };
 
-const EditCard: FC<IEditCard> = ({ title, subtitle, content, icon, onEdit, onDelete }) => {
+const EditCard: FC<IEditCard> = ({ title, subtitle, content, subContent, icon, context, onEdit, onDelete }) => {
   const [showControls, setShowControls] = useState<boolean>(false);
+  const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
 
   return (
     <Card sx={{ p: '15px' }} onMouseEnter={() => setShowControls(true)} onMouseLeave={() => setShowControls(false)}>
@@ -36,17 +39,40 @@ const EditCard: FC<IEditCard> = ({ title, subtitle, content, icon, onEdit, onDel
           {c.text}
         </Typography>
       ))}
+      {subContent && subContent.length > 0 && (
+        <Styled.SubContent>
+          {subContent.map((c, count) => (
+            <Typography key={`edit-card-content-${count}`} variant={!c.isSmall ? 'body1' : 'body2'}>
+              {c.text}
+            </Typography>
+          ))}
+        </Styled.SubContent>
+      )}
       {(onEdit || onDelete) && (
         <Styled.Controls show={showControls}>
-          {onEdit && (
+          {onEdit && !showConfirmDelete && (
             <Button variant="contained" onClick={onEdit}>
-              Edit Supplier
+              Edit {context}
             </Button>
           )}
-          {onDelete && (
-            <Button variant="contained" onClick={onDelete}>
-              Delete Supplier
+          {onDelete && !showConfirmDelete && (
+            <Button variant="contained" color="error" onClick={() => setShowConfirmDelete(true)}>
+              Delete {context}
             </Button>
+          )}
+          {showConfirmDelete && (
+            <>
+              <Typography variant="body1" sx={{ fontWeight: 600, textAlign: 'center' }}>
+                Are you sure? <br />
+                This action cannot be undone
+              </Typography>
+              <Button variant="contained" color="error" onClick={onDelete}>
+                Confirm Delete
+              </Button>
+              <Button variant="contained" onClick={() => setShowConfirmDelete(false)}>
+                Cancel
+              </Button>
+            </>
           )}
         </Styled.Controls>
       )}

@@ -15,7 +15,8 @@ export const CardIcon = styled('div')(() => ({
   lineHeight: '20px',
   height: 'auto',
   svg: {
-    display: 'inline'
+    display: 'inline',
+    transition: 'all linear 0.2s'
   },
   transition: 'all linear 0.2s'
 }));
