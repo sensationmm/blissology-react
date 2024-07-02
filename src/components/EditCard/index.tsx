@@ -27,7 +27,7 @@ const EditCard: FC<IEditCard> = ({ title, subtitle, content, subContent, icon, c
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
 
   return (
-    <Card sx={{ p: '15px' }} onMouseEnter={() => setShowControls(true)} onMouseLeave={() => setShowControls(false)}>
+    <Card onMouseEnter={() => setShowControls(true)} onMouseLeave={() => setShowControls(false)}>
       {icon && <Styled.Icon>{icon}</Styled.Icon>}
 
       {subtitle && <Styled.Subtitle variant="body2">{capitalize(subtitle)}</Styled.Subtitle>}

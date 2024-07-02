@@ -41,6 +41,13 @@ export const blissologyTheme = createTheme({
         }
       }
     },
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          padding: '15px'
+        }
+      }
+    },
     MuiDrawer: {
       styleOverrides: {
         root: {
