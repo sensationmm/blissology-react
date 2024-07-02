@@ -1,6 +1,6 @@
 import { IGuests } from 'src/store/reducers/guests';
 
-type WPWeddingGuests = {
+export type WPWeddingGuests = {
   guests_daytime: {
     guests_daytime_adults: number;
     guests_daytime_children: number;

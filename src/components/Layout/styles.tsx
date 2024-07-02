@@ -54,7 +54,7 @@ export const HeaderBar = styled('header')(() => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  marginBottom: '20px'
+  marginBottom: '30px'
 }));
 
 export const LoadingMask = styled('div')(({ theme }) => ({

@@ -13,6 +13,7 @@ import AuthClass from 'src/api/Auth';
 
 import { readCookie } from 'src/utils/cookie';
 
+import { formatSuppliersResponse } from './utils/wordpress/supplier';
 import { formatWeddingGuestsResponse } from './utils/wordpress/wedding';
 
 const App: React.FC = () => {
@@ -46,6 +47,11 @@ const App: React.FC = () => {
     store.dispatch({
       type: 'guests/set',
       payload: formatWeddingGuestsResponse(wedding[0]?.acf?.guests)
+    });
+
+    store.dispatch({
+      type: 'suppliers/set',
+      payload: formatSuppliersResponse(wedding[0]?.acf?.suppliers)
     });
   };
 

@@ -167,7 +167,7 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
             overflow: 'auto'
           }}>
           <Toolbar />
-          <Container maxWidth="lg" sx={{ mt: 4, mb: 4 }}>
+          <Container sx={{ my: 4, px: [4] }}>
             {title && (
               <Styled.HeaderBar>
                 <>
@@ -177,7 +177,6 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
               </Styled.HeaderBar>
             )}
             {children}
-            {/* <Footer sx={{ pt: 4 }} /> */}
           </Container>
         </Box>
       </Box>

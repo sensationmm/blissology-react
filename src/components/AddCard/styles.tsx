@@ -16,10 +16,12 @@ export const CardIcon = styled('div')(() => ({
   height: 'auto',
   svg: {
     display: 'inline'
-  }
+  },
+  transition: 'all linear 0.2s'
 }));
 
 export const AddLabel = styled(Typography)(() => ({
   textTransform: 'uppercase',
-  fontWeight: 'bold'
+  fontWeight: 'bold',
+  transition: 'all linear 0.2s'
 }));

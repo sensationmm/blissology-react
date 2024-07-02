@@ -2,15 +2,17 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import authReducer from './reducers/auth';
 import guestsReducer from './reducers/guests';
+import suppliersReducer from './reducers/suppliers';
 import uiReducer from './reducers/ui';
 import weddingReducer from './reducers/wedding';
 
 const store = configureStore({
   reducer: {
+    ui: uiReducer,
     auth: authReducer,
-    wedding: weddingReducer,
     guests: guestsReducer,
-    app: uiReducer
+    suppliers: suppliersReducer,
+    wedding: weddingReducer
   }
 });
 

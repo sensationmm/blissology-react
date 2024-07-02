@@ -44,7 +44,7 @@ const EditCard: FC<IEditCard> = ({ title, subtitle, content, icon, onEdit, onDel
             </Button>
           )}
           {onDelete && (
-            <Button variant="contained" onClick={() => {}}>
+            <Button variant="contained" onClick={onDelete}>
               Delete Supplier
             </Button>
           )}
