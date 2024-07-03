@@ -22,7 +22,8 @@ export const Subtitle = styled(Typography)(({ theme }) => ({
 export const SubContent = styled('div')(({ theme }) => ({
   paddingTop: '10px',
   borderTop: `1px solid ${theme.palette.tertiary.main}`,
-  marginTop: '10px'
+  marginTop: '20px',
+  fontStyle: 'italic'
 }));
 
 export const Controls = styled('div')<{ show: boolean }>(({ show, theme }) => ({

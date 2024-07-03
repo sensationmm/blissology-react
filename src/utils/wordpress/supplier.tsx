@@ -13,7 +13,7 @@ export const formatSuppliersResponse = (suppliers: WPSupplier[]): ISupplier[] =>
   return suppliers.map((sup, count) => ({
     id: count,
     contactEmail: sup.supplier_contact_email || '',
-    contactName: sup.supplier_contact_name,
+    contactName: sup.supplier_contact_name || '',
     contactTelephone: sup.supplier_contact_telephone || '',
     name: sup.supplier_name,
     notes: sup.supplier_notes || '',
@@ -23,11 +23,11 @@ export const formatSuppliersResponse = (suppliers: WPSupplier[]): ISupplier[] =>
 
 export const suppliersPayload = (suppliers: ISupplier[]): WPSupplier[] => {
   return suppliers.map((sup) => ({
-    supplier_contact_email: sup.contactEmail || undefined,
+    supplier_contact_email: sup.contactEmail,
     supplier_contact_name: sup.contactName,
-    supplier_contact_telephone: sup.contactTelephone || undefined,
+    supplier_contact_telephone: sup.contactTelephone,
     supplier_name: sup.name,
-    supplier_notes: sup.notes || undefined,
+    supplier_notes: sup.notes,
     supplier_type: sup.type
   }));
 };
