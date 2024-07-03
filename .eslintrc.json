@@ -26,7 +26,7 @@
     "simple-import-sort/imports": "error",
     "simple-import-sort/exports": "error",
     "prettier/prettier": "off",
-    "sort-keys": "error"
+    "sort-keys": ["error", "asc", {"caseSensitive": true, "natural": false, "minKeys": 2, "allowLineSeparatedGroups": true}]
   },
   "overrides": [
     {

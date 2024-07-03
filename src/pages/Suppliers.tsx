@@ -17,6 +17,7 @@ import FormField, { IFormConfig } from 'src/components/FormField';
 import Icon, { IIconKey } from 'src/components/Icon';
 import Layout from 'src/components/Layout/Layout';
 
+import { useSnackbar } from 'src/hooks/useSnackbar';
 import { capitalize } from 'src/utils/common';
 import { formatSuppliersResponse, suppliersPayload } from 'src/utils/wordpress/supplier';
 import { getYupErrors } from 'src/utils/yup';
@@ -35,16 +36,22 @@ const Suppliers = () => {
   const Suppliers: ISupplier[] = useSelector(suppliersState);
   const { userID, token } = useSelector(authState);
   const { weddingID } = useSelector(weddingState);
+  const [openSnackbar] = useSnackbar();
 
   const newSupplier = {
-    contactEmail: '',
-    contactName: '',
-    contactTelephone: '',
     id: undefined,
     isNew: true,
+    type: '' as IIconKey,
+
     name: '',
-    notes: '',
-    type: '' as IIconKey
+
+    contactName: '',
+
+    contactTelephone: '',
+
+    contactEmail: '',
+
+    notes: ''
   };
 
   const newSupplierForm: IFormConfig = {
@@ -111,6 +118,7 @@ const Suppliers = () => {
               payload: formatSuppliersResponse(resp.acf.suppliers),
               type: 'suppliers/update'
             });
+            openSnackbar(`Supplier ${actionType}ed successfully`);
           })
           .finally(() => {
             store.dispatch({
@@ -125,6 +133,7 @@ const Suppliers = () => {
           payload: { isLoading: false },
           type: 'ui/setLoading'
         });
+        openSnackbar('Fix the errors and try again', 'error');
 
         setShowEdit(true);
       });
@@ -162,6 +171,8 @@ const Suppliers = () => {
           payload: formatSuppliersResponse(resp.acf.suppliers),
           type: 'suppliers/update'
         });
+
+        openSnackbar(`Supplier deleted successfully`);
       })
       .then(() => {
         store.dispatch({
