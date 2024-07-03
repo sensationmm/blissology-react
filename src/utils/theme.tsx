@@ -32,25 +32,15 @@ export const blissologyTheme = createTheme({
   components: {
     MuiAlert: {
       styleOverrides: {
-        colorSuccess: {
-          background: 'red',
-          border: '2px solid red !important'
-        },
         root: {
-          background: 'red',
-          border: '2px solid red !important'
+          fontWeight: 'bold'
         },
         standardInfo: {
           '.MuiAlert-icon': {
             color: '#fff'
           },
           backgroundColor: palette.secondary.main,
-          color: '#fff',
-          fontWeight: 'bold'
-        },
-        standardSuccess: {
-          background: 'red',
-          border: '2px solid red !important'
+          color: '#fff'
         }
       }
     },

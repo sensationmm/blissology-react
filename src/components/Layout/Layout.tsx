@@ -11,7 +11,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
 import List from '@mui/material/List';
-import { ThemeProvider } from '@mui/material/styles';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 
@@ -26,7 +25,6 @@ import { blissDate, wpDateToTimestamp } from 'src/utils/common';
 import { deleteCookie } from 'src/utils/cookie';
 
 import * as Styled from './styles';
-import { blissologyTheme } from './theme';
 
 type LayoutProps = {
   title?: string;
@@ -73,18 +71,18 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
   };
 
   return (
-    <ThemeProvider theme={blissologyTheme}>
+    <>
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <Styled.Header position="absolute" open={menuOpen}>
           <Toolbar
             className="bliss"
             sx={{
-                  alignItems: 'space-between',
-                  display: 'flex',
+              alignItems: 'space-between',
+              display: 'flex',
               minHeight: '100px',
-                  pr: '36px',
-                  width: '100%'
+              pr: '36px',
+              width: '100%'
             }}>
             {isLoggedIn && (
               <IconButton
@@ -99,7 +97,7 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
                 <Icon iconKey="menu" />
               </IconButton>
             )}
-                <Grid container sx={{ alignItems: 'center', justifyContent: weddingName ? 'flex-end' : 'flex-start' }}>
+            <Grid container sx={{ alignItems: 'center', justifyContent: weddingName ? 'flex-end' : 'flex-start' }}>
               <Grid item>
                 <Typography variant="body1" color="inherit" noWrap sx={{ fontSize: '1.6rem', fontWeight: 400 }}>
                   {weddingName || siteConfig.siteTitle}
@@ -132,7 +130,7 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
           <Styled.Drawer className="bliss" variant="permanent" open={menuOpen}>
             <Toolbar
               sx={{
-                    alignItems: 'center',
+                alignItems: 'center',
                 display: 'flex',
                 justifyContent: 'flex-end',
                 px: [1]
@@ -185,7 +183,7 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
           <CircularProgress />
         </Styled.LoadingMask>
       )}
-    </ThemeProvider>
+    </>
   );
 };
 

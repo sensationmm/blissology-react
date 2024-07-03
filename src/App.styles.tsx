@@ -1,6 +1,6 @@
 import { styled } from '@mui/material';
 
-import { blissologyTheme } from './components/Layout/theme';
+import { blissologyTheme } from './utils/theme';
 
 export const Loader = styled('div')({
   alignItems: 'center',

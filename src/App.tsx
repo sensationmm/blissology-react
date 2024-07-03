@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import { CircularProgress } from '@mui/material';
+import { ThemeProvider } from '@mui/material/styles';
 
 import * as Styled from 'src/App.styles';
 import navigation from 'src/config/navigation';
@@ -12,6 +13,7 @@ import Login from 'src/pages/Login';
 import AuthClass from 'src/api/Auth';
 
 import { readCookie } from 'src/utils/cookie';
+import { blissologyTheme } from 'src/utils/theme';
 
 import { formatSuppliersResponse } from './utils/wordpress/supplier';
 import { formatWeddingGuestsResponse } from './utils/wordpress/wedding';
@@ -89,6 +91,7 @@ const App: React.FC = () => {
   }
 
   return (
+    <ThemeProvider theme={blissologyTheme}>
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
@@ -97,6 +100,7 @@ const App: React.FC = () => {
         ))}
       </Routes>
     </BrowserRouter>
+    </ThemeProvider>
   );
 };
 
