@@ -26,8 +26,8 @@ const App: React.FC = () => {
     const user = await response.json();
     await getMyWedding(user[0].id);
     store.dispatch({
-      type: 'auth/login',
-      payload: { userID: user[0].id, userName: username, token: authToken }
+      payload: { token: authToken, userID: user[0].id, userName: username },
+      type: 'auth/login'
     });
   };
 
@@ -35,23 +35,23 @@ const App: React.FC = () => {
     const response = await fetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/wedding?author=${user}`);
     const wedding = await response.json();
     store.dispatch({
-      type: 'wedding/set',
       payload: {
-        weddingID: wedding[0].id,
-        weddingName: wedding[0].title.rendered,
+        date: wedding[0]?.acf?.wedding_date,
         deadlines: wedding[0]?.acf?.deadlines,
-        date: wedding[0]?.acf?.wedding_date
-      }
+        weddingID: wedding[0].id,
+        weddingName: wedding[0].title.rendered
+      },
+      type: 'wedding/set'
     });
 
     store.dispatch({
-      type: 'guests/set',
-      payload: formatWeddingGuestsResponse(wedding[0]?.acf?.guests)
+      payload: formatWeddingGuestsResponse(wedding[0]?.acf?.guests),
+      type: 'guests/set'
     });
 
     store.dispatch({
-      type: 'suppliers/set',
-      payload: formatSuppliersResponse(wedding[0]?.acf?.suppliers)
+      payload: formatSuppliersResponse(wedding[0]?.acf?.suppliers),
+      type: 'suppliers/set'
     });
   };
 

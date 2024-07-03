@@ -18,26 +18,39 @@ export const blissologyTheme = createTheme({
   palette: palette,
   typography: {
     h1: {
-      fontSize: '3rem',
       color: palette.primary.main,
+      fontSize: '3rem',
       fontWeight: 400
     },
     h2: {
-      fontSize: '2rem',
       color: palette.secondary.main,
+      fontSize: '2rem',
       fontWeight: 400
     }
   },
+  // eslint-disable-next-line sort-keys
   components: {
     MuiAlert: {
       styleOverrides: {
+        colorSuccess: {
+          background: 'red',
+          border: '2px solid red !important'
+        },
+        root: {
+          background: 'red',
+          border: '2px solid red !important'
+        },
         standardInfo: {
-          backgroundColor: palette.secondary.main,
-          color: '#fff',
-          fontWeight: 'bold',
           '.MuiAlert-icon': {
             color: '#fff'
-          }
+          },
+          backgroundColor: palette.secondary.main,
+          color: '#fff',
+          fontWeight: 'bold'
+        },
+        standardSuccess: {
+          background: 'red',
+          border: '2px solid red !important'
         }
       }
     },
@@ -52,7 +65,6 @@ export const blissologyTheme = createTheme({
       styleOverrides: {
         root: {
           '&.bliss': {
-            background: palette.primary.main,
             '.MuiButtonBase-root': {
               color: '#fff'
             },
@@ -62,17 +74,11 @@ export const blissologyTheme = createTheme({
             '.MuiDrawer-paper': {
               borderRight: 0
             },
-            '.MuiPaper-root': {
-              backgroundColor: 'transparent'
-            },
-            'nav.MuiList-root': {
-              paddingTop: 0
-            },
             '.MuiListItemButton-root': {
-              padding: '16px 16px 16px 8px',
               '&.Mui-selected': {
                 background: palette.secondary.main
-              }
+              },
+              padding: '16px 16px 16px 8px'
             },
             '.MuiListItemIcon-root': {
               justifyContent: 'center'
@@ -80,8 +86,15 @@ export const blissologyTheme = createTheme({
             '.MuiListItemText-primary': {
               paddingLeft: '8px'
             },
+            '.MuiPaper-root': {
+              backgroundColor: 'transparent'
+            },
             '.MuiSvgIcon-root': {
               fill: '#fff'
+            },
+            background: palette.primary.main,
+            'nav.MuiList-root': {
+              paddingTop: 0
             }
           }
         }
@@ -92,15 +105,14 @@ export const blissologyTheme = createTheme({
         root: {
           '&.cards': {
             '.MuiGrid-item': {
-              display: 'flex',
-              position: 'relative',
-              justifyItems: 'stretch',
-              alignItems: 'stretch',
-
               '> div': {
-                width: '100%',
-                position: 'relative'
-              }
+                position: 'relative',
+                width: '100%'
+              },
+              alignItems: 'stretch',
+              display: 'flex',
+              justifyItems: 'stretch',
+              position: 'relative'
             }
           }
         }

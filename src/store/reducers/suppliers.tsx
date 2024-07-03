@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { IIconKey } from 'src/components/Icon';
+
 export type ISupplier = {
   id: number | undefined;
-  type: string;
+  type: IIconKey;
   name: string;
   contactName: string;
   contactTelephone: string;

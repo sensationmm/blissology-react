@@ -5,42 +5,42 @@ import { CardIcon } from 'src/components/AddCard/styles';
 import { hexToRgb } from 'src/utils/common';
 
 export const Icon = styled(CardIcon)(() => ({
-  position: 'absolute',
   bottom: '10px',
-  right: '10px',
   opacity: 0.2,
+  position: 'absolute',
+  right: '10px',
   zIndex: 1
 }));
 
 export const Subtitle = styled(Typography)(({ theme }) => ({
-  textTransform: 'uppercase',
-  marginBottom: '5px',
+  color: theme.palette.tertiary.main,
   fontWeight: 'bold',
-  color: theme.palette.tertiary.main
+  marginBottom: '5px',
+  textTransform: 'uppercase'
 }));
 
 export const SubContent = styled('div')(({ theme }) => ({
-  paddingTop: '10px',
   borderTop: `1px solid ${theme.palette.tertiary.main}`,
+  fontStyle: 'italic',
   marginTop: '20px',
-  fontStyle: 'italic'
+  paddingTop: '10px'
 }));
 
 export const Controls = styled('div')<{ show: boolean }>(({ show, theme }) => ({
-  display: 'flex',
-  flexDirection: 'column',
-  justifyContent: 'center',
-  alignItems: 'center',
-  position: 'absolute',
-  top: 0,
-  left: 0,
-  width: '100%',
-  height: '100%',
-  background: `rgba(${hexToRgb(theme.palette.tertiary.main)}, 0.8)`,
   '> .MuiButtonBase-root': {
     margin: '5px 0'
   },
-  zIndex: 10,
+  alignItems: 'center',
+  background: `rgba(${hexToRgb(theme.palette.tertiary.main)}, 0.8)`,
+  display: 'flex',
+  flexDirection: 'column',
+  height: '100%',
+  justifyContent: 'center',
+  left: 0,
   opacity: show ? 1 : 0,
-  transition: 'all linear 0.2s'
+  position: 'absolute',
+  top: 0,
+  transition: 'all linear 0.2s',
+  width: '100%',
+  zIndex: 10
 }));

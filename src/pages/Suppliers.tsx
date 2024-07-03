@@ -6,7 +6,6 @@ import { object, string } from 'yup';
 import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
-import Icons from 'src/config/icons';
 import store, { RootState } from 'src/store';
 import { ISupplier } from 'src/store/reducers/suppliers';
 
@@ -15,7 +14,7 @@ import { wpRestApiHandler } from 'src/api/wordpress';
 import AddCard from 'src/components/AddCard';
 import EditCard from 'src/components/EditCard';
 import FormField, { IFormConfig } from 'src/components/FormField';
-import Icon from 'src/components/Icon';
+import Icon, { IIconKey } from 'src/components/Icon';
 import Layout from 'src/components/Layout/Layout';
 
 import { capitalize } from 'src/utils/common';
@@ -38,20 +37,20 @@ const Suppliers = () => {
   const { weddingID } = useSelector(weddingState);
 
   const newSupplier = {
+    contactEmail: '',
+    contactName: '',
+    contactTelephone: '',
     id: undefined,
     isNew: true,
-    type: '',
     name: '',
-    contactName: '',
-    contactEmail: '',
-    contactTelephone: '',
-    notes: ''
+    notes: '',
+    type: '' as IIconKey
   };
 
   const newSupplierForm: IFormConfig = {
     type: {
-      type: 'select',
-      items: ['cakeMaker', 'caterer', 'coordinator', 'entertainment', 'florist', 'photographer', 'stylist', 'videographer']
+      items: ['cakeMaker', 'caterer', 'coordinator', 'entertainment', 'florist', 'photographer', 'stylist', 'videographer'],
+      type: 'select'
     }
   };
   const [editSupplier, setEditSupplier] = useState<IEditSupplier>(newSupplier);
@@ -62,20 +61,20 @@ const Suppliers = () => {
 
   const saveSuppliers = async () => {
     store.dispatch({
-      type: 'ui/setLoading',
-      payload: { isLoading: true }
+      payload: { isLoading: true },
+      type: 'ui/setLoading'
     });
     setShowEdit(false);
     const actionType = editSupplier.isNew ? 'add' : 'edit';
     delete editSupplier.isNew;
 
     const supplierSchema = object({
-      type: string().required(),
-      name: string().required(),
-      contactName: string().nullable(),
       contactEmail: string().email().nullable(),
+      contactName: string().nullable(),
       contactTelephone: string().nullable(),
-      notes: string().nullable()
+      name: string().required(),
+      notes: string().nullable(),
+      type: string().required()
     });
 
     await supplierSchema
@@ -109,22 +108,22 @@ const Suppliers = () => {
           .then((resp) => {
             onCancelEdit();
             store.dispatch({
-              type: 'suppliers/update',
-              payload: formatSuppliersResponse(resp.acf.suppliers)
+              payload: formatSuppliersResponse(resp.acf.suppliers),
+              type: 'suppliers/update'
             });
           })
           .finally(() => {
             store.dispatch({
-              type: 'ui/setLoading',
-              payload: { isLoading: false }
+              payload: { isLoading: false },
+              type: 'ui/setLoading'
             });
           });
       })
       .catch((error) => {
         setErrors(getYupErrors(error));
         store.dispatch({
-          type: 'ui/setLoading',
-          payload: { isLoading: false }
+          payload: { isLoading: false },
+          type: 'ui/setLoading'
         });
 
         setShowEdit(true);
@@ -133,8 +132,8 @@ const Suppliers = () => {
 
   const deleteSupplier = (supplierID: number) => {
     store.dispatch({
-      type: 'ui/setLoading',
-      payload: { isLoading: true }
+      payload: { isLoading: true },
+      type: 'ui/setLoading'
     });
 
     let newSuppliers: ISupplier[] = cloneDeep(Suppliers);
@@ -160,14 +159,14 @@ const Suppliers = () => {
       .then((resp) => {
         onCancelEdit();
         store.dispatch({
-          type: 'suppliers/update',
-          payload: formatSuppliersResponse(resp.acf.suppliers)
+          payload: formatSuppliersResponse(resp.acf.suppliers),
+          type: 'suppliers/update'
         });
       })
       .then(() => {
         store.dispatch({
-          type: 'ui/setLoading',
-          payload: { isLoading: false }
+          payload: { isLoading: false },
+          type: 'ui/setLoading'
         });
       });
   };
@@ -200,7 +199,6 @@ const Suppliers = () => {
             <AddCard label="Add Supplier" onClick={() => setShowEdit(true)} />
           </Grid>
           {Object.values(Suppliers).map((supplier: ISupplier) => {
-            const Icon = Icons[supplier.type as keyof typeof Icons];
             return (
               <Grid key={`supplier-${supplier.contactEmail}`} item xs={4}>
                 <EditCard
@@ -208,12 +206,12 @@ const Suppliers = () => {
                   subtitle={supplier.type}
                   content={[
                     { text: supplier.contactName },
-                    { text: supplier.contactTelephone, isSmall: true },
-                    { text: supplier.contactEmail, isSmall: true },
-                    { text: '', isSmall: true }
+                    { isSmall: true, text: supplier.contactTelephone },
+                    { isSmall: true, text: supplier.contactEmail },
+                    { isSmall: true, text: '' }
                   ]}
-                  subContent={supplier.notes !== '' ? [{ text: supplier.notes, isSmall: true }] : undefined}
-                  icon={<Icon color="tertiary" fontSize="inherit" />}
+                  subContent={supplier.notes !== '' ? [{ isSmall: true, text: supplier.notes }] : undefined}
+                  icon={<Icon iconKey={supplier.type} color="tertiary" fontSize="inherit" />}
                   context="Supplier"
                   onEdit={() => handleEditSupplier(supplier)}
                   onDelete={() => deleteSupplier(supplier.id as number)}
@@ -230,10 +228,10 @@ const Suppliers = () => {
           aria-label="close"
           onClick={onCancelEdit}
           sx={{
+            color: (theme) => theme.palette.grey[500],
             position: 'absolute',
             right: 8,
-            top: 8,
-            color: (theme) => theme.palette.grey[500]
+            top: 8
           }}>
           <Icon iconKey="close" />
         </IconButton>
@@ -243,13 +241,13 @@ const Suppliers = () => {
               .filter((supp) => !['id', 'isNew'].includes(supp))
               .map((supp) => {
                 const setup = {
+                  error: Object.prototype.hasOwnProperty.call(errors || {}, supp),
                   fullWidth: true,
+                  helperText: capitalize(errors?.[supp] || ''),
                   id: supp,
                   label: capitalize(supp),
-                  value: editSupplier[supp as keyof IEditSupplier],
                   onChangeEvent: setSupplierValue,
-                  error: Object.prototype.hasOwnProperty.call(errors || {}, supp),
-                  helperText: capitalize(errors?.[supp] || '')
+                  value: editSupplier[supp as keyof IEditSupplier]
                 };
 
                 return <FormField key={`field-${supp}`} fieldId={supp} formConfig={newSupplierForm} setup={setup} />;

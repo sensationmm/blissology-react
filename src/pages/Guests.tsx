@@ -41,15 +41,15 @@ const Guests = () => {
     const delta = parseInt(value) - original;
 
     store.dispatch({
-      type: `guests/update`,
-      payload: { value: parseInt(value), topLevel: object[0], secondLevel: object[1], change: delta }
+      payload: { change: delta, secondLevel: object[1], topLevel: object[0], value: parseInt(value) },
+      type: `guests/update`
     });
   };
 
   const saveGuestNumbers = () => {
     store.dispatch({
-      type: 'ui/setLoading',
-      payload: { isLoading: true }
+      payload: { isLoading: true },
+      type: 'ui/setLoading'
     });
     wpRestApiHandler(
       `wedding/${weddingID}`,
@@ -70,16 +70,16 @@ const Guests = () => {
       })
       .then(() => {
         store.dispatch({
-          type: 'ui/setLoading',
-          payload: { isLoading: false }
+          payload: { isLoading: false },
+          type: 'ui/setLoading'
         });
       });
   };
 
   const resetGuestNumbers = () => {
     store.dispatch({
-      type: 'guests/set',
-      payload: resetGuests
+      payload: resetGuests,
+      type: 'guests/set'
     });
   };
 
@@ -112,7 +112,7 @@ const Guests = () => {
                 })
               ) : (
                 <>
-                  <Grid key={`guests-${guestsType}-1`} item xs={3} sx={{ display: 'flex', alignItems: 'center' }}>
+                  <Grid key={`guests-${guestsType}-1`} item xs={3} sx={{ alignItems: 'center', display: 'flex' }}>
                     <Typography variant="h2">Total Guests</Typography>
                   </Grid>
                   <Grid key={`guests-${guestsType}-2`} item xs={3}></Grid>

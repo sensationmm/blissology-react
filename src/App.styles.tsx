@@ -3,14 +3,14 @@ import { styled } from '@mui/material';
 import { blissologyTheme } from './components/Layout/theme';
 
 export const Loader = styled('div')({
-  position: 'fixed',
-  display: 'flex',
-  justifyContent: 'center',
   alignItems: 'center',
-  width: '100vw',
+  backgroundColor: blissologyTheme.palette.primary.main,
+  display: 'flex',
   height: '100vh',
-  top: 0,
+  justifyContent: 'center',
   left: 0,
-  zIndex: 100000,
-  backgroundColor: blissologyTheme.palette.primary.main
+  position: 'fixed',
+  top: 0,
+  width: '100vw',
+  zIndex: 100000
 });

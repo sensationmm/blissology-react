@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import siteConfig from 'src/siteConfig';

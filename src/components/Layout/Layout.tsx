@@ -80,11 +80,11 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
           <Toolbar
             className="bliss"
             sx={{
-              width: '100%',
+                  alignItems: 'space-between',
+                  display: 'flex',
               minHeight: '100px',
-              display: 'flex',
-              alignItems: 'space-between',
-              pr: '36px' // keep right padding when drawer closed
+                  pr: '36px',
+                  width: '100%'
             }}>
             {isLoggedIn && (
               <IconButton
@@ -99,7 +99,7 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
                 <Icon iconKey="menu" />
               </IconButton>
             )}
-            <Grid container sx={{ justifyContent: weddingName ? 'flex-end' : 'flex-start', alignItems: 'center' }}>
+                <Grid container sx={{ alignItems: 'center', justifyContent: weddingName ? 'flex-end' : 'flex-start' }}>
               <Grid item>
                 <Typography variant="body1" color="inherit" noWrap sx={{ fontSize: '1.6rem', fontWeight: 400 }}>
                   {weddingName || siteConfig.siteTitle}
@@ -132,8 +132,8 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
           <Styled.Drawer className="bliss" variant="permanent" open={menuOpen}>
             <Toolbar
               sx={{
+                    alignItems: 'center',
                 display: 'flex',
-                alignItems: 'center',
                 justifyContent: 'flex-end',
                 px: [1]
               }}>

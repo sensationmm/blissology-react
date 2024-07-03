@@ -1,3 +1,4 @@
+/* eslint-disable sort-keys */
 import siteConfig from 'src/siteConfig';
 
 import { WPLoginReponse, WPValidateReponse } from 'src/types/wp-rest-api';
