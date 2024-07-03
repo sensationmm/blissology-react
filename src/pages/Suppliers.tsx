@@ -3,20 +3,10 @@ import { cloneDeep } from 'lodash';
 import { useSelector } from 'react-redux';
 import { object, string } from 'yup';
 
-import AddIcon from '@mui/icons-material/Add';
-import CakeIcon from '@mui/icons-material/Cake';
-import CameraAltIcon from '@mui/icons-material/CameraAlt';
-import CloseIcon from '@mui/icons-material/Close';
-import DinnerDiningIcon from '@mui/icons-material/DinnerDining';
-import LocalFloristIcon from '@mui/icons-material/LocalFlorist';
-import MusicNoteIcon from '@mui/icons-material/MusicNote';
-import PaletteIcon from '@mui/icons-material/Palette';
-import SupportAgentIcon from '@mui/icons-material/SupportAgent';
-import VideocamIcon from '@mui/icons-material/Videocam';
-import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton, SvgIconTypeMap } from '@mui/material';
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
 
+import Icons from 'src/config/icons';
 import store, { RootState } from 'src/store';
 import { ISupplier } from 'src/store/reducers/suppliers';
 
@@ -25,47 +15,12 @@ import { wpRestApiHandler } from 'src/api/wordpress';
 import AddCard from 'src/components/AddCard';
 import EditCard from 'src/components/EditCard';
 import FormField, { IFormConfig } from 'src/components/FormField';
+import Icon from 'src/components/Icon';
 import Layout from 'src/components/Layout/Layout';
 
 import { capitalize } from 'src/utils/common';
 import { formatSuppliersResponse, suppliersPayload } from 'src/utils/wordpress/supplier';
 import { getYupErrors } from 'src/utils/yup';
-
-export const SupplierIcons = (supplierType: string) => {
-  let Icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>>;
-  switch (supplierType) {
-    case 'photographer':
-      Icon = CameraAltIcon;
-      break;
-    case 'videographer':
-      Icon = VideocamIcon;
-      break;
-    case 'stylist':
-      Icon = PaletteIcon;
-      break;
-    case 'cakeMaker':
-      Icon = CakeIcon;
-      break;
-    case 'entertainment':
-      Icon = MusicNoteIcon;
-      break;
-    case 'caterer':
-      Icon = DinnerDiningIcon;
-      break;
-    case 'coordinator':
-      Icon = SupportAgentIcon;
-      break;
-    case 'florist':
-      Icon = LocalFloristIcon;
-      break;
-    case 'add':
-    default:
-      Icon = AddIcon;
-      break;
-  }
-
-  return <Icon color="tertiary" fontSize="inherit" />;
-};
 
 interface IEditSupplier extends ISupplier {
   isNew?: boolean;
@@ -245,6 +200,7 @@ const Suppliers = () => {
             <AddCard label="Add Supplier" onClick={() => setShowEdit(true)} />
           </Grid>
           {Object.values(Suppliers).map((supplier: ISupplier) => {
+            const Icon = Icons[supplier.type as keyof typeof Icons];
             return (
               <Grid key={`supplier-${supplier.contactEmail}`} item xs={4}>
                 <EditCard
@@ -257,7 +213,7 @@ const Suppliers = () => {
                     { text: '', isSmall: true }
                   ]}
                   subContent={supplier.notes !== '' ? [{ text: supplier.notes, isSmall: true }] : undefined}
-                  icon={SupplierIcons(supplier.type)}
+                  icon={<Icon color="tertiary" fontSize="inherit" />}
                   context="Supplier"
                   onEdit={() => handleEditSupplier(supplier)}
                   onDelete={() => deleteSupplier(supplier.id as number)}
@@ -279,7 +235,7 @@ const Suppliers = () => {
             top: 8,
             color: (theme) => theme.palette.grey[500]
           }}>
-          <CloseIcon />
+          <Icon iconKey="close" />
         </IconButton>
         <DialogContent>
           <Grid container spacing={2}>

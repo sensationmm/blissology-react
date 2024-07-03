@@ -3,8 +3,6 @@ import { formatDate } from 'date-fns';
 import { useSelector } from 'react-redux';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
-import { ChevronLeft as ChevronLeftIcon, Menu as MenuIcon, Notifications as NotificationsIcon } from '@mui/icons-material';
-import LogoutIcon from '@mui/icons-material/Logout';
 import { Alert, CircularProgress, Grid, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
@@ -21,6 +19,8 @@ import navigation from 'src/config/navigation';
 import siteConfig from 'src/siteConfig';
 import store, { RootState } from 'src/store';
 import { IWeddingDeadline } from 'src/store/reducers/wedding';
+
+import Icon from 'src/components/Icon';
 
 import { blissDate, wpDateToTimestamp } from 'src/utils/common';
 import { deleteCookie } from 'src/utils/cookie';
@@ -96,7 +96,7 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
                   marginRight: '36px',
                   ...(menuOpen && { display: 'none' })
                 }}>
-                <MenuIcon />
+                <Icon iconKey="menu" />
               </IconButton>
             )}
             <Grid container sx={{ justifyContent: weddingName ? 'flex-end' : 'flex-start', alignItems: 'center' }}>
@@ -115,12 +115,12 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
                 <Grid item sx={{ pl: '20px' }}>
                   <IconButton color="inherit">
                     <Badge badgeContent={4} color="secondary">
-                      <NotificationsIcon />
+                      <Icon iconKey="notification" />
                     </Badge>
                   </IconButton>
 
                   <IconButton color="inherit" onClick={logout}>
-                    <LogoutIcon />
+                    <Icon iconKey="logout" />
                   </IconButton>
                 </Grid>
               )}
@@ -138,7 +138,7 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
                 px: [1]
               }}>
               <IconButton onClick={toggleDrawer}>
-                <ChevronLeftIcon />
+                <Icon iconKey="back" />
               </IconButton>
             </Toolbar>
             <Divider />
@@ -147,7 +147,7 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
                 return (
                   <ListItemButton key={`nav-${count}`} onClick={() => navigate(item.url)} selected={location.pathname === item.url}>
                     <ListItemIcon>
-                      <item.icon />
+                      <Icon iconKey={item.icon} />
                     </ListItemIcon>
                     <ListItemText primary={item.label} />
                   </ListItemButton>

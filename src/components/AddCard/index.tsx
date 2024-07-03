@@ -1,6 +1,6 @@
 import { FC, useState } from 'react';
 
-import AddIcon from '@mui/icons-material/Add';
+import Icon from 'src/components/Icon';
 
 import * as Styled from './styles';
 
@@ -15,7 +15,7 @@ const AddCard: FC<IAddCard> = ({ label, onClick }) => {
   return (
     <Styled.Container onClick={onClick} onMouseEnter={() => setIsHovering(true)} onMouseLeave={() => setIsHovering(false)}>
       <Styled.CardIcon>
-        <AddIcon color={!isHovering ? 'secondary' : 'primary'} fontSize="inherit" />
+        <Icon iconKey="add" color={!isHovering ? 'secondary' : 'primary'} fontSize="inherit" />
       </Styled.CardIcon>
       <Styled.AddLabel variant="body1" color={!isHovering ? 'secondary' : 'primary'} sx={{}}>
         {label}

@@ -1,19 +1,13 @@
-import CameraEnhanceIcon from '@mui/icons-material/CameraEnhance';
-import DashboardIcon from '@mui/icons-material/Dashboard';
-import GroupsIcon from '@mui/icons-material/Groups';
-import HotelIcon from '@mui/icons-material/Hotel';
-import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
-import { SvgIconTypeMap } from '@mui/material';
-import { OverridableComponent } from '@mui/material/OverridableComponent';
-
 import Accommodation from 'src/pages/Accommodation';
 import Dashboard from 'src/pages/Dashboard';
 import Guests from 'src/pages/Guests';
 import Menu from 'src/pages/Menu';
 import Suppliers from 'src/pages/Suppliers';
 
+import { IIconKey } from 'src/components/Icon';
+
 export type INavigation = {
-  icon: OverridableComponent<SvgIconTypeMap<unknown, 'svg'>> & { muiName: string };
+  icon: IIconKey;
   label: string;
   url: string;
   Component: () => JSX.Element;
@@ -21,31 +15,31 @@ export type INavigation = {
 
 const navigation: INavigation[] = [
   {
-    icon: DashboardIcon,
+    icon: 'dashboard',
     label: 'Dashboard',
     url: '/dashboard',
     Component: Dashboard
   },
   {
-    icon: GroupsIcon,
+    icon: 'guests',
     label: 'Guests',
     url: '/guests',
     Component: Guests
   },
   {
-    icon: CameraEnhanceIcon,
+    icon: 'suppliers',
     label: 'Suppliers',
     url: '/suppliers',
     Component: Suppliers
   },
   {
-    icon: RestaurantMenuIcon,
+    icon: 'dining',
     label: 'Menu',
     url: '/menu',
     Component: Menu
   },
   {
-    icon: HotelIcon,
+    icon: 'accommodation',
     label: 'Accommodation',
     url: '/accommodation',
     Component: Accommodation
