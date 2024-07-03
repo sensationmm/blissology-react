@@ -12,6 +12,8 @@ import store, { RootState } from 'src/store';
 import Login from 'src/pages/Login';
 import AuthClass from 'src/api/Auth';
 
+import SnackbarProvider from 'src/components/Snackbar';
+
 import { readCookie } from 'src/utils/cookie';
 import { blissologyTheme } from 'src/utils/theme';
 
@@ -92,14 +94,16 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={blissologyTheme}>
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Login />} />
-        {navigation.map((item) => (
-          <Route key={`route-${item.url}`} path={item.url} element={<item.Component />} />
-        ))}
-      </Routes>
-    </BrowserRouter>
+      <SnackbarProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            {navigation.map((item) => (
+              <Route key={`route-${item.url}`} path={item.url} element={<item.Component />} />
+            ))}
+          </Routes>
+        </BrowserRouter>
+      </SnackbarProvider>
     </ThemeProvider>
   );
 };

@@ -14,6 +14,7 @@ import Actions from 'src/components/Actions/Actions';
 import Layout from 'src/components/Layout/Layout';
 import ReduxTextField from 'src/components/ReduxTextField';
 
+import { useSnackbar } from 'src/hooks/useSnackbar';
 import { capitalize } from 'src/utils/common';
 import { weddingGuestsPayload } from 'src/utils/wordpress/wedding';
 
@@ -26,6 +27,7 @@ const Guests = () => {
   const { userID, token } = useSelector(authState);
   const { weddingID } = useSelector(weddingState);
   const [resetGuests, setResetGuests] = useState<RootState['guests']>();
+  const [openSnackbar] = useSnackbar();
 
   if (userID === null) {
     return <CircularProgress />;
@@ -51,6 +53,7 @@ const Guests = () => {
       payload: { isLoading: true },
       type: 'ui/setLoading'
     });
+
     wpRestApiHandler(
       `wedding/${weddingID}`,
       {
@@ -60,20 +63,21 @@ const Guests = () => {
       },
       'POST',
       token
-    )
-      .then((resp) => {
-        if (resp.ok) {
-          return resp.json();
-        }
+    ).then(async (resp) => {
+      const respJson = await resp.json();
 
-        return false;
-      })
-      .then(() => {
-        store.dispatch({
-          payload: { isLoading: false },
-          type: 'ui/setLoading'
-        });
+      store.dispatch({
+        payload: { isLoading: false },
+        type: 'ui/setLoading'
       });
+
+      if (!respJson.data?.status) {
+        openSnackbar('Guest numbers updated');
+        return respJson;
+      } else {
+        openSnackbar(respJson.message, 'error');
+      }
+    });
   };
 
   const resetGuestNumbers = () => {
