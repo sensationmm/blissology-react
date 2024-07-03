@@ -22,25 +22,25 @@ import VideocamIcon from '@mui/icons-material/Videocam';
 import { SvgIconProps } from '@mui/material';
 
 const Icons = {
-  photographer: CameraAltIcon,
-  videographer: VideocamIcon,
-  stylist: PaletteIcon,
-  cakeMaker: CakeIcon,
-  entertainment: MusicNoteIcon,
-  caterer: DinnerDiningIcon,
-  coordinator: SupportAgentIcon,
-  florist: LocalFloristIcon,
-  add: AddIcon,
-  close: CloseIcon,
-  dashboard: DashboardIcon,
-  guests: GroupsIcon,
-  suppliers: CameraEnhanceIcon,
-  menu: RestaurantMenuIcon,
   accommodation: HotelIcon,
+  add: AddIcon,
+  back: ChevronLeftIcon,
+  cakeMaker: CakeIcon,
+  caterer: DinnerDiningIcon,
+  close: CloseIcon,
+  coordinator: SupportAgentIcon,
+  dashboard: DashboardIcon,
   dining: MenuIcon,
-  notification: NotificationsIcon,
+  entertainment: MusicNoteIcon,
+  florist: LocalFloristIcon,
+  guests: GroupsIcon,
   logout: LogoutIcon,
-  back: ChevronLeftIcon
+  menu: RestaurantMenuIcon,
+  notification: NotificationsIcon,
+  photographer: CameraAltIcon,
+  stylist: PaletteIcon,
+  suppliers: CameraEnhanceIcon,
+  videographer: VideocamIcon
 };
 
 export type IIconKey = keyof typeof Icons;
