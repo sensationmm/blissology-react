@@ -8,10 +8,10 @@ import weddingReducer from './reducers/wedding';
 
 const store = configureStore({
   reducer: {
-    ui: uiReducer,
     auth: authReducer,
     guests: guestsReducer,
     suppliers: suppliersReducer,
+    ui: uiReducer,
     wedding: weddingReducer
   }
 });

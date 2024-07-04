@@ -15,34 +15,34 @@ export type INavigation = {
 
 const navigation: INavigation[] = [
   {
+    Component: Dashboard,
     icon: 'dashboard',
     label: 'Dashboard',
-    url: '/dashboard',
-    Component: Dashboard
+    url: '/dashboard'
   },
   {
+    Component: Guests,
     icon: 'guests',
     label: 'Guests',
-    url: '/guests',
-    Component: Guests
+    url: '/guests'
   },
   {
+    Component: Suppliers,
     icon: 'suppliers',
     label: 'Suppliers',
-    url: '/suppliers',
-    Component: Suppliers
+    url: '/suppliers'
   },
   {
+    Component: Menu,
     icon: 'dining',
     label: 'Menu',
-    url: '/menu',
-    Component: Menu
+    url: '/menu'
   },
   {
+    Component: Accommodation,
     icon: 'accommodation',
     label: 'Accommodation',
-    url: '/accommodation',
-    Component: Accommodation
+    url: '/accommodation'
   }
 ];
 

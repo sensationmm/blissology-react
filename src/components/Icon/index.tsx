@@ -4,6 +4,8 @@ import AddIcon from '@mui/icons-material/Add';
 import CakeIcon from '@mui/icons-material/Cake';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CameraEnhanceIcon from '@mui/icons-material/CameraEnhance';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import CloseIcon from '@mui/icons-material/Close';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -30,16 +32,18 @@ const Icons = {
   close: CloseIcon,
   coordinator: SupportAgentIcon,
   dashboard: DashboardIcon,
-  dining: MenuIcon,
+  dining: RestaurantMenuIcon,
   entertainment: MusicNoteIcon,
   florist: LocalFloristIcon,
   guests: GroupsIcon,
   logout: LogoutIcon,
-  menu: RestaurantMenuIcon,
+  menu: MenuIcon,
   notification: NotificationsIcon,
   photographer: CameraAltIcon,
+  selected: CheckBoxIcon,
   stylist: PaletteIcon,
   suppliers: CameraEnhanceIcon,
+  unselected: CheckBoxOutlineBlankIcon,
   videographer: VideocamIcon
 };
 
