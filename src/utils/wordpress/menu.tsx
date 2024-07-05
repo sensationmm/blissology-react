@@ -18,7 +18,7 @@ export const formatMenuItems = (menuItems: WPDiningChoices): IMenu => {
   const menuDinnerDessert: IMenuItem[] = [];
 
   menuItems.forEach((item) => {
-    const categories: IMenuItem['category'] = item._embedded['wp:term'].map((catList) => catList.map((cat) => cat.name)).flat();
+    const categories: IMenuItem['category'] = item._embedded ? item._embedded['wp:term']?.map((catList) => catList.map((cat) => cat.name)).flat() : [];
     const newMenuItem: IMenuItem = {
       category: categories,
       description: item.acf.description as string,
