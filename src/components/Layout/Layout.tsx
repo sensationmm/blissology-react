@@ -3,7 +3,7 @@ import { formatDate } from 'date-fns';
 import { useSelector } from 'react-redux';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 
-import { Alert, CircularProgress, Grid, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { Alert, Button, ButtonProps, CircularProgress, Grid, ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 import Badge from '@mui/material/Badge';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -26,12 +26,17 @@ import { deleteCookie } from 'src/utils/cookie';
 
 import * as Styled from './styles';
 
-type LayoutProps = {
+export interface ILayoutAction extends ButtonProps {
+  label: string;
+}
+
+type ILayoutProps = {
   title?: string;
   children: JSX.Element | JSX.Element[];
+  actions?: ILayoutAction[];
 };
 
-const Layout: FC<LayoutProps> = ({ title, children }) => {
+const Layout: FC<ILayoutProps> = ({ title, children, actions }) => {
   const uiState = (state: RootState['ui']) => state.ui;
   const authState = (state: RootState['auth']) => state.auth;
   const weddingState = (state: RootState['wedding']) => state.wedding;
@@ -63,7 +68,7 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
 
     return (
       nextDeadline.length > 0 && (
-        <Alert severity="info">
+        <Alert severity="info" className="condensed">
           {nextDeadline[0].name} due {blissDate(nextDeadline[0].date)}
         </Alert>
       )
@@ -165,13 +170,20 @@ const Layout: FC<LayoutProps> = ({ title, children }) => {
             overflow: 'auto'
           }}>
           <Toolbar />
-          <Container sx={{ my: 4, px: [4] }}>
+          <Container sx={{ my: 4 }}>
             {title && (
               <Styled.HeaderBar>
-                <>
-                  <Typography variant="h1">{title}</Typography>
-                  {getAlert()}
-                </>
+                <Typography variant="h1">{title}</Typography>
+                <Grid container spacing={2} sx={{ width: 'auto' }}>
+                  <Grid item>{getAlert()}</Grid>
+                  {actions?.map(({ label, ...rest }, count) => (
+                    <Grid item key={`action-${count}`}>
+                      <Button variant="contained" {...rest}>
+                        {label}
+                      </Button>
+                    </Grid>
+                  ))}
+                </Grid>
               </Styled.HeaderBar>
             )}
             {children}

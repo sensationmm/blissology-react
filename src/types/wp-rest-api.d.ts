@@ -22,3 +22,22 @@ export type WPAuthErrorResponse = {
   };
   message: string;
 };
+
+export type WPTerm = {
+  id: number;
+  name: string;
+  taxonomy: string;
+}
+
+export type WPPost = {
+  id: number;
+  title: {
+    rendered: string;
+  };
+  _embedded: {
+    'wp:term': Array<WPTerm[]>;
+  };
+  acf: {
+    [key:string]: string | Array<string|number>;
+  }
+}

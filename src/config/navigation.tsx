@@ -27,16 +27,16 @@ const navigation: INavigation[] = [
     url: '/guests'
   },
   {
-    Component: Suppliers,
-    icon: 'suppliers',
-    label: 'Suppliers',
-    url: '/suppliers'
-  },
-  {
     Component: Menu,
     icon: 'dining',
     label: 'Menu',
     url: '/menu'
+  },
+  {
+    Component: Suppliers,
+    icon: 'suppliers',
+    label: 'Suppliers',
+    url: '/suppliers'
   },
   {
     Component: Accommodation,

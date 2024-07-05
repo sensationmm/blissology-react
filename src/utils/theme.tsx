@@ -10,11 +10,12 @@ const palette = {
     main: siteConfig.colorPalette.secondary
   },
   tertiary: {
+    light: '#dfdfdf',
     main: '#c4c4c4'
   }
 };
 
-export const blissologyTheme = createTheme({
+const initialThemeSetup = createTheme({
   palette: palette,
   typography: {
     h1: {
@@ -26,13 +27,26 @@ export const blissologyTheme = createTheme({
       color: palette.secondary.main,
       fontSize: '2rem',
       fontWeight: 400
+    },
+    h3: {
+      color: palette.secondary.main,
+      fontSize: '1.4rem',
+      fontWeight: 400
     }
-  },
+  }
+});
+
+export const blissologyTheme = createTheme({
+  ...initialThemeSetup,
   // eslint-disable-next-line sort-keys
   components: {
     MuiAlert: {
       styleOverrides: {
         root: {
+          '&.condensed': {
+            paddingBottom: 0,
+            paddingTop: '1px'
+          },
           fontWeight: 'bold'
         },
         standardInfo: {
@@ -44,10 +58,34 @@ export const blissologyTheme = createTheme({
         }
       }
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          boxShadow: 'none',
+          fontWeight: 600
+        }
+      }
+    },
     MuiCard: {
       styleOverrides: {
         root: {
+          backgroundColor: '#ffffff',
+          borderTop: `4px solid ${initialThemeSetup.palette.primary.main}`,
           padding: '15px'
+        }
+      }
+    },
+    MuiContainer: {
+      styleOverrides: {
+        root: {
+          position: 'relative'
+        }
+      }
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        '.MuiBox-root': {
+          width: '100%'
         }
       }
     },
@@ -103,8 +141,36 @@ export const blissologyTheme = createTheme({
               display: 'flex',
               justifyItems: 'stretch',
               position: 'relative'
+            },
+            '> div': {
+              width: '100%'
+            },
+            '> div > div > .MuiBox-root': {
+              padding: '36px 0 0 18px'
             }
           }
+        }
+      }
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          fontWeight: 600
+        }
+      }
+    },
+    MuiTabs: {
+      styleOverrides: {
+        root: {
+          '&.secondLevel': {
+            background: initialThemeSetup.palette.tertiary.light
+          },
+          background: initialThemeSetup.palette.tertiary.main,
+          boxSizing: 'content-box',
+          // marginLeft: '-20px',
+          // marginRight: '-40px',
+          // paddingLeft: '40px',
+          width: '100%'
         }
       }
     },

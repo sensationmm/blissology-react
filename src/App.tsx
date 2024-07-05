@@ -17,6 +17,7 @@ import SnackbarProvider from 'src/components/Snackbar';
 import { readCookie } from 'src/utils/cookie';
 import { blissologyTheme } from 'src/utils/theme';
 
+import { formatDiningChoicesResponse } from './utils/wordpress/dining';
 import { formatSuppliersResponse } from './utils/wordpress/supplier';
 import { formatWeddingGuestsResponse } from './utils/wordpress/wedding';
 
@@ -56,6 +57,11 @@ const App: React.FC = () => {
     store.dispatch({
       payload: formatSuppliersResponse(wedding[0]?.acf?.suppliers),
       type: 'suppliers/set'
+    });
+
+    store.dispatch({
+      payload: formatDiningChoicesResponse(wedding[0]?.acf?.dining),
+      type: 'dining/set'
     });
   };
 
