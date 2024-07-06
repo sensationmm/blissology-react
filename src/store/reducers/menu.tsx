@@ -17,6 +17,12 @@ export type IMenu = {
     starter: IMenuItem[];
   };
   evening: IMenuItem[];
+  kids: {
+    dessert: IMenuItem[];
+    main: IMenuItem[];
+    reception: IMenuItem[];
+    starter: IMenuItem[];
+  };
   reception: IMenuItem[];
 };
 
@@ -27,6 +33,12 @@ export const initialState: IMenu = {
     starter: []
   },
   evening: [],
+  kids: {
+    dessert: [],
+    main: [],
+    reception: [],
+    starter: []
+  },
   reception: []
 };
 

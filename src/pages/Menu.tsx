@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
 import { useSelector } from 'react-redux';
 
-import { CircularProgress, Tab, Tabs } from '@mui/material';
+import { Tab, Tabs } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
 import store, { RootState } from 'src/store';
@@ -26,6 +26,8 @@ const Menu = () => {
   const authState = (state: RootState['auth']) => state.auth;
   const menuState = (state: RootState['menu']) => state.menu;
   const diningState = (state: RootState['menu']) => state.dining;
+  const uiState = (state: RootState['ui']) => state.ui;
+  const { isLoading } = useSelector(uiState);
   const { token } = useSelector(authState);
   const Menu = useSelector(menuState);
   const Dining = useSelector(diningState);
@@ -34,6 +36,10 @@ const Menu = () => {
   const [activeTab2, setActiveTab2] = useState<number>(0);
 
   useEffect(() => {
+    store.dispatch({
+      payload: { isLoading: true },
+      type: 'ui/setLoading'
+    });
     if (Menu === emptyMenuState && !!token) {
       wpRestApiHandler(`menu?_embed=wp:term&_fields=id,title,_links,_embedded,acf&acf_format=standard&per_page=100&orderby=title&order=asc`, undefined, 'GET', token).then(
         async (resp) => {
@@ -41,9 +47,13 @@ const Menu = () => {
 
           const dispatchPayload = formatMenuItems(respJson);
 
-          store.dispatch({
+          await store.dispatch({
             payload: dispatchPayload,
             type: 'menu/set'
+          });
+          store.dispatch({
+            payload: { isLoading: false },
+            type: 'ui/setLoading'
           });
         }
       );
@@ -83,9 +93,10 @@ const Menu = () => {
 
   const renderSecondLevelMenu = (type: string) => {
     const secondLevelSetup: IMenuSetup[] = [];
-    Menu[type].starter.length > 0 && secondLevelSetup.push({ id: 'starter', label: 'Starter Options' });
-    Menu[type].main.length > 0 && secondLevelSetup.push({ id: 'main', label: 'Main Course Options' });
-    Menu[type].dessert.length > 0 && secondLevelSetup.push({ id: 'dessert', label: 'Dessert Options' });
+    Menu[type].reception?.length > 0 && secondLevelSetup.push({ id: 'reception', label: 'Reception' });
+    Menu[type].starter.length > 0 && secondLevelSetup.push({ id: 'starter', label: 'Starter' });
+    Menu[type].main.length > 0 && secondLevelSetup.push({ id: 'main', label: 'Main Course' });
+    Menu[type].dessert.length > 0 && secondLevelSetup.push({ id: 'dessert', label: 'Dessert' });
 
     return renderMenu(secondLevelSetup, activeTab2, setActiveTab2, type);
   };
@@ -103,7 +114,7 @@ const Menu = () => {
           <div>
             {setup.map((m, count) => (
               <TabPanel key={`tab-content-${count}`} value={active} index={count}>
-                {m.id !== 'dinner' ? renderMenuItems(list[m.id], m.id) : renderSecondLevelMenu(m.id)}
+                {list[m.id]?.length !== undefined ? renderMenuItems(list[m.id], m.id) : renderSecondLevelMenu(m.id)}
               </TabPanel>
             ))}
           </div>
@@ -121,7 +132,7 @@ const Menu = () => {
               <Grid item xs={4} key={`menu-${type}-${index}`}>
                 <ListCard
                   title={menuItem.name}
-                  content={[menuItem.description, menuItem?.dietary.length > 0 ? <DietaryInfo key={'content-diets'} diets={menuItem?.dietary} /> : <></>]}
+                  content={[menuItem.description, <DietaryInfo key={'content-diets'} diets={menuItem?.dietary} />]}
                   image={menuItem.image}
                   selected={Dining[type].includes(menuItem.id)}
                   onSelect={() => onSelect(menuItem.id, type)}
@@ -137,14 +148,11 @@ const Menu = () => {
 
   const isEdited = JSON.stringify(Dining) !== JSON.stringify(resetDining);
 
-  if (!Menu || !Dining) {
-    return <CircularProgress />;
-  }
-
   const menuSetup: IMenuSetup[] = [];
   Menu.reception.length > 0 && menuSetup.push({ id: 'reception', label: 'Reception Options' });
   Object.values(Menu.dinner).flat().length > 0 && menuSetup.push({ id: 'dinner', label: 'Dinner Options' });
   Menu.evening.length > 0 && menuSetup.push({ id: 'evening', label: 'Evening Options' });
+  Object.values(Menu.kids).flat().length > 0 && menuSetup.push({ id: 'kids', label: 'Kids Options' });
 
   return (
     <Layout
@@ -153,7 +161,7 @@ const Menu = () => {
         { color: 'secondary', disabled: !isEdited, label: 'Reset', onClick: onResetChoices },
         { disabled: !isEdited, label: 'Save', onClick: onSaveChoices }
       ]}>
-      {renderMenu(menuSetup, activeTab, setActiveTab)}
+      {!isLoading ? renderMenu(menuSetup, activeTab, setActiveTab) : <></>}
     </Layout>
   );
 };

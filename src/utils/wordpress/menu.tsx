@@ -16,6 +16,10 @@ export const formatMenuItems = (menuItems: WPDiningChoices): IMenu => {
   const menuDinnerStarter: IMenuItem[] = [];
   const menuDinnerMain: IMenuItem[] = [];
   const menuDinnerDessert: IMenuItem[] = [];
+  const menuKidsStarter: IMenuItem[] = [];
+  const menuKidsMain: IMenuItem[] = [];
+  const menuKidsDessert: IMenuItem[] = [];
+  const menuKidsReception: IMenuItem[] = [];
 
   menuItems.forEach((item) => {
     const categories: IMenuItem['category'] = item._embedded ? item._embedded['wp:term']?.map((catList) => catList.map((cat) => cat.name)).flat() : [];
@@ -40,6 +44,16 @@ export const formatMenuItems = (menuItems: WPDiningChoices): IMenu => {
       }
     } else if (categories.includes('Canapes')) {
       menuReception.push(newMenuItem);
+    } else if (categories.includes('Kids Menu')) {
+      if (categories.includes('Dessert')) {
+        menuKidsDessert.push(newMenuItem);
+      } else if (categories.includes('Main Course')) {
+        menuKidsMain.push(newMenuItem);
+      } else if (categories.includes('Starter')) {
+        menuKidsStarter.push(newMenuItem);
+      } else if (categories.includes('Reception')) {
+        menuKidsReception.push(newMenuItem);
+      }
     }
   });
 
@@ -50,6 +64,12 @@ export const formatMenuItems = (menuItems: WPDiningChoices): IMenu => {
       starter: menuDinnerStarter
     },
     evening: menuEvening,
+    kids: {
+      dessert: menuKidsDessert,
+      main: menuKidsMain,
+      reception: menuKidsReception,
+      starter: menuKidsStarter
+    },
     reception: menuReception
   };
 };

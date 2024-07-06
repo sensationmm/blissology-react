@@ -9,6 +9,7 @@ type IDietaryInfo = {
 };
 
 const DietaryInfo: FC<IDietaryInfo> = ({ diets }) => {
+  if (diets.length === 0) return <></>;
   return (
     <Styled.Diets>
       {diets
