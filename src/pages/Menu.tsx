@@ -121,7 +121,7 @@ const Menu = () => {
               <Grid item xs={4} key={`menu-${type}-${index}`}>
                 <ListCard
                   title={menuItem.name}
-                  content={[menuItem.description, <DietaryInfo key={'content-diets'} diets={menuItem?.dietary} />]}
+                  content={[menuItem.description, menuItem?.dietary.length > 0 ? <DietaryInfo key={'content-diets'} diets={menuItem?.dietary} /> : <></>]}
                   image={menuItem.image}
                   selected={Dining[type].includes(menuItem.id)}
                   onSelect={() => onSelect(menuItem.id, type)}
