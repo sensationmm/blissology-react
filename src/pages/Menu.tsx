@@ -36,11 +36,11 @@ const Menu = () => {
   const [activeTab2, setActiveTab2] = useState<number>(0);
 
   useEffect(() => {
-    store.dispatch({
-      payload: { isLoading: true },
-      type: 'ui/setLoading'
-    });
     if (Menu === emptyMenuState && !!token) {
+      store.dispatch({
+        payload: { isLoading: true },
+        type: 'ui/setLoading'
+      });
       wpRestApiHandler(`menu?_embed=wp:term&_fields=id,title,_links,_embedded,acf&acf_format=standard&per_page=100&orderby=title&order=asc`, undefined, 'GET', token).then(
         async (resp) => {
           const respJson = await resp.json();

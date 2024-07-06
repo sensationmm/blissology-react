@@ -16,8 +16,10 @@ type IAddCard = {
 };
 
 const ListCard: FC<IAddCard> = ({ title, content, image, selected = undefined, sx = {}, onSelect = undefined }) => {
+  const paddingRight = image ? '40%' : selected !== undefined ? '35px' : 0;
+
   return (
-    <Styled.Card sx={{ paddingRight: selected !== undefined ? '35px' : 0, ...sx }}>
+    <Styled.Card sx={{ paddingRight: paddingRight, ...sx }}>
       <Styled.Typography component="h2" variant="h3" sx={{ mb: '10px' }}>
         {title}
       </Styled.Typography>
@@ -33,11 +35,13 @@ const ListCard: FC<IAddCard> = ({ title, content, image, selected = undefined, s
             item
           )
         )}
+
       {selected !== undefined && (
         <Styled.SelectedIcon onClick={onSelect}>
           <Icon iconKey={selected ? 'selected' : 'unselected'} color="primary" />
         </Styled.SelectedIcon>
       )}
+
       {image && (
         <Styled.Image>
           <img src={image} />
