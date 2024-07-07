@@ -10,6 +10,7 @@ const palette = {
     main: siteConfig.colorPalette.secondary
   },
   tertiary: {
+    dark: '#aaaaaa',
     light: '#dfdfdf',
     main: '#c4c4c4'
   }
@@ -171,6 +172,27 @@ export const blissologyTheme = createTheme({
           // marginRight: '-40px',
           // paddingLeft: '40px',
           width: '100%'
+        }
+      }
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            '&:hover': {
+              background: initialThemeSetup.palette.secondary.main
+            },
+            background: initialThemeSetup.palette.primary.main,
+            color: '#fff'
+          },
+          '&:hover': {
+            background: initialThemeSetup.palette.secondary.main
+          },
+          background: initialThemeSetup.palette.tertiary.light,
+          borderColor: `${initialThemeSetup.palette.tertiary.dark} !important`,
+          borderTopWidth: '1px',
+          fontWeight: 600,
+          padding: '5px 20px'
         }
       }
     },

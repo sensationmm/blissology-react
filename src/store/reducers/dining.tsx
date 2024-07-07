@@ -3,11 +3,11 @@ export type IDiningChoices = Array<number>;
 
 export type IDining = {
   dessert: IDiningChoices;
-  starter: IDiningChoices;
-  main: IDiningChoices;
   dinner: IDiningChoices;
   evening: IDiningChoices;
+  main: IDiningChoices;
   reception: IDiningChoices;
+  starter: IDiningChoices;
 };
 
 const initialState: IDining = {

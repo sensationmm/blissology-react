@@ -6,6 +6,7 @@ import { Tab, Tabs } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
 import store, { RootState } from 'src/store';
+import { IFilters } from 'src/store/reducers/filters';
 import { IMenuItem, initialState as emptyMenuState } from 'src/store/reducers/menu';
 
 import { wpRestApiHandler } from 'src/api/wordpress';
@@ -14,7 +15,9 @@ import DietaryInfo from 'src/components/DietaryInfo';
 import Layout from 'src/components/Layout/Layout';
 import ListCard from 'src/components/ListCard';
 import TabPanel from 'src/components/TabPanel';
+import ToggleFilter from 'src/components/ToggleFilter';
 
+import { blissologyTheme } from 'src/utils/theme';
 import { formatMenuItems } from 'src/utils/wordpress/menu';
 
 type IMenuSetup = {
@@ -24,8 +27,13 @@ type IMenuSetup = {
 
 const Menu = () => {
   const authState = (state: RootState['auth']) => state.auth;
-  const menuState = (state: RootState['menu']) => state.menu;
+  const { token } = useSelector(authState);
   const diningState = (state: RootState['menu']) => state.dining;
+  const Dining = useSelector(diningState);
+  const filtersState = (state: RootState) => state.filters;
+  const Filters: IFilters = useSelector(filtersState);
+  const menuState = (state: RootState['menu']) => state.menu;
+  const Menu = useSelector(menuState);
   const uiState = (state: RootState['ui']) => state.ui;
   const { isLoading } = useSelector(uiState);
   const { token } = useSelector(authState);
@@ -68,8 +76,8 @@ const Menu = () => {
     setActiveTab2(0);
   }, [activeTab]);
 
-  const onSelect = (itemID: number, type: string) => {
-    const currentChoices = Dining[type].slice();
+  const onSelect = (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string) => {
+    const currentChoices = stateObject[type].slice();
     if (currentChoices.includes(itemID)) {
       currentChoices.splice(currentChoices.indexOf(itemID), 1);
     } else {
@@ -78,7 +86,7 @@ const Menu = () => {
 
     store.dispatch({
       payload: { choices: currentChoices, type: type },
-      type: 'dining/update'
+      type: `${action}/update`
     });
   };
 
@@ -102,14 +110,38 @@ const Menu = () => {
   };
 
   const renderMenu = (setup: IMenuSetup[], active: number, setActive: (num: number) => void, topLevel?: string) => {
-    const list = topLevel !== undefined ? Menu[topLevel] : Menu;
+    const isTopLevel = topLevel === undefined;
+    const list = !isTopLevel ? Menu[topLevel] : Menu;
     return (
       <>
+        <div
+          style={{
+            alignItems: 'center',
+            background: blissologyTheme.palette.tertiary.main,
+            display: 'flex',
+            justifyContent: 'space-between',
+            paddingRight: isTopLevel ? '5px' : ''
+          }}>
         <Tabs value={active} onChange={(_, setTab) => setActive(setTab)} className={topLevel ? 'secondLevel' : ''}>
           {setup.map((m, count) => (
             <Tab key={`tab-button-${count}`} label={m.label} />
           ))}
         </Tabs>
+
+          {isTopLevel && (
+            <ToggleFilter
+              id="filter-diets"
+              value={Filters.diet}
+              onSelect={(value) => onSelect(value, 'diet', Filters, 'filters')}
+              options={[
+                { label: 'DF', value: 'df' },
+                { label: 'GF', value: 'gf' },
+                { label: 'V', value: 'v' },
+                { label: 'VE', value: 've' }
+              ]}
+            />
+          )}
+        </div>
         <Grid container spacing={2} className="cards">
           <div>
             {setup.map((m, count) => (
@@ -127,7 +159,12 @@ const Menu = () => {
     if (items.length > 0) {
       return (
         <Grid container spacing={2} className="cards">
-          {items.map((menuItem: IMenuItem, index: number) => {
+          {items
+            .slice()
+            .filter((item: IMenuItem) => {
+              return Filters.diet.length === 0 || item.dietary.filter((value) => Filters.diet.includes(value)).length > 0;
+            })
+            .map((menuItem: IMenuItem, index: number) => {
             return (
               <Grid item xs={4} key={`menu-${type}-${index}`}>
                 <ListCard
@@ -135,7 +172,7 @@ const Menu = () => {
                   content={[menuItem.description, <DietaryInfo key={'content-diets'} diets={menuItem?.dietary} />]}
                   image={menuItem.image}
                   selected={Dining[type].includes(menuItem.id)}
-                  onSelect={() => onSelect(menuItem.id, type)}
+                    onSelect={() => onSelect(menuItem.id, type, Dining, 'dining')}
                   sx={{ minHeight: '100px' }}
                 />
               </Grid>

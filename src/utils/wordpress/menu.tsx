@@ -29,7 +29,8 @@ export const formatMenuItems = (menuItems: WPDiningChoices): IMenu => {
       dietary: item.acf.dietary_information as IDiets[],
       id: item.id,
       image: item.acf.image as string,
-      name: item.title.rendered
+      name: item.title.rendered,
+      plating: item.acf.plating_type as string
     };
 
     if (categories.includes('Evening Menu')) {

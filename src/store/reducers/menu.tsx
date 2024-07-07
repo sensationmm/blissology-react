@@ -8,6 +8,7 @@ export type IMenuItem = {
   description: string;
   name: string;
   image: string;
+  plating: string;
 };
 
 export type IMenu = {

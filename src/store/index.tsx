@@ -2,6 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 
 import authReducer from './reducers/auth';
 import diningReducer from './reducers/dining';
+import filtersReducer from './reducers/filters';
 import guestsReducer from './reducers/guests';
 import menuReducer from './reducers/menu';
 import suppliersReducer from './reducers/suppliers';
@@ -12,6 +13,7 @@ const store = configureStore({
   reducer: {
     auth: authReducer,
     dining: diningReducer,
+    filters: filtersReducer,
     guests: guestsReducer,
     menu: menuReducer,
     suppliers: suppliersReducer,

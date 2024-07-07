@@ -5,16 +5,30 @@ export type WPChoice = {
 };
 
 export type WPDiningChoices = {
-  reception_canapes: WPChoice[];
+  evening: WPChoice[];
+  reception: WPChoice[];
+  dinner: {
+    dessert: WPChoice[];
+    main: WPChoice[];
+    starter: WPChoice[];
+  };
+  kids: {
+    dessert: WPChoice[];
+    main: WPChoice[];
+    reception: WPChoice[];
+    starter: WPChoice[];
+  };
 };
 
 export const formatDiningChoicesResponse = (dining: WPDiningChoices): IDining => {
   return {
-    dessert: [],
-    dinner: [],
-    evening: [],
-    main: [],
-    reception: dining.reception_canapes.map((choices) => choices.choice),
-    starter: []
+    dessert: dining.dinner?.dessert?.map((choices) => choices.choice) || [],
+    dinner: dining.dinner?.main?.map((choices) => choices.choice) || [],
+    evening: dining.evening?.map((choices) => choices.choice) || [],
+    main: dining.dinner?.main?.map((choices) => choices.choice) || [],
+    reception: dining.reception?.map((choices) => choices.choice) || [],
+    starter: dining.dinner?.starter?.map((choices) => choices.choice) || []
+  };
+};
   };
 };
