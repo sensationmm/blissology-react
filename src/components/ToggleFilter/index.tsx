@@ -13,7 +13,7 @@ type IToggleFilter = {
   label?: string;
   onSelect: (value: IToggleFilterItem['value']) => void;
   options: IToggleFilterItem[];
-  value: string[];
+  value: string | string[];
 };
 
 const ToggleFilter: FC<IToggleFilter> = ({ id, label = 'Filter by', onSelect, options, value }) => {

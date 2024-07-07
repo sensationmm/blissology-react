@@ -1,4 +1,4 @@
-import { IMenu, IMenuItem } from 'src/store/reducers/menu';
+import { IMenu, IMenuItem, IMenuItemPlating } from 'src/store/reducers/menu';
 
 import { IDiets } from 'src/components/DietaryInfo';
 
@@ -31,7 +31,7 @@ export const formatMenuItems = (menuItems: WPDiningChoices): IMenu => {
       id: item.id,
       image: item.acf.image as string,
       name: item.title.rendered,
-      plating: item.acf.plating_type as string
+      plating: item.acf.plating_type as IMenuItemPlating
     };
 
     if (categories.includes('Evening Menu')) {

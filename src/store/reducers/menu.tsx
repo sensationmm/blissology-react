@@ -1,6 +1,8 @@
 import { IDiets } from 'src/components/DietaryInfo';
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
+export type IMenuItemPlating = 'plated' | 'feasting';
+
 export type IMenuItem = {
   id: number;
   category: Array<string>;
@@ -8,7 +10,7 @@ export type IMenuItem = {
   description: string;
   name: string;
   image: string;
-  plating: string;
+  plating: IMenuItemPlating;
 };
 
 export type IMenu = {

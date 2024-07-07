@@ -7,7 +7,7 @@ import Grid from '@mui/material/Grid';
 
 import store, { RootState } from 'src/store';
 import { IFilters } from 'src/store/reducers/filters';
-import { IMenuItem, initialState as emptyMenuState } from 'src/store/reducers/menu';
+import { IMenuItem, IMenuItemPlating, initialState as emptyMenuState } from 'src/store/reducers/menu';
 
 import { wpRestApiHandler } from 'src/api/wordpress';
 
@@ -45,6 +45,7 @@ const Menu = () => {
   const [resetDining, setResetDining] = useState<RootState['dining']>();
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeTab2, setActiveTab2] = useState<number>(0);
+  const [filterPlating, setFilterPlating] = useState<IMenuItemPlating>('plated');
   const [openSnackbar] = useSnackbar();
 
   useEffect(() => {
@@ -133,6 +134,12 @@ const Menu = () => {
     });
   };
 
+  const onSetPlatingFilter = (newPlating: string) => {
+    if (newPlating !== null) {
+      setFilterPlating(newPlating as IMenuItemPlating);
+    }
+  };
+
   const renderSecondLevelMenu = (type: string) => {
     const secondLevelSetup: IMenuSetup[] = [];
     Menu[type].reception?.length > 0 && secondLevelSetup.push({ id: 'reception', label: 'Reception' });
@@ -152,7 +159,7 @@ const Menu = () => {
         <div
           style={{
             alignItems: 'center',
-            background: blissologyTheme.palette.tertiary.main,
+            background: isTopLevel ? blissologyTheme.palette.tertiary.main : blissologyTheme.palette.tertiary.light,
             display: 'flex',
             justifyContent: 'space-between',
             paddingRight: isTopLevel ? '5px' : ''
@@ -163,7 +170,7 @@ const Menu = () => {
             ))}
           </Tabs>
 
-          {isTopLevel && (
+          {isTopLevel ? (
             <ToggleFilter
               id="filter-diets"
               value={Filters.diet}
@@ -175,6 +182,19 @@ const Menu = () => {
                 { label: 'VE', value: 've' }
               ]}
             />
+          ) : (
+            topLevel === 'dinner' && (
+              <ToggleFilter
+                id="filter-plating"
+                label="Show"
+                value={filterPlating}
+                onSelect={onSetPlatingFilter}
+                options={[
+                  { label: 'Plated', value: 'plated' },
+                  { label: 'Feasting', value: 'feasting' }
+                ]}
+              />
+            )
           )}
         </div>
         <Grid container spacing={2} className="cards">
@@ -193,7 +213,7 @@ const Menu = () => {
   const renderMenuItems = (items: IMenuItem[], type: string) => {
     if (items.length > 0) {
       const filteredItems = items.slice().filter((item: IMenuItem) => {
-        return Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value));
+        return (Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) && (!item.plating || item.plating === filterPlating);
       });
       if (filteredItems.length > 0) {
         return (
