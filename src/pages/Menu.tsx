@@ -12,6 +12,7 @@ import { IMenuItem, initialState as emptyMenuState } from 'src/store/reducers/me
 import { wpRestApiHandler } from 'src/api/wordpress';
 
 import DietaryInfo from 'src/components/DietaryInfo';
+import EmptyCard from 'src/components/EmptyCard';
 import Layout from 'src/components/Layout/Layout';
 import ListCard from 'src/components/ListCard';
 import TabPanel from 'src/components/TabPanel';
@@ -191,14 +192,13 @@ const Menu = () => {
 
   const renderMenuItems = (items: IMenuItem[], type: string) => {
     if (items.length > 0) {
-      return (
-        <Grid container spacing={2} className="cards">
-          {items
-            .slice()
-            .filter((item: IMenuItem) => {
-              return Filters.diet.length === 0 || item.dietary.filter((value) => Filters.diet.includes(value)).length > 0;
-            })
-            .map((menuItem: IMenuItem, index: number) => {
+      const filteredItems = items.slice().filter((item: IMenuItem) => {
+        return Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value));
+      });
+      if (filteredItems.length > 0) {
+        return (
+          <Grid container spacing={2} className="cards">
+            {filteredItems.map((menuItem: IMenuItem, index: number) => {
               return (
                 <Grid item xs={4} key={`menu-${type}-${index}`}>
                   <ListCard
@@ -212,8 +212,11 @@ const Menu = () => {
                 </Grid>
               );
             })}
-        </Grid>
-      );
+          </Grid>
+        );
+      } else {
+        return <EmptyCard />;
+      }
     }
   };
 
