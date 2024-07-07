@@ -135,9 +135,10 @@ const Menu = () => {
   const renderSecondLevelMenu = (type: string) => {
     const secondLevelSetup: IMenuSetup[] = [];
     Menu[type].reception?.length > 0 && secondLevelSetup.push({ id: 'reception', label: 'Reception' });
-    Menu[type].starter.length > 0 && secondLevelSetup.push({ id: 'starter', label: 'Starter' });
-    Menu[type].main.length > 0 && secondLevelSetup.push({ id: 'main', label: 'Main Course' });
-    Menu[type].dessert.length > 0 && secondLevelSetup.push({ id: 'dessert', label: 'Dessert' });
+    Menu[type].starter?.length > 0 && secondLevelSetup.push({ id: 'starter', label: 'Starter' });
+    Menu[type].main?.length > 0 && secondLevelSetup.push({ id: 'main', label: 'Main Course' });
+    Menu[type].sides?.length > 0 && secondLevelSetup.push({ id: 'sides', label: 'Side Dishes' });
+    Menu[type].dessert?.length > 0 && secondLevelSetup.push({ id: 'dessert', label: 'Dessert' });
 
     return renderMenu(secondLevelSetup, activeTab2, setActiveTab2, type);
   };

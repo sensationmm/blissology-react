@@ -15,6 +15,7 @@ export const formatMenuItems = (menuItems: WPDiningChoices): IMenu => {
   const menuEvening: IMenuItem[] = [];
   const menuDinnerStarter: IMenuItem[] = [];
   const menuDinnerMain: IMenuItem[] = [];
+  const menuDinnerSides: IMenuItem[] = [];
   const menuDinnerDessert: IMenuItem[] = [];
   const menuKidsStarter: IMenuItem[] = [];
   const menuKidsMain: IMenuItem[] = [];
@@ -42,6 +43,8 @@ export const formatMenuItems = (menuItems: WPDiningChoices): IMenu => {
         menuDinnerMain.push(newMenuItem);
       } else if (categories.includes('Starter')) {
         menuDinnerStarter.push(newMenuItem);
+      } else if (categories.includes('Sides')) {
+        menuDinnerSides.push(newMenuItem);
       }
     } else if (categories.includes('Canapes')) {
       menuReception.push(newMenuItem);
@@ -62,6 +65,7 @@ export const formatMenuItems = (menuItems: WPDiningChoices): IMenu => {
     dinner: {
       dessert: menuDinnerDessert,
       main: menuDinnerMain,
+      sides: menuDinnerSides,
       starter: menuDinnerStarter
     },
     evening: menuEvening,

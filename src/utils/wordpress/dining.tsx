@@ -10,6 +10,7 @@ export type WPDiningChoices = {
   dinner: {
     dessert: WPChoice[];
     main: WPChoice[];
+    sides: WPChoice[];
     starter: WPChoice[];
   };
   kids: {
@@ -27,6 +28,7 @@ export const formatDiningChoicesResponse = (dining: WPDiningChoices): IDining =>
     evening: dining.evening?.map((choices) => choices.choice) || [],
     main: dining.dinner?.main?.map((choices) => choices.choice) || [],
     reception: dining.reception?.map((choices) => choices.choice) || [],
+    sides: dining.dinner?.sides?.map((choices) => choices.choice) || [],
     starter: dining.dinner?.starter?.map((choices) => choices.choice) || []
   };
 };
@@ -36,6 +38,7 @@ export const diningChoicesPayload = (dining: IDining): WPDiningChoices => {
     dinner: {
       dessert: dining.dessert.map((choice) => ({ choice: choice })),
       main: dining.main.map((choice) => ({ choice: choice })),
+      sides: dining.sides.map((choice) => ({ choice: choice })),
       starter: dining.starter.map((choice) => ({ choice: choice }))
     },
     evening: dining.evening.map((choice) => ({ choice: choice })),

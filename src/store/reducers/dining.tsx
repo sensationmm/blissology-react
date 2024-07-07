@@ -7,6 +7,7 @@ export type IDining = {
   evening: IDiningChoices;
   main: IDiningChoices;
   reception: IDiningChoices;
+  sides: IDiningChoices;
   starter: IDiningChoices;
 };
 
@@ -16,6 +17,7 @@ const initialState: IDining = {
   evening: [],
   main: [],
   reception: [],
+  sides: [],
   starter: []
 };
 

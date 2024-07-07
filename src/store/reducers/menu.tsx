@@ -15,6 +15,7 @@ export type IMenu = {
   dinner: {
     dessert: IMenuItem[];
     main: IMenuItem[];
+    sides: IMenuItem[];
     starter: IMenuItem[];
   };
   evening: IMenuItem[];
@@ -31,6 +32,7 @@ export const initialState: IMenu = {
   dinner: {
     dessert: [],
     main: [],
+    sides: [],
     starter: []
   },
   evening: [],
