@@ -17,7 +17,9 @@ import ListCard from 'src/components/ListCard';
 import TabPanel from 'src/components/TabPanel';
 import ToggleFilter from 'src/components/ToggleFilter';
 
+import { useSnackbar } from 'src/hooks/useSnackbar';
 import { blissologyTheme } from 'src/utils/theme';
+import { diningChoicesPayload } from 'src/utils/wordpress/dining';
 import { formatMenuItems } from 'src/utils/wordpress/menu';
 
 type IMenuSetup = {
@@ -36,12 +38,13 @@ const Menu = () => {
   const Menu = useSelector(menuState);
   const uiState = (state: RootState['ui']) => state.ui;
   const { isLoading } = useSelector(uiState);
-  const { token } = useSelector(authState);
-  const Menu = useSelector(menuState);
-  const Dining = useSelector(diningState);
+  const weddingState = (state: RootState['wedding']) => state.wedding;
+  const { weddingID } = useSelector(weddingState);
+
   const [resetDining, setResetDining] = useState<RootState['dining']>();
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeTab2, setActiveTab2] = useState<number>(0);
+  const [openSnackbar] = useSnackbar();
 
   useEffect(() => {
     if (Menu === emptyMenuState && !!token) {
@@ -90,7 +93,37 @@ const Menu = () => {
     });
   };
 
-  const onSaveChoices = () => {};
+  const onSaveChoices = () => {
+    store.dispatch({
+      payload: { isLoading: true },
+      type: 'ui/setLoading'
+    });
+
+    wpRestApiHandler(
+      `wedding/${weddingID}`,
+      {
+        acf: {
+          dining: diningChoicesPayload(Dining)
+        }
+      },
+      'POST',
+      token
+    ).then(async (resp) => {
+      const respJson = await resp.json();
+
+      store.dispatch({
+        payload: { isLoading: false },
+        type: 'ui/setLoading'
+      });
+
+      if (!respJson.data?.status) {
+        openSnackbar('Dining choices updated');
+        return respJson;
+      } else {
+        openSnackbar(respJson.message, 'error');
+      }
+    });
+  };
 
   const onResetChoices = () => {
     store.dispatch({
@@ -122,11 +155,11 @@ const Menu = () => {
             justifyContent: 'space-between',
             paddingRight: isTopLevel ? '5px' : ''
           }}>
-        <Tabs value={active} onChange={(_, setTab) => setActive(setTab)} className={topLevel ? 'secondLevel' : ''}>
-          {setup.map((m, count) => (
-            <Tab key={`tab-button-${count}`} label={m.label} />
-          ))}
-        </Tabs>
+          <Tabs value={active} onChange={(_, setTab) => setActive(setTab)} className={topLevel ? 'secondLevel' : ''}>
+            {setup.map((m, count) => (
+              <Tab key={`tab-button-${count}`} label={m.label} />
+            ))}
+          </Tabs>
 
           {isTopLevel && (
             <ToggleFilter
@@ -165,19 +198,19 @@ const Menu = () => {
               return Filters.diet.length === 0 || item.dietary.filter((value) => Filters.diet.includes(value)).length > 0;
             })
             .map((menuItem: IMenuItem, index: number) => {
-            return (
-              <Grid item xs={4} key={`menu-${type}-${index}`}>
-                <ListCard
-                  title={menuItem.name}
-                  content={[menuItem.description, <DietaryInfo key={'content-diets'} diets={menuItem?.dietary} />]}
-                  image={menuItem.image}
-                  selected={Dining[type].includes(menuItem.id)}
+              return (
+                <Grid item xs={4} key={`menu-${type}-${index}`}>
+                  <ListCard
+                    title={menuItem.name}
+                    content={[menuItem.description, <DietaryInfo key={'content-diets'} diets={menuItem?.dietary} />]}
+                    image={menuItem.image}
+                    selected={Dining[type].includes(menuItem.id)}
                     onSelect={() => onSelect(menuItem.id, type, Dining, 'dining')}
-                  sx={{ minHeight: '100px' }}
-                />
-              </Grid>
-            );
-          })}
+                    sx={{ minHeight: '100px' }}
+                  />
+                </Grid>
+              );
+            })}
         </Grid>
       );
     }

@@ -30,5 +30,21 @@ export const formatDiningChoicesResponse = (dining: WPDiningChoices): IDining =>
     starter: dining.dinner?.starter?.map((choices) => choices.choice) || []
   };
 };
+
+export const diningChoicesPayload = (dining: IDining): WPDiningChoices => {
+  return {
+    dinner: {
+      dessert: dining.dessert.map((choice) => ({ choice: choice })),
+      main: dining.main.map((choice) => ({ choice: choice })),
+      starter: dining.starter.map((choice) => ({ choice: choice }))
+    },
+    evening: dining.evening.map((choice) => ({ choice: choice })),
+    kids: {
+      dessert: dining.dessert.map((choice) => ({ choice: choice })),
+      main: dining.main.map((choice) => ({ choice: choice })),
+      reception: dining.reception.map((choice) => ({ choice: choice })),
+      starter: dining.starter.map((choice) => ({ choice: choice }))
+    },
+    reception: dining.reception.map((choice) => ({ choice: choice }))
   };
 };
