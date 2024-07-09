@@ -15,6 +15,7 @@ import DietaryInfo from 'src/components/DietaryInfo';
 import EmptyCard from 'src/components/EmptyCard';
 import Layout from 'src/components/Layout/Layout';
 import ListCard from 'src/components/ListCard';
+import TabbedCards from 'src/components/TabbedCards';
 import TabPanel from 'src/components/TabPanel';
 import ToggleFilter from 'src/components/ToggleFilter';
 import UnsavedWarning from 'src/components/UnsavedWarning';
@@ -256,7 +257,48 @@ const Menu = () => {
         { color: 'secondary', disabled: !isEdited, label: 'Reset', onClick: onResetChoices },
         { disabled: !isEdited, label: 'Save', onClick: onSaveChoices }
       ]}>
-      {!isLoading ? renderMenu(menuSetup, activeTab, setActiveTab) : <></>}
+      {!isLoading ? (
+        <TabbedCards
+          topLevelFilter={
+            <ToggleFilter
+              id="filter-diets"
+              value={Filters.diet}
+              onSelect={(value) => onSelect(value, 'diet', Filters, 'filters')}
+              options={[
+                { label: 'DF', value: 'df' },
+                { label: 'GF', value: 'gf' },
+                { label: 'V', value: 'v' },
+                { label: 'VE', value: 've' }
+              ]}
+            />
+          }
+          filterValue2={filterPlating}
+          fliterValue2Type={typeof filterPlating}
+          secondLevelFilter={
+            <ToggleFilter
+              id="filter-plating"
+              label="Show"
+              value={filterPlating}
+              onSelect={onSetPlatingFilter}
+              options={[
+                { label: 'Plated', value: 'plated' },
+                { label: 'Feasting', value: 'feasting' }
+              ]}
+            />
+          }
+          tabsSetup={menuSetup}
+          activeTab={activeTab}
+          setActiveTab={setActiveTab}
+          activeTab2={activeTab2}
+          setActiveTab2={setActiveTab2}
+          onSelect={onSelect}
+          Filters={Filters}
+          Content={Menu}
+          SelectedContent={Dining}
+        />
+      ) : (
+        <></>
+      )}
       <UnsavedWarning isUnsaved={isEdited} onDiscard={onResetChoices} onSave={onSaveChoices} />
     </Layout>
   );
