@@ -17,6 +17,7 @@ import Layout from 'src/components/Layout/Layout';
 import ListCard from 'src/components/ListCard';
 import TabPanel from 'src/components/TabPanel';
 import ToggleFilter from 'src/components/ToggleFilter';
+import UnsavedWarning from 'src/components/UnsavedWarning';
 
 import { useSnackbar } from 'src/hooks/useSnackbar';
 import { blissologyTheme } from 'src/utils/theme';
@@ -256,6 +257,7 @@ const Menu = () => {
         { disabled: !isEdited, label: 'Save', onClick: onSaveChoices }
       ]}>
       {!isLoading ? renderMenu(menuSetup, activeTab, setActiveTab) : <></>}
+      <UnsavedWarning isUnsaved={isEdited} onDiscard={onResetChoices} onSave={onSaveChoices} />
     </Layout>
   );
 };

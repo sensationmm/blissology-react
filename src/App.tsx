@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
 import { CircularProgress } from '@mui/material';
 import { ThemeProvider } from '@mui/material/styles';
@@ -98,17 +98,12 @@ const App: React.FC = () => {
     );
   }
 
+  const router = createBrowserRouter([{ element: <Login />, path: '/' }].concat(navigation.map((item) => ({ element: <item.Component />, path: item.url }))));
+
   return (
     <ThemeProvider theme={blissologyTheme}>
       <SnackbarProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Login />} />
-            {navigation.map((item) => (
-              <Route key={`route-${item.url}`} path={item.url} element={<item.Component />} />
-            ))}
-          </Routes>
-        </BrowserRouter>
+        <RouterProvider router={router} />
       </SnackbarProvider>
     </ThemeProvider>
   );
