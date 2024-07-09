@@ -56,8 +56,7 @@ const Menu = () => {
         payload: { isLoading: true },
         type: 'ui/setLoading'
       });
-      wpRestApiHandler(`menu?_embed=wp:term&_fields=id,title,_links,_embedded,acf&acf_format=standard&per_page=100&orderby=title&order=asc`, undefined, 'GET', token).then(
-        async (resp) => {
+      wpRestApiHandler(`menu`, undefined, 'GET', token).then(async (resp) => {
           const respJson = await resp.json();
 
           const dispatchPayload = formatMenuItems(respJson);
