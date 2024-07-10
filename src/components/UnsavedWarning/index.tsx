@@ -1,41 +1,34 @@
 import { FC } from 'react';
-import { useBlocker } from 'react-router-dom';
 
-import { Button, Dialog, DialogActions, DialogTitle } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 
 type IUnsavedWarning = {
+  title: string;
+  subtitle?: string;
+  confirmButton: string;
+  cancelButton: string;
   isUnsaved: boolean;
-  onDiscard: () => void;
-  onSave: () => void;
+  onCancel: () => void;
+  onProceed: () => void;
 };
 
-const UnsavedWarning: FC<IUnsavedWarning> = ({ isUnsaved = false, onDiscard }) => {
-  const savedStatus = useBlocker(isUnsaved);
-
-  const handleDiscard = async () => {
-    await onDiscard();
-    savedStatus.proceed?.();
-  };
-
-  const handleSave = async () => {
-    savedStatus.reset?.();
-  };
-
+const UnsavedWarning: FC<IUnsavedWarning> = ({ isUnsaved = false, onCancel, onProceed, title, subtitle, confirmButton, cancelButton }) => {
   return (
-    <Dialog
-      open={savedStatus.state === 'blocked'}
-      // onClose={onCancelEdit}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
-      fullWidth={true}
-      maxWidth="sm">
-      <DialogTitle>You have unsaved changes</DialogTitle>
+    <Dialog open={isUnsaved} fullWidth={true} maxWidth="sm">
+      <DialogTitle variant="h2" color="primary">
+        {title}
+      </DialogTitle>
+      {subtitle && (
+        <DialogContent>
+          <DialogContentText variant="body1">{subtitle}</DialogContentText>
+        </DialogContent>
+      )}
       <DialogActions>
-        <Button color="secondary" variant="contained" onClick={handleSave}>
-          Go back
+        <Button color="secondary" variant="contained" onClick={onCancel}>
+          {cancelButton}
         </Button>
-        <Button variant="contained" onClick={handleDiscard}>
-          Discard changes and proceed
+        <Button variant="contained" onClick={onProceed}>
+          {confirmButton}
         </Button>
       </DialogActions>
     </Dialog>

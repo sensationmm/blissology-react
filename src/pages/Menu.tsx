@@ -19,8 +19,8 @@ import TabbedCards from 'src/components/TabbedCards';
 import TabPanel from 'src/components/TabPanel';
 import ToggleFilter from 'src/components/ToggleFilter';
 
-import { usePrompt } from 'src/hooks/usePrompt';
 import { useSnackbar } from 'src/hooks/useSnackbar';
+import { useUnsaved } from 'src/hooks/useUnsaved';
 import { blissologyTheme } from 'src/utils/theme';
 import { diningChoicesPayload } from 'src/utils/wordpress/dining';
 import { formatMenuItems } from 'src/utils/wordpress/menu';
@@ -49,9 +49,6 @@ const Menu = () => {
   const [activeTab2, setActiveTab2] = useState<number>(0);
   const [filterPlating, setFilterPlating] = useState<IMenuItemPlating>('plated');
   const [openSnackbar] = useSnackbar();
-  usePrompt({
-    isDirty: true
-  });
 
   const isEdited = JSON.stringify(Dining) !== JSON.stringify(resetDining);
 
@@ -250,6 +247,11 @@ const Menu = () => {
   Object.values(Menu.dinner).flat().length > 0 && menuSetup.push({ id: 'dinner', label: 'Dinner Options' });
   Menu.evening.length > 0 && menuSetup.push({ id: 'evening', label: 'Evening Options' });
   Object.values(Menu.kids).flat().length > 0 && menuSetup.push({ id: 'kids', label: 'Kids Options' });
+
+  useUnsaved({
+    isUnsaved: isEdited,
+    onConfirm: onResetChoices
+  });
 
   return (
     <Layout

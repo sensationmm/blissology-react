@@ -20,6 +20,7 @@ import TabPanel from 'src/components/TabPanel';
 import ToggleFilter from 'src/components/ToggleFilter';
 
 import { useSnackbar } from 'src/hooks/useSnackbar';
+import { useUnsaved } from 'src/hooks/useUnsaved';
 import { blissologyTheme } from 'src/utils/theme';
 import { diningChoicesPayload } from 'src/utils/wordpress/dining';
 import { formatMenuItems } from 'src/utils/wordpress/menu';
@@ -246,6 +247,11 @@ const Upgrades = () => {
   Object.values(Menu.dinner).flat().length > 0 && menuSetup.push({ id: 'dinner', label: 'Dinner Options' });
   Menu.evening.length > 0 && menuSetup.push({ id: 'evening', label: 'Evening Options' });
   Object.values(Menu.kids).flat().length > 0 && menuSetup.push({ id: 'kids', label: 'Kids Options' });
+
+  useUnsaved({
+    isUnsaved: isEdited,
+    onConfirm: onResetChoices
+  });
 
   return (
     <Layout
