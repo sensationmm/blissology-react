@@ -17,6 +17,7 @@ import SnackbarProvider from 'src/components/Snackbar';
 import { readCookie } from 'src/utils/cookie';
 import { blissologyTheme } from 'src/utils/theme';
 
+import { ConfirmProvider } from './providers/ConfirmProvider';
 import { formatDiningChoicesResponse } from './utils/wordpress/dining';
 import { formatSuppliersResponse } from './utils/wordpress/supplier';
 import { formatWeddingGuestsResponse } from './utils/wordpress/wedding';
@@ -102,9 +103,11 @@ const App: React.FC = () => {
 
   return (
     <ThemeProvider theme={blissologyTheme}>
-      <SnackbarProvider>
-        <RouterProvider router={router} />
-      </SnackbarProvider>
+      <ConfirmProvider>
+        <SnackbarProvider>
+          <RouterProvider router={router} />
+        </SnackbarProvider>
+      </ConfirmProvider>
     </ThemeProvider>
   );
 };

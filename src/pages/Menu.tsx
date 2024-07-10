@@ -19,6 +19,7 @@ import TabbedCards from 'src/components/TabbedCards';
 import TabPanel from 'src/components/TabPanel';
 import ToggleFilter from 'src/components/ToggleFilter';
 
+import { usePrompt } from 'src/hooks/usePrompt';
 import { useSnackbar } from 'src/hooks/useSnackbar';
 import { blissologyTheme } from 'src/utils/theme';
 import { diningChoicesPayload } from 'src/utils/wordpress/dining';
@@ -48,6 +49,9 @@ const Menu = () => {
   const [activeTab2, setActiveTab2] = useState<number>(0);
   const [filterPlating, setFilterPlating] = useState<IMenuItemPlating>('plated');
   const [openSnackbar] = useSnackbar();
+  usePrompt({
+    isDirty: true
+  });
 
   const isEdited = JSON.stringify(Dining) !== JSON.stringify(resetDining);
 
