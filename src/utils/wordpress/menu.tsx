@@ -4,9 +4,9 @@ import { IDiets } from 'src/components/DietaryInfo';
 
 import { WPPost } from 'src/types/wp-rest-api';
 
-export type WPDiningChoices = WPPost[];
+export type WPMenuChoices = WPPost[];
 
-export const formatMenuItems = (menuItems: WPDiningChoices): IMenu => {
+export const formatMenuItems = (menuItems: WPMenuChoices): IMenu => {
   const menuReception: IMenuItem[] = [];
   const menuEvening: IMenuItem[] = [];
   const menuDinnerStarter: IMenuItem[] = [];

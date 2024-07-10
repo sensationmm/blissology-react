@@ -18,7 +18,7 @@ import { readCookie } from 'src/utils/cookie';
 import { blissologyTheme } from 'src/utils/theme';
 
 import { UnsavedProvider } from './providers/UnsavedProvider';
-import { formatDiningChoicesResponse } from './utils/wordpress/dining';
+import { formatMenuChoicesResponse } from './utils/wordpress/menuChoices';
 import { formatSuppliersResponse } from './utils/wordpress/supplier';
 import { formatWeddingGuestsResponse } from './utils/wordpress/wedding';
 
@@ -61,8 +61,8 @@ const App: React.FC = () => {
     });
 
     store.dispatch({
-      payload: formatDiningChoicesResponse(wedding[0]?.acf?.dining),
-      type: 'dining/set'
+      payload: formatMenuChoicesResponse(wedding[0]?.acf?.menuChoices),
+      type: 'menuChoices/set'
     });
   };
 

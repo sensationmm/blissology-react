@@ -15,8 +15,8 @@ import ToggleFilter from 'src/components/ToggleFilter';
 
 import { useSnackbar } from 'src/hooks/useSnackbar';
 import { useUnsaved } from 'src/hooks/useUnsaved';
-import { diningChoicesPayload } from 'src/utils/wordpress/dining';
 import { formatMenuItems } from 'src/utils/wordpress/menu';
+import { menuChoicesPayload } from 'src/utils/wordpress/menuChoices';
 
 type IMenuSetup = {
   id: string;
@@ -26,8 +26,8 @@ type IMenuSetup = {
 const Menu = () => {
   const authState = (state: RootState['auth']) => state.auth;
   const { token } = useSelector(authState);
-  const diningState = (state: RootState['menu']) => state.dining;
-  const Dining = useSelector(diningState);
+  const menuChoicesState = (state: RootState['menuChoices']) => state.menuChoices;
+  const MenuChoices = useSelector(menuChoicesState);
   const filtersState = (state: RootState) => state.filters;
   const Filters: IFilters = useSelector(filtersState);
   const menuState = (state: RootState['menu']) => state.menu;
@@ -37,11 +37,11 @@ const Menu = () => {
   const weddingState = (state: RootState['wedding']) => state.wedding;
   const { weddingID } = useSelector(weddingState);
 
-  const [resetDining, setResetDining] = useState<RootState['dining']>();
+  const [resetMenuChoices, setResetMenuChoices] = useState<RootState['menuChoices']>();
   const [filterPlating, setFilterPlating] = useState<IMenuItemPlating>('plated');
   const [openSnackbar] = useSnackbar();
 
-  const isEdited = JSON.stringify(Dining) !== JSON.stringify(resetDining);
+  const isEdited = JSON.stringify(MenuChoices) !== JSON.stringify(resetMenuChoices);
 
   useEffect(() => {
     if (Menu === emptyMenuState && !!token) {
@@ -67,8 +67,8 @@ const Menu = () => {
   }, []);
 
   useEffect(() => {
-    !resetDining && setResetDining(cloneDeep(Dining));
-  }, [Dining]);
+    !resetMenuChoices && setResetMenuChoices(cloneDeep(MenuChoices));
+  }, [MenuChoices]);
 
   const onSelect = (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string) => {
     const currentChoices = stateObject[type].slice();
@@ -94,7 +94,7 @@ const Menu = () => {
       `wedding/${weddingID}`,
       {
         acf: {
-          dining: diningChoicesPayload(Dining)
+          menuChoices: menuChoicesPayload(MenuChoices)
         }
       },
       'POST',
@@ -108,7 +108,7 @@ const Menu = () => {
       });
 
       if (!respJson.data?.status) {
-        openSnackbar('Dining choices updated');
+        openSnackbar('Menu choices updated');
         return respJson;
       } else {
         openSnackbar(respJson.message, 'error');
@@ -118,8 +118,8 @@ const Menu = () => {
 
   const onResetChoices = () => {
     store.dispatch({
-      payload: resetDining,
-      type: 'dining/set'
+      payload: resetMenuChoices,
+      type: 'menuChoices/set'
     });
   };
 
@@ -180,7 +180,7 @@ const Menu = () => {
           onSelect={onSelect}
           Filters={Filters}
           Content={Menu}
-          SelectedContent={Dining}
+          SelectedContent={MenuChoices}
           cardContentKeys={[{ id: 'description' }, { Component: DietaryInfo, args: { key: 'diets', value: 'dietary' }, id: 'dietary' }]}
         />
       ) : (
