@@ -2,26 +2,18 @@ import { useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
 import { useSelector } from 'react-redux';
 
-import { Tab, Tabs } from '@mui/material';
-import Grid from '@mui/material/Grid';
-
 import store, { RootState } from 'src/store';
 import { IFilters } from 'src/store/reducers/filters';
-import { IMenuItem, IMenuItemPlating, initialState as emptyMenuState } from 'src/store/reducers/menu';
+import { IMenuItemPlating, initialState as emptyMenuState } from 'src/store/reducers/menu';
 
 import { wpRestApiHandler } from 'src/api/wordpress';
 
-import DietaryInfo from 'src/components/DietaryInfo';
-import EmptyCard from 'src/components/EmptyCard';
 import Layout from 'src/components/Layout/Layout';
-import ListCard from 'src/components/ListCard';
 import TabbedCards from 'src/components/TabbedCards';
-import TabPanel from 'src/components/TabPanel';
 import ToggleFilter from 'src/components/ToggleFilter';
 
 import { useSnackbar } from 'src/hooks/useSnackbar';
 import { useUnsaved } from 'src/hooks/useUnsaved';
-import { blissologyTheme } from 'src/utils/theme';
 import { diningChoicesPayload } from 'src/utils/wordpress/dining';
 import { formatMenuItems } from 'src/utils/wordpress/menu';
 
@@ -139,106 +131,6 @@ const Menu = () => {
   const onSetPlatingFilter = (newPlating: string) => {
     if (newPlating !== null) {
       setFilterPlating(newPlating as IMenuItemPlating);
-    }
-  };
-
-  const renderSecondLevelMenu = (type: string) => {
-    const secondLevelSetup: IMenuSetup[] = [];
-    Menu[type].reception?.length > 0 && secondLevelSetup.push({ id: 'reception', label: 'Reception' });
-    Menu[type].starter?.length > 0 && secondLevelSetup.push({ id: 'starter', label: 'Starter' });
-    Menu[type].main?.length > 0 && secondLevelSetup.push({ id: 'main', label: 'Main Course' });
-    Menu[type].sides?.length > 0 && secondLevelSetup.push({ id: 'sides', label: 'Side Dishes' });
-    Menu[type].dessert?.length > 0 && secondLevelSetup.push({ id: 'dessert', label: 'Dessert' });
-
-    return renderMenu(secondLevelSetup, activeTab2, setActiveTab2, type);
-  };
-
-  const renderMenu = (setup: IMenuSetup[], active: number, setActive: (num: number) => void, topLevel?: string) => {
-    const isTopLevel = topLevel === undefined;
-    const list = !isTopLevel ? Menu[topLevel] : Menu;
-    return (
-      <>
-        <div
-          style={{
-            alignItems: 'center',
-            background: isTopLevel ? blissologyTheme.palette.tertiary.main : blissologyTheme.palette.tertiary.light,
-            display: 'flex',
-            justifyContent: 'space-between',
-            paddingRight: isTopLevel ? '5px' : ''
-          }}>
-          <Tabs value={active} onChange={(_, setTab) => setActive(setTab)} className={topLevel ? 'secondLevel' : ''}>
-            {setup.map((m, count) => (
-              <Tab key={`tab-button-${count}`} label={m.label} />
-            ))}
-          </Tabs>
-
-          {isTopLevel ? (
-            <ToggleFilter
-              id="filter-diets"
-              value={Filters.diet}
-              onSelect={(value) => onSelect(value, 'diet', Filters, 'filters')}
-              options={[
-                { label: 'DF', value: 'df' },
-                { label: 'GF', value: 'gf' },
-                { label: 'V', value: 'v' },
-                { label: 'VE', value: 've' }
-              ]}
-            />
-          ) : (
-            topLevel === 'dinner' && (
-              <ToggleFilter
-                id="filter-plating"
-                label="Show"
-                value={filterPlating}
-                onSelect={onSetPlatingFilter}
-                options={[
-                  { label: 'Plated', value: 'plated' },
-                  { label: 'Feasting', value: 'feasting' }
-                ]}
-              />
-            )
-          )}
-        </div>
-        <Grid container spacing={2} className="cards">
-          <div>
-            {setup.map((m, count) => (
-              <TabPanel key={`tab-content-${count}`} value={active} index={count}>
-                {list[m.id]?.length !== undefined ? renderMenuItems(list[m.id], m.id) : renderSecondLevelMenu(m.id)}
-              </TabPanel>
-            ))}
-          </div>
-        </Grid>
-      </>
-    );
-  };
-
-  const renderMenuItems = (items: IMenuItem[], type: string) => {
-    if (items.length > 0) {
-      const filteredItems = items.slice().filter((item: IMenuItem) => {
-        return (Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) && (!item.plating || item.plating === filterPlating);
-      });
-      if (filteredItems.length > 0) {
-        return (
-          <Grid container spacing={2} className="cards">
-            {filteredItems.map((menuItem: IMenuItem, index: number) => {
-              return (
-                <Grid item xs={4} key={`menu-${type}-${index}`}>
-                  <ListCard
-                    title={menuItem.name}
-                    content={[menuItem.description, <DietaryInfo key={'content-diets'} diets={menuItem?.dietary} />]}
-                    image={menuItem.image}
-                    selected={Dining[type].includes(menuItem.id)}
-                    onSelect={() => onSelect(menuItem.id, type, Dining, 'dining')}
-                    sx={{ minHeight: '100px' }}
-                  />
-                </Grid>
-              );
-            })}
-          </Grid>
-        );
-      } else {
-        return <EmptyCard />;
-      }
     }
   };
 
