@@ -24,12 +24,12 @@ import { blissologyTheme } from 'src/utils/theme';
 import { diningChoicesPayload } from 'src/utils/wordpress/dining';
 import { formatMenuItems } from 'src/utils/wordpress/menu';
 
-type IMenuSetup = {
+type IUpgradesSetup = {
   id: string;
   label: string;
 };
 
-const Menu = () => {
+const Upgrades = () => {
   const authState = (state: RootState['auth']) => state.auth;
   const { token } = useSelector(authState);
   const diningState = (state: RootState['menu']) => state.dining;
@@ -142,7 +142,7 @@ const Menu = () => {
   };
 
   const renderSecondLevelMenu = (type: string) => {
-    const secondLevelSetup: IMenuSetup[] = [];
+    const secondLevelSetup: IUpgradesSetup[] = [];
     Menu[type].reception?.length > 0 && secondLevelSetup.push({ id: 'reception', label: 'Reception' });
     Menu[type].starter?.length > 0 && secondLevelSetup.push({ id: 'starter', label: 'Starter' });
     Menu[type].main?.length > 0 && secondLevelSetup.push({ id: 'main', label: 'Main Course' });
@@ -152,7 +152,7 @@ const Menu = () => {
     return renderMenu(secondLevelSetup, activeTab2, setActiveTab2, type);
   };
 
-  const renderMenu = (setup: IMenuSetup[], active: number, setActive: (num: number) => void, topLevel?: string) => {
+  const renderMenu = (setup: IUpgradesSetup[], active: number, setActive: (num: number) => void, topLevel?: string) => {
     const isTopLevel = topLevel === undefined;
     const list = !isTopLevel ? Menu[topLevel] : Menu;
     return (
@@ -241,7 +241,7 @@ const Menu = () => {
     }
   };
 
-  const menuSetup: IMenuSetup[] = [];
+  const menuSetup: IUpgradesSetup[] = [];
   Menu.reception.length > 0 && menuSetup.push({ id: 'reception', label: 'Reception Options' });
   Object.values(Menu.dinner).flat().length > 0 && menuSetup.push({ id: 'dinner', label: 'Dinner Options' });
   Menu.evening.length > 0 && menuSetup.push({ id: 'evening', label: 'Evening Options' });
@@ -249,7 +249,7 @@ const Menu = () => {
 
   return (
     <Layout
-      title="Menu"
+      title="Upgrades"
       actions={[
         { color: 'secondary', disabled: !isEdited, label: 'Reset', onClick: onResetChoices },
         { disabled: !isEdited, label: 'Save', onClick: onSaveChoices }
@@ -300,4 +300,4 @@ const Menu = () => {
   );
 };
 
-export default Menu;
+export default Upgrades;

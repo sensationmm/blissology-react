@@ -21,6 +21,7 @@ import PaletteIcon from '@mui/icons-material/Palette';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import VideocamIcon from '@mui/icons-material/Videocam';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import { SvgIconProps } from '@mui/material';
 
 const Icons = {
@@ -44,6 +45,7 @@ const Icons = {
   stylist: PaletteIcon,
   suppliers: CameraEnhanceIcon,
   unselected: CheckBoxOutlineBlankIcon,
+  upgrade: WorkspacePremiumIcon,
   videographer: VideocamIcon
 };
 

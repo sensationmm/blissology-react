@@ -3,6 +3,7 @@ import Dashboard from 'src/pages/Dashboard';
 import Guests from 'src/pages/Guests';
 import Menu from 'src/pages/Menu';
 import Suppliers from 'src/pages/Suppliers';
+import Upgrades from 'src/pages/Upgrades';
 
 import { IIconKey } from 'src/components/Icon';
 
@@ -31,6 +32,12 @@ const navigation: INavigation[] = [
     icon: 'dining',
     label: 'Menu',
     url: '/menu'
+  },
+  {
+    Component: Upgrades,
+    icon: 'upgrade',
+    label: 'Upgrades',
+    url: '/upgrades'
   },
   {
     Component: Suppliers,
