@@ -38,6 +38,10 @@ export type WPPost = {
     'wp:term': Array<WPTerm[]>;
   };
   acf: {
-    [key:string]: string | Array<string|number>;
+    [key:string]: string | Array<string|number> | Record<string|number>;
   }
 }
+
+export type WPChoice = {
+  choice: number;
+};

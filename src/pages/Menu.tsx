@@ -8,6 +8,7 @@ import { IMenuItemPlating, initialState as emptyMenuState } from 'src/store/redu
 
 import { wpRestApiHandler } from 'src/api/wordpress';
 
+import DietaryInfo from 'src/components/DietaryInfo';
 import Layout from 'src/components/Layout/Layout';
 import TabbedCards from 'src/components/TabbedCards';
 import ToggleFilter from 'src/components/ToggleFilter';
@@ -37,8 +38,6 @@ const Menu = () => {
   const { weddingID } = useSelector(weddingState);
 
   const [resetDining, setResetDining] = useState<RootState['dining']>();
-  const [activeTab, setActiveTab] = useState<number>(0);
-  const [activeTab2, setActiveTab2] = useState<number>(0);
   const [filterPlating, setFilterPlating] = useState<IMenuItemPlating>('plated');
   const [openSnackbar] = useSnackbar();
 
@@ -70,10 +69,6 @@ const Menu = () => {
   useEffect(() => {
     !resetDining && setResetDining(cloneDeep(Dining));
   }, [Dining]);
-
-  useEffect(() => {
-    setActiveTab2(0);
-  }, [activeTab]);
 
   const onSelect = (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string) => {
     const currentChoices = stateObject[type].slice();
@@ -182,14 +177,11 @@ const Menu = () => {
             />
           }
           tabsSetup={menuSetup}
-          activeTab={activeTab}
-          setActiveTab={setActiveTab}
-          activeTab2={activeTab2}
-          setActiveTab2={setActiveTab2}
           onSelect={onSelect}
           Filters={Filters}
           Content={Menu}
           SelectedContent={Dining}
+          cardContentKeys={[{ id: 'description' }, { Component: DietaryInfo, args: { key: 'diets', value: 'dietary' }, id: 'dietary' }]}
         />
       ) : (
         <></>

@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { IDiets } from 'src/components/DietaryInfo';
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export type IMenuItemPlating = 'plated' | 'feasting';
 
 export type IMenuItem = {

@@ -4,10 +4,6 @@ import { IDiets } from 'src/components/DietaryInfo';
 
 import { WPPost } from 'src/types/wp-rest-api';
 
-export type WPChoice = {
-  choice: number;
-};
-
 export type WPDiningChoices = WPPost[];
 
 export const formatMenuItems = (menuItems: WPDiningChoices): IMenu => {

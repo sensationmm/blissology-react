@@ -1,8 +1,6 @@
 import { IDining } from 'src/store/reducers/dining';
 
-export type WPChoice = {
-  choice: number;
-};
+import { WPChoice } from 'src/types/wp-rest-api';
 
 export type WPDiningChoices = {
   evening: WPChoice[];

@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, FunctionComponent, useEffect, useState } from 'react';
 
 import { Grid, Tab, Tabs } from '@mui/material';
 
@@ -8,25 +8,30 @@ import { IMenuItem } from 'src/store/reducers/menu';
 
 import { blissologyTheme } from 'src/utils/theme';
 
-import DietaryInfo from '../DietaryInfo';
+// import DietaryInfo from '../DietaryInfo';
 import EmptyCard from '../EmptyCard';
 import ListCard from '../ListCard';
 import TabPanel from '../TabPanel';
 
+type IListCardContentArgs = {
+  key: string;
+  value: keyof IMenuItem;
+};
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type IListCardContent = { id: keyof IMenuItem; Component?: FunctionComponent<any>; args?: IListCardContentArgs };
+
 type ITabbedCards = {
   onSelect: (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string) => void;
   tabsSetup: ITabsSetup[];
-  activeTab: number;
-  setActiveTab: (tabNum: number) => void;
-  activeTab2?: number;
-  setActiveTab2?: (tabNum: number) => void;
   topLevelFilter?: JSX.Element;
   secondLevelFilter?: JSX.Element;
-  Filters: IFilters;
+  Filters?: IFilters;
   Content: RootState[keyof RootState];
   SelectedContent: RootState[keyof RootState];
-  filterValue2: ITabbedCards['fliterValue2Type'];
-  fliterValue2Type: string;
+  filterValue2?: ITabbedCards['fliterValue2Type'];
+  fliterValue2Type?: string;
+  cardSpan?: number;
+  cardContentKeys?: IListCardContent[];
 };
 
 export type ITabsSetup = {
@@ -37,17 +42,22 @@ export type ITabsSetup = {
 const TabbedCards: FC<ITabbedCards> = ({
   secondLevelFilter,
   topLevelFilter,
-  activeTab,
-  activeTab2,
-  setActiveTab2,
   tabsSetup,
-  setActiveTab,
   onSelect,
-  Filters,
+  cardContentKeys = [{ id: 'description' }] as ITabbedCards['cardContentKeys'],
   Content,
+  Filters,
   SelectedContent,
-  filterValue2
+  filterValue2,
+  cardSpan = 4
 }) => {
+  const [activeTab, setActiveTab] = useState<number>(0);
+  const [activeTab2, setActiveTab2] = useState<number>(0);
+
+  useEffect(() => {
+    setActiveTab2(0);
+  }, [activeTab]);
+
   const renderSecondLevelTabs = (type: string) => {
     const secondLevelSetup: ITabsSetup[] = [];
     Content[type].reception?.length > 0 && secondLevelSetup.push({ id: 'reception', label: 'Reception' });
@@ -56,10 +66,10 @@ const TabbedCards: FC<ITabbedCards> = ({
     Content[type].sides?.length > 0 && secondLevelSetup.push({ id: 'sides', label: 'Side Dishes' });
     Content[type].dessert?.length > 0 && secondLevelSetup.push({ id: 'dessert', label: 'Dessert' });
 
-    return renderTabs(secondLevelSetup, activeTab2 as ITabbedCards['activeTab2'], setActiveTab2 as ITabbedCards['setActiveTab2'], type);
+    return renderTabs(secondLevelSetup, activeTab2 as number, setActiveTab2 as (val: number) => void, type);
   };
 
-  const renderTabs = (setup: ITabsSetup[], active: ITabbedCards['activeTab2'], setActive: ITabbedCards['setActiveTab2'], topLevel?: string) => {
+  const renderTabs = (setup: ITabsSetup[], active: number, setActive: (val: number) => void, topLevel?: string) => {
     const isTopLevel = topLevel === undefined;
     const list = !isTopLevel ? Content[topLevel] : Content;
     return (
@@ -95,20 +105,29 @@ const TabbedCards: FC<ITabbedCards> = ({
 
   const renderTabItems = (items: IMenuItem[], type: string) => {
     if (items.length > 0) {
-      const filteredItems = items.slice().filter((item: IMenuItem) => {
-        return (Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) && (!item.plating || item.plating === filterValue2);
-      });
+      const filteredItems = !Filters
+        ? items
+        : items.slice().filter((item: IMenuItem) => {
+            return (Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) && (!item.plating || item.plating === filterValue2);
+          });
       if (filteredItems.length > 0) {
         return (
           <Grid container spacing={2} className="cards">
             {filteredItems.map((menuItem: IMenuItem, index: number) => {
               return (
-                <Grid item xs={4} key={`menu-${type}-${index}`}>
+                <Grid item xs={cardSpan} key={`menu-${type}-${index}`}>
                   <ListCard
                     title={menuItem.name}
-                    content={[menuItem.description, <DietaryInfo key={'content-diets'} diets={menuItem?.dietary} />]}
+                    content={(cardContentKeys || []).map((key) => {
+                      const { id, Component, args } = key as IListCardContent;
+                      const argsObj = args ? { [args.key]: menuItem[args.value] } : {};
+                      if (Component) {
+                        return <Component key={id} {...argsObj} />;
+                      }
+                      return menuItem[id as keyof IMenuItem] as string;
+                    })}
                     image={menuItem.image}
-                    selected={SelectedContent[type].includes(menuItem.id)}
+                    selected={SelectedContent?.[type]?.includes(menuItem.id) || false}
                     onSelect={() => onSelect(menuItem.id, type, SelectedContent, 'dining')}
                     sx={{ minHeight: '100px' }}
                   />

@@ -6,7 +6,7 @@ import Icon from 'src/components/Icon';
 
 import * as Styled from './styles';
 
-type IAddCard = {
+type IListCard = {
   title: string;
   content: Array<string | JSX.Element>;
   selected?: boolean;
@@ -15,7 +15,7 @@ type IAddCard = {
   sx?: CardProps['sx'];
 };
 
-const ListCard: FC<IAddCard> = ({ title, content, image, selected = undefined, sx = {}, onSelect = undefined }) => {
+const ListCard: FC<IListCard> = ({ title, content, image, selected = undefined, sx = {}, onSelect = undefined }) => {
   const paddingRight = image ? '40%' : selected !== undefined ? '35px' : 0;
 
   return (
