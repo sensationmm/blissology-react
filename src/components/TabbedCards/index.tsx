@@ -6,6 +6,7 @@ import { RootState } from 'src/store';
 import { IFilters } from 'src/store/reducers/filters';
 import { IMenuItem } from 'src/store/reducers/menu';
 
+import { firstLetterUppercase } from 'src/utils/common';
 import { blissologyTheme } from 'src/utils/theme';
 
 // import DietaryInfo from '../DietaryInfo';
@@ -28,6 +29,7 @@ type ITabbedCards = {
   Filters?: IFilters;
   Content: RootState[keyof RootState];
   SelectedContent: RootState[keyof RootState];
+  selectedContentKey: keyof RootState;
   filterValue2?: ITabbedCards['fliterValue2Type'];
   fliterValue2Type?: string;
   cardSpan?: number;
@@ -48,6 +50,7 @@ const TabbedCards: FC<ITabbedCards> = ({
   Content,
   Filters,
   SelectedContent,
+  selectedContentKey,
   filterValue2,
   cardSpan = 4
 }) => {
@@ -111,6 +114,7 @@ const TabbedCards: FC<ITabbedCards> = ({
             return (Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) && (!item.plating || item.plating === filterValue2);
           });
       if (filteredItems.length > 0) {
+        const selectedContent = firstLetterUppercase(type) ? SelectedContent : SelectedContent?.[type];
         return (
           <Grid container spacing={2} className="cards">
             {filteredItems.map((menuItem: IMenuItem, index: number) => {
@@ -127,8 +131,8 @@ const TabbedCards: FC<ITabbedCards> = ({
                       return menuItem[id as keyof IMenuItem] as string;
                     })}
                     image={menuItem.image}
-                    selected={SelectedContent?.[type]?.includes(menuItem.id) || false}
-                    onSelect={() => onSelect(menuItem.id, type, SelectedContent, 'menuChoices')}
+                    selected={selectedContent?.includes(menuItem.id) || false}
+                    onSelect={() => onSelect(menuItem.id, type, SelectedContent, selectedContentKey)}
                     sx={{ minHeight: '100px' }}
                   />
                 </Grid>

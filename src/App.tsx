@@ -20,6 +20,7 @@ import { blissologyTheme } from 'src/utils/theme';
 import { UnsavedProvider } from './providers/UnsavedProvider';
 import { formatMenuChoicesResponse } from './utils/wordpress/menuChoices';
 import { formatSuppliersResponse } from './utils/wordpress/supplier';
+import { formatUpgradeChoicesResponse } from './utils/wordpress/upgradeChoices';
 import { formatWeddingGuestsResponse } from './utils/wordpress/wedding';
 
 const App: React.FC = () => {
@@ -63,6 +64,11 @@ const App: React.FC = () => {
     store.dispatch({
       payload: formatMenuChoicesResponse(wedding[0]?.acf?.menuChoices),
       type: 'menuChoices/set'
+    });
+
+    store.dispatch({
+      payload: formatUpgradeChoicesResponse(wedding[0]?.acf?.upgradeChoices),
+      type: 'upgradeChoices/set'
     });
   };
 

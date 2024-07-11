@@ -108,6 +108,7 @@ const Menu = () => {
       });
 
       if (!respJson.data?.status) {
+        setResetMenuChoices(cloneDeep(MenuChoices));
         openSnackbar('Menu choices updated');
         return respJson;
       } else {
@@ -181,6 +182,7 @@ const Menu = () => {
           Filters={Filters}
           Content={Menu}
           SelectedContent={MenuChoices}
+          selectedContentKey="menuChoices"
           cardContentKeys={[{ id: 'description' }, { Component: DietaryInfo, args: { key: 'diets', value: 'dietary' }, id: 'dietary' }]}
         />
       ) : (

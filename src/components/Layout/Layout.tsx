@@ -21,6 +21,7 @@ import { IWeddingDeadline } from 'src/store/reducers/wedding';
 
 import Icon from 'src/components/Icon';
 
+import { useUnsaved } from 'src/hooks/useUnsaved';
 import { blissDate, wpDateToTimestamp } from 'src/utils/common';
 import { deleteCookie } from 'src/utils/cookie';
 
@@ -48,6 +49,10 @@ const Layout: FC<ILayoutProps> = ({ title, children, actions }) => {
   const page = location.pathname.split('/')[1];
 
   if (!isLoggedIn && location.pathname !== '/') return <Navigate to="/" replace={true} />;
+
+  useUnsaved({
+    isUnsaved: false
+  });
 
   const toggleDrawer = () => {
     store.dispatch({ type: `ui/toggleMenu` });

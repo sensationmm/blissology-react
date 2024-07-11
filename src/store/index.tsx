@@ -7,18 +7,21 @@ import menuReducer from './reducers/menu';
 import menuChoicesReducer from './reducers/menuChoices';
 import suppliersReducer from './reducers/suppliers';
 import uiReducer from './reducers/ui';
+import upgradeChoicesReducer from './reducers/upgradeChoices';
+import upgradeReducer from './reducers/upgrades';
 import weddingReducer from './reducers/wedding';
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
-    dining: diningReducer,
     filters: filtersReducer,
     guests: guestsReducer,
     menu: menuReducer,
     menuChoices: menuChoicesReducer,
     suppliers: suppliersReducer,
     ui: uiReducer,
+    upgradeChoices: upgradeChoicesReducer,
+    upgrades: upgradeReducer,
     wedding: weddingReducer
   }
 });

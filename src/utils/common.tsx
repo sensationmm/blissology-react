@@ -73,3 +73,7 @@ export const hexToRgb = (hex: string) => {
         ?.map((x) => parseInt(x, 16))
     : '';
 };
+
+export const firstLetterUppercase = (testString: string): boolean => {
+  return /^[A-Z]/.test(testString);
+};

@@ -14,8 +14,8 @@ import TabbedCards from 'src/components/TabbedCards';
 import { useSnackbar } from 'src/hooks/useSnackbar';
 import { useUnsaved } from 'src/hooks/useUnsaved';
 import { capitalize } from 'src/utils/common';
-import { diningChoicesPayload } from 'src/utils/wordpress/dining';
-import { formatUpgrades } from 'src/utils/wordpress/upgrade';
+import { formatUpgradesResponse } from 'src/utils/wordpress/upgrade';
+import { upgradeChoicesPayload } from 'src/utils/wordpress/upgradeChoices';
 
 type IUpgradesSetup = {
   id: string;
@@ -27,6 +27,8 @@ const Upgrades = () => {
   const { token } = useSelector(authState);
   const upgradesState = (state: RootState['upgrades']) => state.upgrades;
   const Upgrades = useSelector(upgradesState);
+  const upgradeChoicesState = (state: RootState['upgradeChoices']) => state.upgradeChoices;
+  const UpgradeChoices = useSelector(upgradeChoicesState);
   const filtersState = (state: RootState) => state.filters;
   const Filters: IFilters = useSelector(filtersState);
   const uiState = (state: RootState['ui']) => state.ui;
@@ -34,10 +36,10 @@ const Upgrades = () => {
   const weddingState = (state: RootState['wedding']) => state.wedding;
   const { weddingID } = useSelector(weddingState);
 
-  const [resetUpgrages, setResetUpgrades] = useState<RootState['upgrades']>();
+  const [resetUpgradeChoices, setResetUpgradeChoices] = useState<RootState['upgradeChoices']>();
   const [openSnackbar] = useSnackbar();
 
-  const isEdited = JSON.stringify(Upgrades) !== JSON.stringify(resetUpgrages);
+  const isEdited = JSON.stringify(UpgradeChoices) !== JSON.stringify(resetUpgradeChoices);
 
   useEffect(() => {
     if (Upgrades === emptyUpgradesState && !!token) {
@@ -48,7 +50,7 @@ const Upgrades = () => {
       wpRestApiHandler(`upgrade`, undefined, 'GET', token).then(async (resp) => {
         const respJson = await resp.json();
 
-        const dispatchPayload = formatUpgrades(respJson);
+        const dispatchPayload = formatUpgradesResponse(respJson);
 
         await store.dispatch({
           payload: dispatchPayload,
@@ -63,11 +65,11 @@ const Upgrades = () => {
   }, []);
 
   useEffect(() => {
-    !resetUpgrages && setResetUpgrades(cloneDeep(Upgrades));
-  }, [Upgrades]);
+    !resetUpgradeChoices && setResetUpgradeChoices(cloneDeep(UpgradeChoices));
+  }, [UpgradeChoices]);
 
-  const onSelect = (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string) => {
-    const currentChoices = stateObject[type].slice();
+  const onSelect = (itemID: number | string, type: string, stateObject: RootState[keyof RootState]) => {
+    const currentChoices = stateObject.slice();
     if (currentChoices.includes(itemID)) {
       currentChoices.splice(currentChoices.indexOf(itemID), 1);
     } else {
@@ -75,8 +77,8 @@ const Upgrades = () => {
     }
 
     store.dispatch({
-      payload: { choices: currentChoices, type: type },
-      type: `${action}/update`
+      payload: currentChoices,
+      type: 'upgradeChoices/set'
     });
   };
 
@@ -90,7 +92,7 @@ const Upgrades = () => {
       `wedding/${weddingID}`,
       {
         acf: {
-          dining: diningChoicesPayload(Upgrades)
+          upgradeChoices: upgradeChoicesPayload(UpgradeChoices)
         }
       },
       'POST',
@@ -104,6 +106,7 @@ const Upgrades = () => {
       });
 
       if (!respJson.data?.status) {
+        setResetUpgradeChoices(cloneDeep(UpgradeChoices));
         openSnackbar('Upgrades choices updated');
         return respJson;
       } else {
@@ -114,8 +117,8 @@ const Upgrades = () => {
 
   const onResetChoices = () => {
     store.dispatch({
-      payload: resetUpgrages,
-      type: 'upgrades/set'
+      payload: resetUpgradeChoices,
+      type: 'upgradeChoices/set'
     });
   };
 
@@ -139,7 +142,8 @@ const Upgrades = () => {
           onSelect={onSelect}
           Filters={Filters}
           Content={Upgrades}
-          SelectedContent={{}}
+          SelectedContent={UpgradeChoices}
+          selectedContentKey="upgradeChoices"
           cardSpan={6}
           cardContentKeys={[{ id: 'description' }]}
         />
