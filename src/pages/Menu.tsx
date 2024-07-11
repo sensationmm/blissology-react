@@ -10,18 +10,13 @@ import { wpRestApiHandler } from 'src/api/wordpress';
 
 import DietaryInfo from 'src/components/DietaryInfo';
 import Layout from 'src/components/Layout/Layout';
-import TabbedCards from 'src/components/TabbedCards';
+import TabbedCards, { ITabs2Setup, ITabsSetup } from 'src/components/TabbedCards';
 import ToggleFilter from 'src/components/ToggleFilter';
 
 import { useSnackbar } from 'src/hooks/useSnackbar';
 import { useUnsaved } from 'src/hooks/useUnsaved';
 import { formatMenuItems } from 'src/utils/wordpress/menu';
 import { menuChoicesPayload } from 'src/utils/wordpress/menuChoices';
-
-type IMenuSetup = {
-  id: string;
-  label: string;
-};
 
 const Menu = () => {
   const authState = (state: RootState['auth']) => state.auth;
@@ -130,11 +125,26 @@ const Menu = () => {
     }
   };
 
-  const menuSetup: IMenuSetup[] = [];
-  Menu.reception.length > 0 && menuSetup.push({ id: 'reception', label: 'Reception Options' });
-  Object.values(Menu.dinner).flat().length > 0 && menuSetup.push({ id: 'dinner', label: 'Dinner Options' });
-  Menu.evening.length > 0 && menuSetup.push({ id: 'evening', label: 'Evening Options' });
-  Object.values(Menu.kids).flat().length > 0 && menuSetup.push({ id: 'kids', label: 'Kids Options' });
+  const menuSetup: ITabsSetup[] = [];
+  Menu.reception.length > 0 && menuSetup.push({ id: 'reception', label: 'Reception' });
+  Object.values(Menu.dinner).flat().length > 0 && menuSetup.push({ id: 'dinner', label: 'Dinner' });
+  Menu.evening.length > 0 && menuSetup.push({ id: 'evening', label: 'Evening' });
+  Object.values(Menu.kids).flat().length > 0 && menuSetup.push({ id: 'kids', label: 'Kids' });
+
+  const secondLevelSetup: ITabs2Setup = {
+    dinner: [],
+    kids: []
+  };
+
+  Menu.dinner.starter?.length > 0 && secondLevelSetup.dinner.push({ id: 'starter', label: 'Starter' });
+  Menu.dinner.main?.length > 0 && secondLevelSetup.dinner.push({ id: 'main', label: 'Main Course' });
+  Menu.dinner.sides?.length > 0 && secondLevelSetup.dinner.push({ id: 'sides', label: 'Side Dishes' });
+  Menu.dinner.dessert?.length > 0 && secondLevelSetup.dinner.push({ id: 'dessert', label: 'Dessert' });
+
+  Menu.kids.kidsReception?.length > 0 && secondLevelSetup.kids.push({ id: 'kidsReception', label: 'Reception' });
+  Menu.kids.kidsStarter?.length > 0 && secondLevelSetup.kids.push({ id: 'kidsStarter', label: 'Starter' });
+  Menu.kids.kidsMain?.length > 0 && secondLevelSetup.kids.push({ id: 'kidsMain', label: 'Main Course' });
+  Menu.kids.kidsDessert?.length > 0 && secondLevelSetup.kids.push({ id: 'kidsDessert', label: 'Dessert' });
 
   useUnsaved({
     isUnsaved: isEdited,
@@ -178,6 +188,7 @@ const Menu = () => {
             />
           }
           tabsSetup={menuSetup}
+          tabs2Setup={secondLevelSetup}
           onSelect={onSelect}
           Filters={Filters}
           Content={Menu}

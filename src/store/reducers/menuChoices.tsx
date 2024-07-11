@@ -5,6 +5,10 @@ export type IMenuChoices = {
   dessert: IMenuChoiceItem;
   dinner: IMenuChoiceItem;
   evening: IMenuChoiceItem;
+  kidsDessert: IMenuChoiceItem;
+  kidsMain: IMenuChoiceItem;
+  kidsReception: IMenuChoiceItem;
+  kidsStarter: IMenuChoiceItem;
   main: IMenuChoiceItem;
   reception: IMenuChoiceItem;
   sides: IMenuChoiceItem;
@@ -15,6 +19,10 @@ const initialState: IMenuChoices = {
   dessert: [],
   dinner: [],
   evening: [],
+  kidsDessert: [],
+  kidsMain: [],
+  kidsReception: [],
+  kidsStarter: [],
   main: [],
   reception: [],
   sides: [],

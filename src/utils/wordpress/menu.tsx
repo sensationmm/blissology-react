@@ -66,10 +66,10 @@ export const formatMenuItems = (menuItems: WPMenuChoices): IMenu => {
     },
     evening: menuEvening,
     kids: {
-      dessert: menuKidsDessert,
-      main: menuKidsMain,
-      reception: menuKidsReception,
-      starter: menuKidsStarter
+      kidsDessert: menuKidsDessert,
+      kidsMain: menuKidsMain,
+      kidsReception: menuKidsReception,
+      kidsStarter: menuKidsStarter
     },
     reception: menuReception
   };

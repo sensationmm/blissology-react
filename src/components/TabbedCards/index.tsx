@@ -21,9 +21,19 @@ type IListCardContentArgs = {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type IListCardContent = { id: keyof IMenuItem; Component?: FunctionComponent<any>; args?: IListCardContentArgs };
 
+export type ITabsSetup = {
+  id: string;
+  label: string;
+};
+
+export type ITabs2Setup = {
+  [key: string]: ITabsSetup[];
+};
+
 type ITabbedCards = {
   onSelect: (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string) => void;
   tabsSetup: ITabsSetup[];
+  tabs2Setup?: ITabs2Setup;
   topLevelFilter?: JSX.Element;
   secondLevelFilter?: JSX.Element;
   Filters?: IFilters;
@@ -36,15 +46,11 @@ type ITabbedCards = {
   cardContentKeys?: IListCardContent[];
 };
 
-export type ITabsSetup = {
-  id: string;
-  label: string;
-};
-
 const TabbedCards: FC<ITabbedCards> = ({
   secondLevelFilter,
   topLevelFilter,
   tabsSetup,
+  tabs2Setup,
   onSelect,
   cardContentKeys = [{ id: 'description' }] as ITabbedCards['cardContentKeys'],
   Content,
@@ -62,14 +68,8 @@ const TabbedCards: FC<ITabbedCards> = ({
   }, [activeTab]);
 
   const renderSecondLevelTabs = (type: string) => {
-    const secondLevelSetup: ITabsSetup[] = [];
-    Content[type].reception?.length > 0 && secondLevelSetup.push({ id: 'reception', label: 'Reception' });
-    Content[type].starter?.length > 0 && secondLevelSetup.push({ id: 'starter', label: 'Starter' });
-    Content[type].main?.length > 0 && secondLevelSetup.push({ id: 'main', label: 'Main Course' });
-    Content[type].sides?.length > 0 && secondLevelSetup.push({ id: 'sides', label: 'Side Dishes' });
-    Content[type].dessert?.length > 0 && secondLevelSetup.push({ id: 'dessert', label: 'Dessert' });
-
-    return renderTabs(secondLevelSetup, activeTab2 as number, setActiveTab2 as (val: number) => void, type);
+    if (!tabs2Setup) return;
+    return renderTabs(tabs2Setup[type], activeTab2 as number, setActiveTab2 as (val: number) => void, type);
   };
 
   const renderTabs = (setup: ITabsSetup[], active: number, setActive: (val: number) => void, topLevel?: string) => {
@@ -86,18 +86,16 @@ const TabbedCards: FC<ITabbedCards> = ({
             paddingRight: isTopLevel ? '5px' : ''
           }}>
           <Tabs value={active} onChange={(_, setTab) => setActive?.(setTab)} className={topLevel ? 'secondLevel' : ''}>
-            {setup.map((m, count) => (
-              <Tab key={`tab-button-${count}`} label={m.label} />
-            ))}
+            {setup?.map((m, count) => <Tab key={`tab-button-${count}`} label={m.label} />)}
           </Tabs>
 
           {isTopLevel ? topLevelFilter : secondLevelFilter}
         </div>
         <Grid container spacing={2} className="cards">
           <div>
-            {setup.map((m, count) => (
+            {setup?.map((m, count) => (
               <TabPanel key={`tab-content-${count}`} value={active as number} index={count}>
-                {list[m.id]?.length !== undefined ? renderTabItems(list[m.id], m.id) : renderSecondLevelTabs(m.id)}
+                {list[m.id]?.length !== undefined || tabs2Setup === undefined ? renderTabItems(list[m.id], m.id) : renderSecondLevelTabs(m.id)}
               </TabPanel>
             ))}
           </div>
