@@ -53,6 +53,7 @@ export const Image = styled('div')(() => ({
     height: '100%'
   },
   height: '100%',
+  maxWidth: '50%',
   overflow: 'hidden',
   position: 'absolute',
   right: 0,
