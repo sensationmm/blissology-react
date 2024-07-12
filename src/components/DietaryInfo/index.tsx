@@ -9,8 +9,7 @@ type IDietaryInfo = {
 };
 
 const DietaryInfo: FC<IDietaryInfo> = ({ diets }) => {
-  if (diets.length === 0) return <></>;
-  return (
+  return diets.length > 0 ? (
     <Styled.Diets>
       {diets
         .slice()
@@ -19,6 +18,8 @@ const DietaryInfo: FC<IDietaryInfo> = ({ diets }) => {
           <Styled.Diet key={`diet-${count}`}>{diet}</Styled.Diet>
         ))}
     </Styled.Diets>
+  ) : (
+    <></>
   );
 };
 

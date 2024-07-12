@@ -15,7 +15,6 @@ export const Diets = styled('div')(({ theme }) => ({
   background: theme.palette.secondary.main,
   borderRadius: '4px',
   display: 'inline-flex',
-  marginTop: '10px',
   overflow: 'hidden',
   padding: '5px',
   width: 'auto'

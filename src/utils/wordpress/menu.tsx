@@ -21,13 +21,29 @@ export const formatMenuItems = (menuItems: WPMenuChoices): IMenu => {
   menuItems.forEach((item) => {
     const categories: IMenuItem['category'] = item._embedded ? item._embedded['wp:term']?.map((catList) => catList.map((cat) => cat.name)).flat() : [];
     const newMenuItem: IMenuItem = {
+      additionalUnit: {
+        cost: item.acf.upgrade_additional_unit_cost.cost,
+        unit: item.acf.upgrade_additional_unit_cost.unit
+      },
       category: categories,
       description: item.acf.description as string,
       dietary: item.acf.dietary_information as IDiets[],
       id: item.id,
       image: item.acf.image as string,
+      isUpgrade: item.acf.is_upgrade,
+      minimumOrder: {
+        num: item.acf.upgrade_minimum_order_num,
+        percentage: item.acf.upgrade_minimum_order_percentage
+      },
       name: item.title.rendered,
-      plating: item.acf.plating_type as IMenuItemPlating
+      plating: item.acf.plating_type as IMenuItemPlating,
+      price: item.acf.upgrade_price,
+      priceFor: {
+        number: item.acf.upgrade_price_for.number,
+        unit: item.acf.upgrade_price_for.unit
+      },
+      priceType: item.acf.upgrade_price_type,
+      setupFee: item.acf.upgrade_setup_fee
     };
 
     if (categories.includes('Evening Menu')) {

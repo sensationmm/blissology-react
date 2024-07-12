@@ -12,25 +12,29 @@ export const formatUpgradesResponse = (upgradeItems: WPUpgrades): IUpgrades => {
 
     const newUpgradeItem: IUpgradeItem = {
       additionalUnit: {
-        cost: item.acf.upgrades_additional_unit_cost.cost,
-        unit: item.acf.upgrades_additional_unit_cost.unit
+        cost: item.acf.upgrade_additional_unit_cost.cost,
+        unit: item.acf.upgrade_additional_unit_cost.unit
       },
       description: item.acf.upgrade_description,
       extraInfo: {
-        name: item.acf.upgrades_extra_info.title,
-        text: item.acf.upgrades_extra_info.text
+        text: item.acf.upgrades_extra_info.text,
+        title: item.acf.upgrades_extra_info.title
       },
       id: item.id,
       image: item.acf.upgrades_image,
-      minimumOrder: item.acf.upgrades_minimum_order,
-      name: item.title.rendered,
-      price: item.acf.upgrades_price,
-      priceFor: {
-        number: item.acf.upgrades_price_for.number,
-        unit: item.acf.upgrades_price_for.unit
+      isUpgrade: item.acf.is_upgrade,
+      minimumOrder: {
+        num: item.acf.upgrade_minimum_order_num,
+        percentage: item.acf.upgrade_minimum_order_percentage
       },
-      priceType: item.acf.upgrades_price_type,
-      setupFee: item.acf.upgrades_setup_fee
+      name: item.title.rendered,
+      price: item.acf.upgrade_price,
+      priceFor: {
+        number: item.acf.upgrade_price_for.number,
+        unit: item.acf.upgrade_price_for.unit
+      },
+      priceType: item.acf.upgrade_price_type,
+      setupFee: item.acf.upgrade_setup_fee
     };
 
     categories.forEach((cat) => {

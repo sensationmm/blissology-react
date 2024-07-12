@@ -2,21 +2,47 @@ import { FC } from 'react';
 
 import { CardProps } from '@mui/material';
 
+import { IMenuItem } from 'src/store/reducers/menu';
+
 import Icon from 'src/components/Icon';
 
 import * as Styled from './styles';
 
+type IListCardContentArgs = {
+  key: string;
+  value: keyof IMenuItem;
+};
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type IListCardContent = { id?: keyof IMenuItem; Component?: FC<any>; args?: IListCardContentArgs };
+
 type IListCard = {
   title: string;
-  content: Array<string | JSX.Element>;
+  content: IListCardContent[];
+  icons?: IListCardContent[];
   selected?: boolean;
   image?: string;
+  item: IMenuItem;
   onSelect?: () => void;
   sx?: CardProps['sx'];
 };
 
-const ListCard: FC<IListCard> = ({ title, content, image, selected = undefined, sx = {}, onSelect = undefined }) => {
+const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected = undefined, sx = {}, onSelect = undefined }) => {
   const paddingRight = image ? '40%' : selected !== undefined ? '35px' : 0;
+
+  const parseItem = (itemKey: IListCardContent, count: number) => {
+    const { id, Component, args } = itemKey;
+    const argsObj = args ? { [args.key]: item[args.value] } : {};
+    if (Component && id && item[id]) {
+      return <Component key={id} {...argsObj} />;
+    }
+    const string: string = item[id as keyof IMenuItem] as string;
+    return (
+      <Styled.Description key={`list-card-content-${count}`}>
+        <Styled.Typography variant={'body1'}>{string}</Styled.Typography>
+      </Styled.Description>
+    );
+  };
 
   return (
     <Styled.Card sx={{ paddingRight: paddingRight, ...sx }}>
@@ -24,17 +50,8 @@ const ListCard: FC<IListCard> = ({ title, content, image, selected = undefined, 
         {title}
       </Styled.Typography>
 
-      {content &&
-        content.length &&
-        content.map((item, count) =>
-          typeof item === 'string' ? (
-            <Styled.Typography key={`list-card-content-${count}`} variant={'body1'}>
-              {item}
-            </Styled.Typography>
-          ) : (
-            item
-          )
-        )}
+      {content && content.length > 0 && content.map(parseItem)}
+      {icons && icons.length > 0 && <Styled.Icons>{icons.map(parseItem)}</Styled.Icons>}
 
       {selected !== undefined && (
         <Styled.SelectedIcon onClick={onSelect}>

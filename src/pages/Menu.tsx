@@ -12,6 +12,7 @@ import DietaryInfo from 'src/components/DietaryInfo';
 import Layout from 'src/components/Layout/Layout';
 import TabbedCards, { ITabs2Setup, ITabsSetup } from 'src/components/TabbedCards';
 import ToggleFilter from 'src/components/ToggleFilter';
+import UpgradeIcon from 'src/components/UpgradeIcon';
 
 import { useSnackbar } from 'src/hooks/useSnackbar';
 import { useUnsaved } from 'src/hooks/useUnsaved';
@@ -194,7 +195,11 @@ const Menu = () => {
           Content={Menu}
           SelectedContent={MenuChoices}
           selectedContentKey="menuChoices"
-          cardContentKeys={[{ id: 'description' }, { Component: DietaryInfo, args: { key: 'diets', value: 'dietary' }, id: 'dietary' }]}
+          cardContentKeys={[{ id: 'description' }]}
+          cardIconKeys={[
+            { Component: DietaryInfo, args: { key: 'diets', value: 'dietary' }, id: 'dietary' },
+            { Component: UpgradeIcon, id: 'isUpgrade' }
+          ]}
         />
       ) : (
         <></>

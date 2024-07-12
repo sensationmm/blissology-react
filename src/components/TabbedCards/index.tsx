@@ -1,4 +1,4 @@
-import { FC, FunctionComponent, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { Grid, Tab, Tabs } from '@mui/material';
 
@@ -6,20 +6,12 @@ import { RootState } from 'src/store';
 import { IFilters } from 'src/store/reducers/filters';
 import { IMenuItem } from 'src/store/reducers/menu';
 
+import EmptyCard from 'src/components/EmptyCard';
+import ListCard, { IListCardContent } from 'src/components/ListCard';
+import TabPanel from 'src/components/TabPanel';
+
 import { firstLetterUppercase } from 'src/utils/common';
 import { blissologyTheme } from 'src/utils/theme';
-
-// import DietaryInfo from '../DietaryInfo';
-import EmptyCard from '../EmptyCard';
-import ListCard from '../ListCard';
-import TabPanel from '../TabPanel';
-
-type IListCardContentArgs = {
-  key: string;
-  value: keyof IMenuItem;
-};
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-type IListCardContent = { id: keyof IMenuItem; Component?: FunctionComponent<any>; args?: IListCardContentArgs };
 
 export type ITabsSetup = {
   id: string;
@@ -44,6 +36,7 @@ type ITabbedCards = {
   fliterValue2Type?: string;
   cardSpan?: number;
   cardContentKeys?: IListCardContent[];
+  cardIconKeys?: IListCardContent[];
 };
 
 const TabbedCards: FC<ITabbedCards> = ({
@@ -53,6 +46,7 @@ const TabbedCards: FC<ITabbedCards> = ({
   tabs2Setup,
   onSelect,
   cardContentKeys = [{ id: 'description' }] as ITabbedCards['cardContentKeys'],
+  cardIconKeys = [],
   Content,
   Filters,
   SelectedContent,
@@ -120,15 +114,10 @@ const TabbedCards: FC<ITabbedCards> = ({
                 <Grid item xs={cardSpan} key={`menu-${type}-${index}`}>
                   <ListCard
                     title={menuItem.name}
-                    content={(cardContentKeys || []).map((key) => {
-                      const { id, Component, args } = key as IListCardContent;
-                      const argsObj = args ? { [args.key]: menuItem[args.value] } : {};
-                      if (Component) {
-                        return <Component key={id} {...argsObj} />;
-                      }
-                      return menuItem[id as keyof IMenuItem] as string;
-                    })}
+                    content={cardContentKeys || []}
+                    icons={cardIconKeys}
                     image={menuItem.image}
+                    item={menuItem}
                     selected={selectedContent?.includes(menuItem.id) || false}
                     onSelect={() => onSelect(menuItem.id, type, SelectedContent, selectedContentKey)}
                     sx={{ minHeight: '100px' }}

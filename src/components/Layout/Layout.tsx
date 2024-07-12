@@ -155,7 +155,7 @@ const Layout: FC<ILayoutProps> = ({ title, children, actions }) => {
                 return (
                   <ListItemButton key={`nav-${count}`} onClick={() => navigate(item.url)} selected={location.pathname === item.url}>
                     <ListItemIcon>
-                      <Icon iconKey={item.icon} />
+                      <Icon iconKey={item.icon} fontSize="large" />
                     </ListItemIcon>
                     <ListItemText primary={item.label} />
                   </ListItemButton>

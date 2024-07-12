@@ -203,6 +203,20 @@ export const blissologyTheme = createTheme({
           minHeight: 80
         }
       }
+    },
+    MuiTooltip: {
+      styleOverrides: {
+        tooltip: {
+          backgroundColor: initialThemeSetup.palette.secondary.main
+        }
+      }
+    },
+    MuiTypography: {
+      styleOverrides: {
+        root: {
+          whiteSpace: 'pre-wrap'
+        }
+      }
     }
   }
 });
