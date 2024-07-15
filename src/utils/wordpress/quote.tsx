@@ -7,6 +7,16 @@ type WPQuoteConfig = {
   [key: string]: any;
 };
 
+type WPPackageChoice = {
+  package_description: string;
+  package_cost: number;
+  taxonomy: {
+    term_id: string;
+    name: string;
+    slug: string;
+  };
+};
+
 export const formatQuoteConfigResponse = (quoteConfig: WPQuoteConfig): IQuoteConfig => {
   const qc: IQuoteConfig = {
     packages: [],
@@ -31,7 +41,14 @@ export const formatQuoteConfigResponse = (quoteConfig: WPQuoteConfig): IQuoteCon
                     qc.setFees.push(parsedItem);
                   } else if (key === 'packages') {
                     const parsedItem: IQuotePackageItem = {
-                      choices: item.package_choices,
+                      choices: item.package_choices.map((choice: WPPackageChoice) => ({
+                        ...choice,
+                        taxonomy: {
+                          id: choice.taxonomy.term_id,
+                          name: choice.taxonomy.name,
+                          slug: choice.taxonomy.slug
+                        }
+                      })),
                       cost: item.package_cost,
                       description: item.package_description
                     };
@@ -54,6 +71,7 @@ export const generateQuote = (quoteConfig: IQuoteConfig) => {
   const items = [];
   let quoteTotal = 0;
 
+  // Base Fees
   quoteConfig.setFees.forEach((fee: IQuoteConfigItem) => {
     quoteTotal += fee.unit_price;
     items.push(quoteTableData(fee.description, '1', currencyFormat(fee.unit_price), currencyFormat(fee.unit_price)));

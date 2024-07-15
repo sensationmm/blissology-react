@@ -7,7 +7,11 @@ export type IQuoteConfigItem = {
 
 export type IQuotePackageChoiceItem = {
   name: string;
-  taxonomyID: number;
+  taxonomy: {
+    id: number;
+    name: string;
+    slug: string;
+  };
   minimum: number;
   maximum: number;
   additional_allowed: boolean;
