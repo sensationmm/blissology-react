@@ -2,6 +2,7 @@ import Accommodation from 'src/pages/Accommodation';
 import Dashboard from 'src/pages/Dashboard';
 import Guests from 'src/pages/Guests';
 import Menu from 'src/pages/Menu';
+import Quote from 'src/pages/Quote';
 import Suppliers from 'src/pages/Suppliers';
 import Upgrades from 'src/pages/Upgrades';
 
@@ -20,6 +21,12 @@ const navigation: INavigation[] = [
     icon: 'dashboard',
     label: 'Dashboard',
     url: '/dashboard'
+  },
+  {
+    Component: Quote,
+    icon: 'quote',
+    label: 'Quotes',
+    url: '/quote'
   },
   {
     Component: Guests,

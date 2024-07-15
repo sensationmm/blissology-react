@@ -14,10 +14,10 @@ export type IWeddingState = {
 };
 
 const initialState: IWeddingState = {
-  weddingID: undefined,
-  weddingName: undefined,
   date: undefined,
-  deadlines: []
+  deadlines: [],
+  weddingID: undefined,
+  weddingName: undefined
 };
 
 const weddingReducer = (state = initialState, action: any) => {

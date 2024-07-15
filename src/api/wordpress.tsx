@@ -3,11 +3,11 @@
 
 import siteConfig from 'src/siteConfig';
 
-export const wpRestApiHandler = function (route: string, data: any, method = 'GET', authToken: string) {
+export const wpRestApiHandler = function (route: string, data: any, method = 'GET', authToken: string, isPost: boolean = true) {
   if (!route) route = 'posts';
   if (!method) method = 'GET';
 
-  const suffix = method === 'GET' ? '?_embed=wp:term&_fields=id,title,_links,_embedded,acf&acf_format=standard&per_page=100&orderby=title&order=asc' : '';
+  const suffix = method === 'GET' && isPost ? '?_embed=wp:term&_fields=id,title,_links,_embedded,acf&acf_format=standard&per_page=100&orderby=title&order=asc' : '';
 
   return fetch(`${siteConfig.cmsDomain}/wp-json/wp/v2/${route}${suffix}`, {
     method,

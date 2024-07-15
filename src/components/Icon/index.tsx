@@ -18,6 +18,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PaletteIcon from '@mui/icons-material/Palette';
+import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
 import VideocamIcon from '@mui/icons-material/Videocam';
@@ -41,6 +42,7 @@ const Icons = {
   menu: MenuIcon,
   notification: NotificationsIcon,
   photographer: CameraAltIcon,
+  quote: PointOfSaleIcon,
   selected: CheckBoxIcon,
   stylist: PaletteIcon,
   suppliers: CameraEnhanceIcon,
