@@ -25,7 +25,10 @@ const weddingReducer = (state = initialState, action: any) => {
     case 'wedding/set':
       return {
         ...state,
-        ...action.payload
+        date: action.payload.date,
+        deadlines: action.payload.deadlines,
+        weddingID: action.payload.weddingID,
+        weddingName: action.payload.weddingName
       };
     case 'auth/logout':
       return initialState;

@@ -45,6 +45,7 @@ const App: React.FC = () => {
       payload: {
         date: wedding[0]?.acf?.wedding_date,
         deadlines: wedding[0]?.acf?.deadlines,
+        payments: wedding[0]?.acf?.payments,
         weddingID: wedding[0].id,
         weddingName: wedding[0].title.rendered
       },

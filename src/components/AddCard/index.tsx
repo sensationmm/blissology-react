@@ -17,7 +17,7 @@ const AddCard: FC<IAddCard> = ({ label, onClick }) => {
       <Styled.CardIcon>
         <Icon iconKey="add" color={!isHovering ? 'secondary' : 'primary'} fontSize="inherit" />
       </Styled.CardIcon>
-      <Styled.AddLabel variant="body1" color={!isHovering ? 'secondary' : 'primary'} sx={{}}>
+      <Styled.AddLabel variant="body1" color={!isHovering ? 'secondary' : 'primary'}>
         {label}
       </Styled.AddLabel>
     </Styled.Container>

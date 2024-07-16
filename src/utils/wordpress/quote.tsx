@@ -1,8 +1,9 @@
 import { IGuests } from 'src/store/reducers/guests';
+import { IPayment } from 'src/store/reducers/payments';
 import { IQuoteConfig, IQuoteConfigItem, IQuotePackageItem } from 'src/store/reducers/quoteConfig';
 import { IRoom, IRooms } from 'src/store/reducers/rooms';
 
-import { currencyFormat, uniqueArrayObjects } from '../common';
+import { blissDate, currencyFormat, uniqueArrayObjects } from '../common';
 
 type WPQuoteConfig = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -74,7 +75,7 @@ const quoteTableData = (description: string, quantity: string, unitPrice: string
   return { description, quantity, total, unitPrice };
 };
 
-export const generateQuote = (QuoteConfig: IQuoteConfig, Guests: IGuests, Rooms: IRooms) => {
+export const generateQuote = (QuoteConfig: IQuoteConfig, Guests: IGuests, Payments: IPayment[], Rooms: IRooms) => {
   const items = [];
   let quoteTotal = 0;
 
@@ -113,6 +114,13 @@ export const generateQuote = (QuoteConfig: IQuoteConfig, Guests: IGuests, Rooms:
     const occurrences = roomBreakdown.filter((rb) => JSON.stringify(rb) === stringified).length;
     const lineTotal = addToTotal(occurrences, rbc.costPerNight);
     items.push(quoteTableData(rbc.costCategory as string, occurrences.toString(), currencyFormat(rbc.costPerNight), currencyFormat(lineTotal)));
+  });
+
+  // Payments Received
+  Payments?.map((payment) => {
+    const paymentValue = payment.amount * -1;
+    const lineTotal = addToTotal(1, paymentValue);
+    items.push(quoteTableData(`${payment.label || 'Payment'} (Received ${blissDate(payment.date, true)})`, '', '', currencyFormat(lineTotal)));
   });
 
   items.push(quoteTableData('Invoice Total', '', '', currencyFormat(quoteTotal)));

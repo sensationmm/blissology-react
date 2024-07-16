@@ -79,8 +79,10 @@ export const firstLetterUppercase = (testString: string): boolean => {
 };
 
 export const currencyFormat = (num: number) => {
-  const value = parseInt(num as unknown as string);
-  return '£' + value.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+  const isNegative = num < 0;
+  const value = parseInt((!isNegative ? num : num * -1) as unknown as string);
+  const currency = '£' + value.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+  return !isNegative ? currency : `(${currency})`;
 };
 
 export const uniqueArrayObjects = (array: Array<unknown>) => {
