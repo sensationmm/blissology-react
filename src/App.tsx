@@ -45,31 +45,15 @@ const App: React.FC = () => {
       payload: {
         date: wedding[0]?.acf?.wedding_date,
         deadlines: wedding[0]?.acf?.deadlines,
+        guests: formatWeddingGuestsResponse(wedding[0]?.acf?.guests),
+        menuChoices: formatMenuChoicesResponse(wedding[0]?.acf?.menuChoices),
         payments: wedding[0]?.acf?.payments,
+        suppliers: formatSuppliersResponse(wedding[0]?.acf?.suppliers),
+        upgradeChoices: formatUpgradeChoicesResponse(wedding[0]?.acf?.upgradeChoices),
         weddingID: wedding[0].id,
         weddingName: wedding[0].title.rendered
       },
       type: 'wedding/set'
-    });
-
-    store.dispatch({
-      payload: formatWeddingGuestsResponse(wedding[0]?.acf?.guests),
-      type: 'guests/set'
-    });
-
-    store.dispatch({
-      payload: formatSuppliersResponse(wedding[0]?.acf?.suppliers),
-      type: 'suppliers/set'
-    });
-
-    store.dispatch({
-      payload: formatMenuChoicesResponse(wedding[0]?.acf?.menuChoices),
-      type: 'menuChoices/set'
-    });
-
-    store.dispatch({
-      payload: formatUpgradeChoicesResponse(wedding[0]?.acf?.upgradeChoices),
-      type: 'upgradeChoices/set'
     });
   };
 

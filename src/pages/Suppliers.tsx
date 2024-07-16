@@ -209,7 +209,7 @@ const Suppliers = () => {
           <Grid item xs={4}>
             <AddCard label="Add Supplier" onClick={() => setShowEdit(true)} />
           </Grid>
-          {Object.values(Suppliers).map((supplier: ISupplier) => {
+          {Suppliers.map((supplier: ISupplier) => {
             return (
               <Grid key={`supplier-${supplier.contactEmail}`} item xs={4}>
                 <EditCard

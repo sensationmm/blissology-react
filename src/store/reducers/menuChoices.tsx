@@ -31,8 +31,9 @@ const initialState: IMenuChoices = {
 
 const menuChoicesReducer = (state = initialState, action: any) => {
   switch (action.type) {
+    case 'wedding/set':
     case 'menuChoices/set':
-      return action.payload;
+      return action.payload.menuChoices;
     case 'menuChoices/update': {
       return {
         ...state,

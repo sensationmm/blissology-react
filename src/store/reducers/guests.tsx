@@ -16,10 +16,11 @@ const initialState: IGuests = {} as IGuests;
 
 const guestsReducer = (state = initialState, action: any) => {
   switch (action.type) {
+    case 'wedding/set':
     case 'guests/set':
       return {
         ...state,
-        ...action.payload
+        ...action.payload.guests
       };
     case 'guests/update': {
       const topLevel = state[action.payload.topLevel as keyof IGuests] as IGuestBreakdown;

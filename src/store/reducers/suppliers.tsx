@@ -16,11 +16,9 @@ const initialState: ISupplier[] = [] as ISupplier[];
 
 const suppliersReducer = (state = initialState, action: any) => {
   switch (action.type) {
+    case 'wedding/set':
     case 'suppliers/set':
-      return {
-        ...state,
-        ...action.payload
-      };
+      return action.payload.suppliers;
     case 'suppliers/update': {
       return action.payload;
     }
