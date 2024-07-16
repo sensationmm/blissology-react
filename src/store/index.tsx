@@ -6,6 +6,7 @@ import guestsReducer from './reducers/guests';
 import menuReducer from './reducers/menu';
 import menuChoicesReducer from './reducers/menuChoices';
 import quoteConfigReducer from './reducers/quoteConfig';
+import roomsReducer from './reducers/rooms';
 import suppliersReducer from './reducers/suppliers';
 import uiReducer from './reducers/ui';
 import upgradeChoicesReducer from './reducers/upgradeChoices';
@@ -20,6 +21,7 @@ const store = configureStore({
     menu: menuReducer,
     menuChoices: menuChoicesReducer,
     quoteConfig: quoteConfigReducer,
+    rooms: roomsReducer,
     suppliers: suppliersReducer,
     ui: uiReducer,
     upgradeChoices: upgradeChoicesReducer,
