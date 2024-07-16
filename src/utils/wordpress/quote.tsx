@@ -1,3 +1,4 @@
+import { IGuests } from 'src/store/reducers/guests';
 import { IQuoteConfig, IQuoteConfigItem, IQuotePackageItem } from 'src/store/reducers/quoteConfig';
 
 import { currencyFormat } from '../common';
@@ -10,6 +11,10 @@ type WPQuoteConfig = {
 type WPPackageChoice = {
   package_description: string;
   package_cost: number;
+  package_price_calculation: {
+    guest_type: string;
+    timeframe: string;
+  };
   taxonomy: {
     term_id: string;
     name: string;
@@ -41,7 +46,7 @@ export const formatQuoteConfigResponse = (quoteConfig: WPQuoteConfig): IQuoteCon
                     qc.setFees.push(parsedItem);
                   } else if (key === 'packages') {
                     const parsedItem: IQuotePackageItem = {
-                      choices: item.package_choices.map((choice: WPPackageChoice) => ({
+                      choices: (item.package_choices || []).map((choice: WPPackageChoice) => ({
                         ...choice,
                         taxonomy: {
                           id: choice.taxonomy.term_id,
@@ -50,7 +55,8 @@ export const formatQuoteConfigResponse = (quoteConfig: WPQuoteConfig): IQuoteCon
                         }
                       })),
                       cost: item.package_cost,
-                      description: item.package_description
+                      description: item.package_description,
+                      priceCalculation: item.package_price_calculation
                     };
                     qc.packages.push(parsedItem);
                   }
@@ -67,15 +73,36 @@ const quoteTableData = (description: string, quantity: string, unitPrice: string
   return { description, quantity, total, unitPrice };
 };
 
-export const generateQuote = (quoteConfig: IQuoteConfig) => {
+export const generateQuote = (quoteConfig: IQuoteConfig, Guests: IGuests) => {
   const items = [];
   let quoteTotal = 0;
 
+  const addToTotal = (units: number, unitPrice: number) => {
+    const valueToAdd = units * unitPrice;
+    quoteTotal += valueToAdd;
+
+    return valueToAdd;
+  };
+
   // Base Fees
   quoteConfig.setFees.forEach((fee: IQuoteConfigItem) => {
-    quoteTotal += fee.unit_price;
-    items.push(quoteTableData(fee.description, '1', currencyFormat(fee.unit_price), currencyFormat(fee.unit_price)));
+    const lineTotal = addToTotal(1, fee.unit_price);
+    items.push(quoteTableData(fee.description, '1', currencyFormat(fee.unit_price), currencyFormat(lineTotal)));
   });
+
+  // Menu Choices Package Check
+  quoteConfig.packages.forEach((packageItem: IQuotePackageItem) => {
+    const quantity = Guests[packageItem.priceCalculation.timeframe][packageItem.priceCalculation.guest_type];
+    const lineTotal = addToTotal(quantity, packageItem.cost);
+    items.push(quoteTableData(packageItem.description, quantity.toString(), currencyFormat(packageItem.cost), currencyFormat(lineTotal)));
+  });
+
+  // TODO: user adds number of orders where necessary
+  // Upgrades
+  // const myUpgrades = Object.values(Upgrades)
+  //   .flat()
+  //   .filter((upgr) => UpgradeChoices.includes(upgr.id));
+  // myUpgrades.forEach(());
 
   items.push(quoteTableData('Invoice Total', '', '', currencyFormat(quoteTotal)));
 

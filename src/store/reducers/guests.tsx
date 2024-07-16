@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-type IGuestBreakdown = {
+export type IGuestBreakdown = {
   adults: number;
   children: number;
   babies: number;

@@ -32,6 +32,7 @@ export const formatMenuItems = (menuItems: WPMenuChoices): IMenu => {
       image: item.acf.image as string,
       isUpgrade: item.acf.is_upgrade,
       minimumOrder: {
+        hasMinimum: item.acf.upgrade_minimum_order.type,
         num: item.acf.upgrade_minimum_order_num,
         percentage: item.acf.upgrade_minimum_order_percentage
       },

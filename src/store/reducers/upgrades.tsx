@@ -9,6 +9,7 @@ export type IUpgradeParams = {
   };
   isUpgrade: boolean;
   minimumOrder: {
+    hasMinimum: 'none' | 'people' | 'percentage';
     num: number;
     percentage: number;
   };

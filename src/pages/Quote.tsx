@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Card, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
 import store, { RootState } from 'src/store';
 
@@ -12,17 +12,23 @@ import Layout from 'src/components/Layout/Layout';
 import { formatQuoteConfigResponse, generateQuote } from 'src/utils/wordpress/quote';
 
 const Quote = () => {
-  const authState = (state: RootState['auth']) => state.auth;
-  const { token } = useSelector(authState);
-  const quoteConfig = (state: RootState['auth']) => state.quoteConfig;
-  const QuoteConfig = useSelector(quoteConfig);
+  const state = (state: RootState) => state;
+  const { auth, guests: Guests, quoteConfig: QuoteConfig } = useSelector(state);
+  // const authState = (state: RootState['auth']) => state.auth;
+  // const { token } = useSelector(authState);
+  // const quoteConfig = (state: RootState['auth']) => state.quoteConfig;
+  // const QuoteConfig = useSelector(quoteConfig);
+  // const guests = (state: RootState['auth']) => state.guests;
+  // const Guests = useSelector(guests);
+  // const upgrades = (state: RootState['upgrades']) => state.upgrades;
+  // const Upgrades = useSelector(upgrades);
 
   useEffect(() => {
     store.dispatch({
       payload: { isLoading: true },
       type: 'ui/setLoading'
     });
-    wpRestApiHandler(`options/all`, undefined, 'GET', token, false).then(async (resp) => {
+    wpRestApiHandler(`options/all`, undefined, 'GET', auth.token, false).then(async (resp) => {
       const respJson = await resp.json();
 
       const dispatchPayload = formatQuoteConfigResponse(respJson);
@@ -38,44 +44,50 @@ const Quote = () => {
     });
   }, []);
 
-  const quote = generateQuote(QuoteConfig);
+  const quote = generateQuote(QuoteConfig, Guests);
 
   return (
     <Layout title="Your Latest Quote">
       <Grid container spacing={2}>
         <Grid item xs={8}>
-          <TableContainer component={Paper}>
-            <Table sx={{ width: '100%' }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell>Description</TableCell>
-                  <TableCell>Quantity</TableCell>
-                  <TableCell>Unit Price</TableCell>
-                  <TableCell>Total</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {quote.map((item: Record<string, string | null>, count: number) => {
-                  const { description, quantity, total, unitPrice } = item;
-                  return (
-                    <TableRow key={`set-fee-${count}`}>
-                      <TableCell component="th" scope="row">
-                        {description}
-                      </TableCell>
-                      <TableCell>{quantity}</TableCell>
-                      <TableCell>{unitPrice}</TableCell>
-                      <TableCell component="th" scope="row">
-                        {total}
-                      </TableCell>
-                    </TableRow>
-                  );
-                })}
-              </TableBody>
-            </Table>
-          </TableContainer>
+          <Card>
+            <TableContainer>
+              <Table sx={{ width: '100%' }}>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Description</TableCell>
+                    <TableCell align="center">Quantity</TableCell>
+                    <TableCell align="right">Unit Price</TableCell>
+                    <TableCell align="right">Total</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {quote.map((item: Record<string, string | null>, count: number) => {
+                    const { description, quantity, total, unitPrice } = item;
+                    return (
+                      <TableRow key={`set-fee-${count}`}>
+                        <TableCell component="th" scope="row">
+                          {description}
+                        </TableCell>
+                        <TableCell align="center">{quantity}</TableCell>
+                        <TableCell align="right">{unitPrice}</TableCell>
+                        <TableCell align="right">{total}</TableCell>
+                      </TableRow>
+                    );
+                  })}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Card>
         </Grid>
+
         <Grid item xs={4}>
-          <Typography variant="h2">Payments</Typography>
+          <Card sx={{ mb: '20px' }}>
+            <Typography variant="h2">Payments</Typography>
+          </Card>
+          <Card>
+            <Typography variant="h2">Payment Schedule</Typography>
+          </Card>
         </Grid>
       </Grid>
     </Layout>

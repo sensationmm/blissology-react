@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { IGuestBreakdown, IGuests } from './guests';
+
 export type IQuoteConfigItem = {
   description: string;
   unit_price: number;
@@ -22,6 +24,10 @@ export type IQuotePackageItem = {
   description: string;
   cost: number;
   choices: IQuotePackageChoiceItem[];
+  priceCalculation: {
+    guest_type: keyof Omit<IGuestBreakdown, 'total'>;
+    timeframe: keyof Omit<IGuests, 'total'>;
+  };
 };
 
 export type IQuoteConfig = {

@@ -24,8 +24,9 @@ export const formatUpgradesResponse = (upgradeItems: WPUpgrades): IUpgrades => {
       image: item.acf.upgrades_image,
       isUpgrade: item.acf.is_upgrade,
       minimumOrder: {
-        num: item.acf.upgrade_minimum_order_num,
-        percentage: item.acf.upgrade_minimum_order_percentage
+        hasMinimum: item.acf.upgrade_minimum_order.type,
+        num: item.acf.upgrade_minimum_order.num,
+        percentage: item.acf.upgrade_minimum_order.percentage
       },
       name: item.title.rendered,
       price: item.acf.upgrade_price,
