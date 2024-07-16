@@ -23,17 +23,17 @@ type IUpgradesSetup = {
 };
 
 const Upgrades = () => {
-  const authState = (state: RootState['auth']) => state.auth;
+  const authState = (state: RootState) => state.auth;
   const { token } = useSelector(authState);
-  const upgradesState = (state: RootState['upgrades']) => state.upgrades;
+  const upgradesState = (state: RootState) => state.upgrades;
   const Upgrades = useSelector(upgradesState);
-  const upgradeChoicesState = (state: RootState['upgradeChoices']) => state.upgradeChoices;
+  const upgradeChoicesState = (state: RootState) => state.upgradeChoices;
   const UpgradeChoices = useSelector(upgradeChoicesState);
   const filtersState = (state: RootState) => state.filters;
   const Filters: IFilters = useSelector(filtersState);
-  const uiState = (state: RootState['ui']) => state.ui;
+  const uiState = (state: RootState) => state.ui;
   const { isLoading } = useSelector(uiState);
-  const weddingState = (state: RootState['wedding']) => state.wedding;
+  const weddingState = (state: RootState) => state.wedding;
   const { weddingID } = useSelector(weddingState);
 
   const [resetUpgradeChoices, setResetUpgradeChoices] = useState<RootState['upgradeChoices']>();

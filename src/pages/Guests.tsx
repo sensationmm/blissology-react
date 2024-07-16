@@ -19,9 +19,9 @@ import { capitalize } from 'src/utils/common';
 import { weddingGuestsPayload } from 'src/utils/wordpress/wedding';
 
 const Guests = () => {
-  const authState = (state: RootState['auth']) => state.auth;
-  const weddingState = (state: RootState['wedding']) => state.wedding;
-  const guestsState = (state: RootState['guests']) => state.guests;
+  const authState = (state: RootState) => state.auth;
+  const weddingState = (state: RootState) => state.wedding;
+  const guestsState = (state: RootState) => state.guests;
 
   const Guests = useSelector(guestsState);
   const { userID, token } = useSelector(authState);

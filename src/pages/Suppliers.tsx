@@ -27,9 +27,9 @@ interface IEditSupplier extends ISupplier {
 }
 
 const Suppliers = () => {
-  const authState = (state: RootState['auth']) => state.auth;
-  const weddingState = (state: RootState['wedding']) => state.wedding;
-  const suppliersState = (state: RootState['suppliers']) => state.suppliers;
+  const authState = (state: RootState) => state.auth;
+  const weddingState = (state: RootState) => state.wedding;
+  const suppliersState = (state: RootState) => state.suppliers;
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const [errors, setErrors] = useState<Record<string, string>>();
 

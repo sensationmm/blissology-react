@@ -20,17 +20,17 @@ import { formatMenuItems } from 'src/utils/wordpress/menu';
 import { menuChoicesPayload } from 'src/utils/wordpress/menuChoices';
 
 const Menu = () => {
-  const authState = (state: RootState['auth']) => state.auth;
+  const authState = (state: RootState) => state.auth;
   const { token } = useSelector(authState);
-  const menuChoicesState = (state: RootState['menuChoices']) => state.menuChoices;
+  const menuChoicesState = (state: RootState) => state.menuChoices;
   const MenuChoices = useSelector(menuChoicesState);
   const filtersState = (state: RootState) => state.filters;
   const Filters: IFilters = useSelector(filtersState);
-  const menuState = (state: RootState['menu']) => state.menu;
+  const menuState = (state: RootState) => state.menu;
   const Menu = useSelector(menuState);
-  const uiState = (state: RootState['ui']) => state.ui;
+  const uiState = (state: RootState) => state.ui;
   const { isLoading } = useSelector(uiState);
-  const weddingState = (state: RootState['wedding']) => state.wedding;
+  const weddingState = (state: RootState) => state.wedding;
   const { weddingID } = useSelector(weddingState);
 
   const [resetMenuChoices, setResetMenuChoices] = useState<RootState['menuChoices']>();

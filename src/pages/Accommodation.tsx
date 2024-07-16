@@ -15,9 +15,9 @@ import Layout from 'src/components/Layout/Layout';
 import { formatRoomsResponse } from 'src/utils/wordpress/rooms';
 
 const Accommodation = () => {
-  const authState = (state: RootState['auth']) => state.auth;
+  const authState = (state: RootState) => state.auth;
   const { token } = useSelector(authState);
-  const roomsState = (state: RootState['rooms']) => state.rooms;
+  const roomsState = (state: RootState) => state.rooms;
   const Rooms: IRooms = useSelector(roomsState);
 
   useEffect(() => {

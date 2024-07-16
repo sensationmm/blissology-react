@@ -38,9 +38,9 @@ type ILayoutProps = {
 };
 
 const Layout: FC<ILayoutProps> = ({ title, children, actions }) => {
-  const uiState = (state: RootState['ui']) => state.ui;
-  const authState = (state: RootState['auth']) => state.auth;
-  const weddingState = (state: RootState['wedding']) => state.wedding;
+  const uiState = (state: RootState) => state.ui;
+  const authState = (state: RootState) => state.auth;
+  const weddingState = (state: RootState) => state.wedding;
   const navigate = useNavigate();
   const location = useLocation();
   const { menuOpen, isLoading } = useSelector(uiState);

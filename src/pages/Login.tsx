@@ -14,7 +14,7 @@ import Layout from 'src/components/Layout/Layout';
 
 import { bakeCookie } from 'src/utils/cookie';
 
-const authState = (state: RootState['auth']) => state.auth;
+const authState = (state: RootState) => state.auth;
 
 const Login = () => {
   const [username, setUsername] = useState('brianandkevin');

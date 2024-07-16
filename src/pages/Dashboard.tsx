@@ -20,8 +20,8 @@ import { blissDate, wpDateToTimestamp } from 'src/utils/common';
 // } | null;
 
 const Dashboard = () => {
-  const authState = (state: RootState['auth']) => state.auth;
-  const weddingState = (state: RootState['wedding']) => state.wedding;
+  const authState = (state: RootState) => state.auth;
+  const weddingState = (state: RootState) => state.wedding;
   const { userID } = useSelector(authState);
   const { deadlines } = useSelector(weddingState);
 
