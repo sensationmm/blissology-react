@@ -13,7 +13,7 @@ import { formatQuoteConfigResponse, generateQuote } from 'src/utils/wordpress/qu
 
 const Quote = () => {
   const state = (state: RootState) => state;
-  const { auth, guests: Guests, quoteConfig: QuoteConfig } = useSelector(state);
+  const { auth, guests: Guests, quoteConfig: QuoteConfig, rooms: Rooms } = useSelector(state);
   // const authState = (state: RootState['auth']) => state.auth;
   // const { token } = useSelector(authState);
   // const quoteConfig = (state: RootState['auth']) => state.quoteConfig;
@@ -44,7 +44,7 @@ const Quote = () => {
     });
   }, []);
 
-  const quote = generateQuote(QuoteConfig, Guests);
+  const quote = generateQuote(QuoteConfig, Guests, Rooms);
 
   return (
     <Layout title="Your Latest Quote">

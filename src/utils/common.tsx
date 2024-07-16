@@ -82,3 +82,7 @@ export const currencyFormat = (num: number) => {
   const value = parseInt(num as unknown as string);
   return '£' + value.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
 };
+
+export const uniqueArrayObjects = (array: Array<unknown>) => {
+  return array.filter((obj1, i, arr) => arr.findIndex((obj2) => JSON.stringify(obj2) === JSON.stringify(obj1)) === i);
+};
