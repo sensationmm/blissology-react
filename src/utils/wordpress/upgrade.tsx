@@ -1,5 +1,7 @@
 import { IUpgradeItem, IUpgrades } from 'src/store/reducers/upgrades';
 
+import { IDiets } from 'src/components/DietaryInfo';
+
 import { WPPost } from 'src/types/wp-rest-api';
 
 export type WPUpgrades = WPPost[];
@@ -16,6 +18,7 @@ export const formatUpgradesResponse = (upgradeItems: WPUpgrades): IUpgrades => {
         unit: item.acf.upgrade_additional_unit_cost.unit
       },
       description: item.acf.upgrade_description,
+      dietary: item.acf.dietary_information as IDiets[],
       extraInfo: {
         text: item.acf.upgrades_extra_info.text,
         title: item.acf.upgrades_extra_info.title
@@ -29,6 +32,7 @@ export const formatUpgradesResponse = (upgradeItems: WPUpgrades): IUpgrades => {
         percentage: item.acf.upgrade_minimum_order.percentage
       },
       name: item.title.rendered,
+      postType: 'upgrade',
       price: item.acf.upgrade_price,
       priceFor: {
         number: item.acf.upgrade_price_for.number,

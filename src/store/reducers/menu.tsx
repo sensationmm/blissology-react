@@ -1,11 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { IDiets } from 'src/components/DietaryInfo';
 
-import { IUpgradeParams } from './upgrades';
-
 export type IMenuItemPlating = 'plated' | 'feasting';
 
-export interface IMenuItem extends IUpgradeParams {
+export type IMenuItem = {
   id: number;
   category: Array<string>;
   dietary: IDiets[];
@@ -13,7 +11,9 @@ export interface IMenuItem extends IUpgradeParams {
   name: string;
   image: string;
   plating: IMenuItemPlating;
-}
+  postType: string;
+  upcharge?: number;
+};
 
 export type IMenu = {
   dinner: {

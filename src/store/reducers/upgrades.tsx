@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { IDiets } from 'src/components/DietaryInfo';
+
 export type IUpgradePriceType = 'pp' | 'set';
 
 export type IUpgradeParams = {
@@ -7,6 +9,7 @@ export type IUpgradeParams = {
     cost: number;
     unit: string;
   };
+  dietary: IDiets[];
   isUpgrade: boolean;
   minimumOrder: {
     hasMinimum: 'none' | 'people' | 'percentage';
@@ -31,6 +34,7 @@ export interface IUpgradeItem extends IUpgradeParams {
   };
   id: number;
   image: string;
+  postType: string;
 }
 
 export type IUpgrades = {

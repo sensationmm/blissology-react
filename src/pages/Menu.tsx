@@ -198,7 +198,7 @@ const Menu = () => {
           cardContentKeys={[{ id: 'description' }]}
           cardIconKeys={[
             { Component: DietaryInfo, args: { key: 'diets', value: 'dietary' }, id: 'dietary' },
-            { Component: UpgradeIcon, id: 'isUpgrade' }
+            { Component: UpgradeIcon, id: 'upcharge' }
           ]}
         />
       ) : (
