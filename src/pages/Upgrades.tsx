@@ -8,6 +8,7 @@ import { initialState as emptyUpgradesState } from 'src/store/reducers/upgrades'
 
 import { wpRestApiHandler } from 'src/api/wordpress';
 
+import DietaryInfo from 'src/components/DietaryInfo';
 import Layout from 'src/components/Layout/Layout';
 import TabbedCards from 'src/components/TabbedCards';
 
@@ -29,6 +30,8 @@ const Upgrades = () => {
   const Upgrades = useSelector(upgradesState);
   const upgradeChoicesState = (state: RootState) => state.upgradeChoices;
   const UpgradeChoices = useSelector(upgradeChoicesState);
+  const upgradeOrdersState = (state: RootState) => state.orders;
+  const UpgradeOrders = useSelector(upgradeOrdersState);
   const filtersState = (state: RootState) => state.filters;
   const Filters: IFilters = useSelector(filtersState);
   const uiState = (state: RootState) => state.ui;
@@ -37,6 +40,7 @@ const Upgrades = () => {
   const { weddingID } = useSelector(weddingState);
 
   const [resetUpgradeChoices, setResetUpgradeChoices] = useState<RootState['upgradeChoices']>();
+  const [resetUpgradeOrders, setResetUpgradeOrders] = useState<RootState['upgradeChoices']>();
   const [openSnackbar] = useSnackbar();
 
   const isEdited = JSON.stringify(UpgradeChoices) !== JSON.stringify(resetUpgradeChoices);
@@ -68,16 +72,24 @@ const Upgrades = () => {
     !resetUpgradeChoices && setResetUpgradeChoices(cloneDeep(UpgradeChoices));
   }, [UpgradeChoices]);
 
-  const onSelect = (itemID: number | string, type: string, stateObject: RootState[keyof RootState]) => {
+  useEffect(() => {
+    !resetUpgradeOrders && setResetUpgradeOrders(cloneDeep(UpgradeOrders));
+  }, [UpgradeOrders]);
+
+  const onSelect = (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string, orderNum: number | undefined) => {
     const currentChoices = stateObject.slice();
+    const currentOrders = cloneDeep(UpgradeOrders);
+
     if (currentChoices.includes(itemID)) {
       currentChoices.splice(currentChoices.indexOf(itemID), 1);
+      delete currentOrders[itemID];
     } else {
       currentChoices.push(itemID);
+      currentOrders[itemID] = orderNum;
     }
 
     store.dispatch({
-      payload: currentChoices,
+      payload: { orders: currentOrders, upgradeChoices: currentChoices },
       type: 'upgradeChoices/set'
     });
   };
@@ -92,7 +104,7 @@ const Upgrades = () => {
       `wedding/${weddingID}`,
       {
         acf: {
-          upgradeChoices: upgradeChoicesPayload(UpgradeChoices)
+          upgradeChoices: upgradeChoicesPayload(UpgradeChoices, UpgradeOrders)
         }
       },
       'POST',
@@ -117,7 +129,7 @@ const Upgrades = () => {
 
   const onResetChoices = () => {
     store.dispatch({
-      payload: resetUpgradeChoices,
+      payload: { orders: resetUpgradeOrders, upgradeChoices: resetUpgradeChoices },
       type: 'upgradeChoices/set'
     });
   };
@@ -143,9 +155,11 @@ const Upgrades = () => {
           Filters={Filters}
           Content={Upgrades}
           SelectedContent={UpgradeChoices}
+          SelectedOrders={UpgradeOrders}
           selectedContentKey="upgradeChoices"
           cardSpan={6}
           cardContentKeys={[{ id: 'description' }]}
+          cardIconKeys={[{ Component: DietaryInfo, args: { key: 'diets', value: 'dietary' }, id: 'dietary' }]}
         />
       ) : (
         <></>

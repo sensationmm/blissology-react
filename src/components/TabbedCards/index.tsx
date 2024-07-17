@@ -5,6 +5,8 @@ import { Grid, Tab, Tabs } from '@mui/material';
 import { RootState } from 'src/store';
 import { IFilters } from 'src/store/reducers/filters';
 import { IMenuItem } from 'src/store/reducers/menu';
+import { IOrders } from 'src/store/reducers/orders';
+import { IUpgradeParams } from 'src/store/reducers/upgrades';
 
 import EmptyCard from 'src/components/EmptyCard';
 import ListCard, { IListCardContent } from 'src/components/ListCard';
@@ -22,8 +24,10 @@ export type ITabs2Setup = {
   [key: string]: ITabsSetup[];
 };
 
+interface ITabbedCard extends IMenuItem, IUpgradeParams {}
+
 type ITabbedCards = {
-  onSelect: (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string) => void;
+  onSelect: (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string, orderNum?: number) => void;
   tabsSetup: ITabsSetup[];
   tabs2Setup?: ITabs2Setup;
   topLevelFilter?: JSX.Element;
@@ -32,6 +36,7 @@ type ITabbedCards = {
   Content: RootState[keyof RootState];
   SelectedContent: RootState[keyof RootState];
   selectedContentKey: keyof RootState;
+  SelectedOrders?: IOrders;
   filterValue2?: ITabbedCards['fliterValue2Type'];
   fliterValue2Type?: string;
   cardSpan?: number;
@@ -51,6 +56,7 @@ const TabbedCards: FC<ITabbedCards> = ({
   Filters,
   SelectedContent,
   selectedContentKey,
+  SelectedOrders,
   filterValue2,
   cardSpan = 4
 }) => {
@@ -98,20 +104,20 @@ const TabbedCards: FC<ITabbedCards> = ({
     );
   };
 
-  const renderTabItems = (items: IMenuItem[], type: string) => {
+  const renderTabItems = (items: ITabbedCard[], type: string) => {
     if (items.length > 0) {
       const filteredItems = !Filters
         ? items
-        : items.slice().filter((item: IMenuItem) => {
+        : items.slice().filter((item: ITabbedCard) => {
             return (Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) && (!item.plating || item.plating === filterValue2);
           });
       if (filteredItems.length > 0) {
         const selectedContent = firstLetterUppercase(type) ? SelectedContent : SelectedContent?.[type];
         return (
           <Grid container spacing={2} className="cards">
-            {filteredItems.map((menuItem: IMenuItem, index: number) => {
+            {filteredItems.map((menuItem: ITabbedCard, index: number) => {
               return (
-                <Grid item xs={cardSpan} key={`menu-${type}-${index}`}>
+                <Grid item xs={cardSpan} key={`menu-${type}-${index}`} sx={{ display: 'flex' }}>
                   <ListCard
                     title={menuItem.name}
                     content={cardContentKeys || []}
@@ -119,8 +125,18 @@ const TabbedCards: FC<ITabbedCards> = ({
                     image={menuItem.image}
                     item={menuItem}
                     selected={selectedContent?.includes(menuItem.id) || false}
-                    onSelect={() => onSelect(menuItem.id, type, SelectedContent, selectedContentKey)}
+                    onSelect={(orderNum?: number) => onSelect(menuItem.id, type, SelectedContent, selectedContentKey, orderNum)}
                     sx={{ minHeight: `${cardSpan * 2 * 20}px` }}
+                    order={
+                      menuItem.postType === 'upgrade' && !!menuItem.minimumOrder
+                        ? {
+                            min: menuItem.minimumOrder?.hasMinimum === 'people' ? menuItem.minimumOrder.num : menuItem.minimumOrder.percentage,
+                            required: menuItem.postType === 'upgrade' || menuItem.minimumOrder.hasMinimum !== 'none',
+                            type: menuItem.minimumOrder.hasMinimum
+                          }
+                        : undefined
+                    }
+                    ordered={SelectedOrders && Object.keys(SelectedOrders).includes(menuItem.id.toString()) ? SelectedOrders[menuItem.id] : undefined}
                   />
                 </Grid>
               );

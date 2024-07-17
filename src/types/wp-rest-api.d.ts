@@ -44,4 +44,5 @@ export type WPPost = {
 
 export type WPChoice = {
   choice: number;
+  order?: number;
 };

@@ -8,12 +8,14 @@ export const SelectedIcon = styled('div')(() => ({
   borderRadius: '4px',
   bottom: '5px',
   cursor: 'pointer',
+  display: 'flex',
   position: 'absolute',
   right: '5px',
   zIndex: 2
 }));
 
 export const Card = styled(MuiCard)(() => ({
+  paddingBottom: '60px',
   position: 'relative'
 }));
 
@@ -25,10 +27,12 @@ export const Description = styled('div')(() => ({
 
 export const Icons = styled('div')(() => ({
   alignItems: 'center',
+  bottom: '15px',
   display: 'flex',
   flexDirection: 'row',
   gap: '10px',
-  marginTop: '20px'
+  marginTop: '20px',
+  position: 'absolute'
 }));
 
 export const Typography = styled(MuiTypography)(() => ({
