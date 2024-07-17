@@ -120,7 +120,7 @@ const TabbedCards: FC<ITabbedCards> = ({
                     item={menuItem}
                     selected={selectedContent?.includes(menuItem.id) || false}
                     onSelect={() => onSelect(menuItem.id, type, SelectedContent, selectedContentKey)}
-                    sx={{ minHeight: '100px' }}
+                    sx={{ minHeight: `${cardSpan * 2 * 20}px` }}
                   />
                 </Grid>
               );

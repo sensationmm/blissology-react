@@ -19,7 +19,7 @@ export const Card = styled(MuiCard)(() => ({
 
 export const Description = styled('div')(() => ({
   marginTop: '20px',
-  maxHeight: '50px',
+  minHeight: '50px',
   overflow: 'hidden'
 }));
 
