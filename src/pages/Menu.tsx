@@ -193,7 +193,7 @@ const Menu = () => {
           selectedContentKey="menuChoices"
           cardContentKeys={[{ id: 'description' }]}
           cardIconKeys={[
-            { Component: DietaryInfo, args: { key: 'diets', value: 'dietary' }, id: 'dietary' },
+            { Component: DietaryInfo, args: [{ key: 'diets', value: 'dietary' }], id: 'dietary' },
             { Component: UpgradeIcon, id: 'upcharge' }
           ]}
         />

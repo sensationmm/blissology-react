@@ -2,7 +2,6 @@ import { FC, useState } from 'react';
 
 import { Button, CardProps, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText, Grid, Input, InputAdornment, InputLabel, Typography } from '@mui/material';
 
-import { IMenuItem } from 'src/store/reducers/menu';
 import { IUpgradeParams } from 'src/store/reducers/upgrades';
 
 import Icon from 'src/components/Icon';
@@ -11,11 +10,11 @@ import * as Styled from './styles';
 
 type IListCardContentArgs = {
   key: string;
-  value: keyof IMenuItem;
+  value: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type IListCardContent = { id?: keyof IMenuItem; Component?: FC<any>; args?: IListCardContentArgs };
+export type IListCardContent = { id?: string; Component?: FC<any>; args?: IListCardContentArgs[] };
 
 type IListCardOrder = {
   required: boolean;
@@ -29,7 +28,8 @@ type IListCard = {
   icons?: IListCardContent[];
   selected?: boolean;
   image?: string;
-  item: IMenuItem;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  item: Record<string, any>;
   onSelect?: (orderNum?: number) => void;
   sx?: CardProps['sx'];
   order?: IListCardOrder;
@@ -44,13 +44,16 @@ const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected 
 
   const parseItem = (itemKey: IListCardContent, count: number) => {
     const { id, Component, args } = itemKey;
-    const argsObj = args ? { [args.key]: item[args.value] } : {};
+    const argsObj: Record<string, string> = {};
+    args?.map((arg) => {
+      argsObj[arg.key] = item[arg.value];
+    });
 
     if (Component && id && item[id]) {
       return <Component key={id} {...argsObj} />;
     }
 
-    const string: string = item[id as keyof IMenuItem] as string;
+    const string: string = item[id as string] as string;
 
     if (!string) return;
 

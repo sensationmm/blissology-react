@@ -60,7 +60,7 @@ interface IIcon extends SvgIconProps {
 const Icon: FC<IIcon> = ({ iconKey, ...rest }) => {
   const Icon = Icons[iconKey as keyof typeof Icons];
 
-  return <Icon {...rest} />;
+  return <Icon fontSize="inherit" {...rest} />;
 };
 
 export default Icon;

@@ -169,7 +169,7 @@ const Upgrades = () => {
           selectedContentKey="upgradeChoices"
           cardSpan={6}
           cardContentKeys={[{ id: 'description' }]}
-          cardIconKeys={[{ Component: DietaryInfo, args: { key: 'diets', value: 'dietary' }, id: 'dietary' }]}
+          cardIconKeys={[{ Component: DietaryInfo, args: [{ key: 'diets', value: 'dietary' }], id: 'dietary' }]}
         />
       ) : (
         <></>

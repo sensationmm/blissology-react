@@ -9,6 +9,7 @@ export const SelectedIcon = styled('div')(() => ({
   bottom: '5px',
   cursor: 'pointer',
   display: 'flex',
+  fontSize: '1.6em',
   position: 'absolute',
   right: '5px',
   zIndex: 2
@@ -27,10 +28,11 @@ export const Description = styled('div')(() => ({
 
 export const Icons = styled('div')(() => ({
   alignItems: 'center',
-  bottom: '15px',
+  bottom: '10px',
   display: 'flex',
   flexDirection: 'row',
   gap: '10px',
+  left: '10px',
   marginTop: '20px',
   position: 'absolute'
 }));
