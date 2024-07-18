@@ -1,6 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
 
 import authReducer from './reducers/auth';
+import drinkChoicesReducer from './reducers/drinkChoices';
+import drinksReducer from './reducers/drinks';
 import filtersReducer from './reducers/filters';
 import guestsReducer from './reducers/guests';
 import menuReducer from './reducers/menu';
@@ -18,6 +20,8 @@ import weddingReducer from './reducers/wedding';
 const store = configureStore({
   reducer: {
     auth: authReducer,
+    drinkChoices: drinkChoicesReducer,
+    drinks: drinksReducer,
     filters: filtersReducer,
     guests: guestsReducer,
     menu: menuReducer,

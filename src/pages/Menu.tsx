@@ -152,7 +152,7 @@ const Menu = () => {
 
   return (
     <Layout
-      title="Menu"
+      title="Food Package"
       actions={[
         { color: 'secondary', disabled: !isEdited, label: 'Reset', onClick: onResetChoices },
         { disabled: !isEdited, label: 'Save', onClick: onSaveChoices }

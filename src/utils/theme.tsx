@@ -153,6 +153,15 @@ export const blissologyTheme = createTheme({
         }
       }
     },
+    MuiListItemText: {
+      styleOverrides: {
+        root: {
+          '.MuiTypography-root': {
+            whiteSpace: 'nowrap'
+          }
+        }
+      }
+    },
     MuiTab: {
       styleOverrides: {
         root: {

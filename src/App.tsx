@@ -18,6 +18,7 @@ import { readCookie } from 'src/utils/cookie';
 import { blissologyTheme } from 'src/utils/theme';
 
 import { UnsavedProvider } from './providers/UnsavedProvider';
+import { formatDrinkChoicesResponse } from './utils/wordpress/drinkChoices';
 import { formatMenuChoicesResponse } from './utils/wordpress/menuChoices';
 import { formatSuppliersResponse } from './utils/wordpress/supplier';
 import { formatUpgradeChoicesResponse, formatUpgradeOrdersResponse } from './utils/wordpress/upgradeChoices';
@@ -45,6 +46,7 @@ const App: React.FC = () => {
       payload: {
         date: wedding[0]?.acf?.wedding_date,
         deadlines: wedding[0]?.acf?.deadlines,
+        drinkChoices: formatDrinkChoicesResponse(wedding[0]?.acf?.drinkChoices),
         guests: formatWeddingGuestsResponse(wedding[0]?.acf?.guests),
         menuChoices: formatMenuChoicesResponse(wedding[0]?.acf?.menuChoices),
         orders: formatUpgradeOrdersResponse(wedding[0]?.acf?.upgradeChoices),
