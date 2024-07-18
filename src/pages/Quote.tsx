@@ -10,12 +10,22 @@ import { wpRestApiHandler } from 'src/api/wordpress';
 import Layout from 'src/components/Layout/Layout';
 
 import { blissDate, currencyFormat } from 'src/utils/common';
+import { generateQuote } from 'src/utils/generateQuote';
 import { blissologyTheme } from 'src/utils/theme';
-import { formatQuoteConfigResponse, generateQuote } from 'src/utils/wordpress/quote';
+import { formatQuoteConfigResponse } from 'src/utils/wordpress/quote';
 
 const Quote = () => {
   const state = (state: RootState) => state;
-  const { auth, guests: Guests, payments: Payments, quoteConfig: QuoteConfig, rooms: Rooms } = useSelector(state);
+  const {
+    auth,
+    guests: Guests,
+    orders: Orders,
+    payments: Payments,
+    quoteConfig: QuoteConfig,
+    rooms: Rooms,
+    upgrades: Upgrades,
+    upgradeChoices: UpgradeChoices
+  } = useSelector(state);
   // const authState = (state: RootState) => state.auth;
   // const { token } = useSelector(authState);
   // const quoteConfig = (state: RootState) => state.quoteConfig;
@@ -46,7 +56,7 @@ const Quote = () => {
     });
   }, []);
 
-  const quote = generateQuote(QuoteConfig, Guests, Payments, Rooms);
+  const quote = generateQuote(QuoteConfig, Guests, Orders, Payments, Rooms, Upgrades, UpgradeChoices);
 
   return (
     <Layout title="Your Latest Quote">

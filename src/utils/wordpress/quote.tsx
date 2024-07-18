@@ -1,9 +1,4 @@
-import { IGuests } from 'src/store/reducers/guests';
-import { IPayment } from 'src/store/reducers/payments';
 import { IQuoteConfig, IQuoteConfigItem, IQuotePackageItem } from 'src/store/reducers/quoteConfig';
-import { IRoom, IRooms } from 'src/store/reducers/rooms';
-
-import { blissDate, currencyFormat, uniqueArrayObjects } from '../common';
 
 type WPQuoteConfig = {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -69,61 +64,4 @@ export const formatQuoteConfigResponse = (quoteConfig: WPQuoteConfig): IQuoteCon
     });
 
   return qc;
-};
-
-const quoteTableData = (description: string, quantity: string, unitPrice: string, total: string) => {
-  return { description, quantity, total, unitPrice };
-};
-
-export const generateQuote = (QuoteConfig: IQuoteConfig, Guests: IGuests, Payments: IPayment[], Rooms: IRooms) => {
-  const items = [];
-  let quoteTotal = 0;
-
-  const addToTotal = (units: number, unitPrice: number) => {
-    const valueToAdd = units * unitPrice;
-    quoteTotal += valueToAdd;
-
-    return valueToAdd;
-  };
-
-  // Base Fees
-  QuoteConfig.setFees.forEach((fee: IQuoteConfigItem) => {
-    const lineTotal = addToTotal(1, fee.unit_price);
-    items.push(quoteTableData(fee.description, '1', currencyFormat(fee.unit_price), currencyFormat(lineTotal)));
-  });
-
-  // Menu Choices Package Check
-  QuoteConfig.packages.forEach((packageItem: IQuotePackageItem) => {
-    const quantity = Guests[packageItem.priceCalculation.timeframe][packageItem.priceCalculation.guest_type];
-    const lineTotal = addToTotal(quantity, packageItem.cost);
-    items.push(quoteTableData(packageItem.description, quantity.toString(), currencyFormat(packageItem.cost), currencyFormat(lineTotal)));
-  });
-
-  // TODO: user adds number of orders where necessary
-  // Upgrades
-  // const myUpgrades = Object.values(Upgrades)
-  //   .flat()
-  //   .filter((upgr) => UpgradeChoices.includes(upgr.id));
-  // myUpgrades.forEach(());
-
-  // Accommodation
-  const roomBreakdown = Object.values(Rooms).map(({ costCategory, costPerNight }) => ({ costCategory, costPerNight }));
-  const roomBreakdownCombined = uniqueArrayObjects(roomBreakdown) as IRooms;
-  roomBreakdownCombined.map((rbc: IRoom) => {
-    const stringified = JSON.stringify(rbc);
-    const occurrences = roomBreakdown.filter((rb) => JSON.stringify(rb) === stringified).length;
-    const lineTotal = addToTotal(occurrences, rbc.costPerNight);
-    items.push(quoteTableData(rbc.costCategory as string, occurrences.toString(), currencyFormat(rbc.costPerNight), currencyFormat(lineTotal)));
-  });
-
-  // Payments Received
-  Payments?.map((payment) => {
-    const paymentValue = payment.amount * -1;
-    const lineTotal = addToTotal(1, paymentValue);
-    items.push(quoteTableData(`${payment.label || 'Payment'} (Received ${blissDate(payment.date, true)})`, '', '', currencyFormat(lineTotal)));
-  });
-
-  items.push(quoteTableData('Invoice Total', '', '', currencyFormat(quoteTotal)));
-
-  return items;
 };
