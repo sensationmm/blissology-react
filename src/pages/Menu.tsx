@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 
 import store, { RootState } from 'src/store';
 import { IFilters } from 'src/store/reducers/filters';
-import { IMenuItemPlating, initialState as emptyMenuState } from 'src/store/reducers/menu';
+import { initialState as emptyMenuState } from 'src/store/reducers/menu';
 
 import { wpRestApiHandler } from 'src/api/wordpress';
 
@@ -34,7 +34,6 @@ const Menu = () => {
   const { weddingID } = useSelector(weddingState);
 
   const [resetMenuChoices, setResetMenuChoices] = useState<RootState['menuChoices']>();
-  const [filterPlating, setFilterPlating] = useState<IMenuItemPlating>('plated');
   const [openSnackbar] = useSnackbar();
 
   const isEdited = JSON.stringify(MenuChoices) !== JSON.stringify(resetMenuChoices);
@@ -66,12 +65,17 @@ const Menu = () => {
     !resetMenuChoices && setResetMenuChoices(cloneDeep(MenuChoices));
   }, [MenuChoices]);
 
-  const onSelect = (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string) => {
-    const currentChoices = stateObject[type].slice();
-    if (currentChoices.includes(itemID)) {
-      currentChoices.splice(currentChoices.indexOf(itemID), 1);
+  const onSelect = (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string, set: 'push' | 'replace' = 'push') => {
+    let currentChoices;
+    if (set === 'push') {
+      currentChoices = stateObject[type].slice();
+      if (currentChoices.includes(itemID)) {
+        currentChoices.splice(currentChoices.indexOf(itemID), 1);
+      } else {
+        currentChoices.push(itemID);
+      }
     } else {
-      currentChoices.push(itemID);
+      currentChoices = itemID;
     }
 
     store.dispatch({
@@ -118,12 +122,6 @@ const Menu = () => {
       payload: resetMenuChoices,
       type: 'menuChoices/set'
     });
-  };
-
-  const onSetPlatingFilter = (newPlating: string) => {
-    if (newPlating !== null) {
-      setFilterPlating(newPlating as IMenuItemPlating);
-    }
   };
 
   const menuSetup: ITabsSetup[] = [];
@@ -174,14 +172,12 @@ const Menu = () => {
               ]}
             />
           }
-          filterValue2={filterPlating}
-          fliterValue2Type={typeof filterPlating}
           secondLevelFilter={
             <ToggleFilter
               id="filter-plating"
               label="Show"
-              value={filterPlating}
-              onSelect={onSetPlatingFilter}
+              value={Filters.plating}
+              onSelect={(value) => onSelect(value, 'plating', Filters, 'filters', 'replace')}
               options={[
                 { label: 'Plated', value: 'plated' },
                 { label: 'Feasting', value: 'feasting' }

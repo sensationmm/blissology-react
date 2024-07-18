@@ -76,22 +76,32 @@ const Upgrades = () => {
     !resetUpgradeOrders && setResetUpgradeOrders(cloneDeep(UpgradeOrders));
   }, [UpgradeOrders]);
 
-  const onSelect = (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string, orderNum: number | undefined) => {
-    const currentChoices = stateObject.slice();
-    const currentOrders = cloneDeep(UpgradeOrders);
+  const onSelect = (
+    itemID: number | string,
+    type: string,
+    stateObject: RootState[keyof RootState],
+    action: string,
+    set: 'push' | 'replace' = 'replace',
+    orderNum: number | undefined
+  ) => {
+    let currentChoices;
+    if (set === 'push') {
+      currentChoices = stateObject.slice();
+      const currentOrders = cloneDeep(UpgradeOrders);
 
-    if (currentChoices.includes(itemID)) {
-      currentChoices.splice(currentChoices.indexOf(itemID), 1);
-      delete currentOrders[itemID];
-    } else {
-      currentChoices.push(itemID);
-      currentOrders[itemID] = orderNum;
+      if (currentChoices.includes(itemID)) {
+        currentChoices.splice(currentChoices.indexOf(itemID), 1);
+        delete currentOrders[itemID];
+      } else {
+        currentChoices.push(itemID);
+        currentOrders[itemID] = orderNum;
+      }
+
+      store.dispatch({
+        payload: { orders: currentOrders, upgradeChoices: currentChoices },
+        type: 'upgradeChoices/set'
+      });
     }
-
-    store.dispatch({
-      payload: { orders: currentOrders, upgradeChoices: currentChoices },
-      type: 'upgradeChoices/set'
-    });
   };
 
   const onSaveChoices = () => {

@@ -27,7 +27,7 @@ export type ITabs2Setup = {
 interface ITabbedCard extends IMenuItem, IUpgradeParams {}
 
 type ITabbedCards = {
-  onSelect: (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string, orderNum?: number) => void;
+  onSelect: (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string, set: 'push' | 'replace', orderNum?: number) => void;
   tabsSetup: ITabsSetup[];
   tabs2Setup?: ITabs2Setup;
   topLevelFilter?: JSX.Element;
@@ -37,8 +37,6 @@ type ITabbedCards = {
   SelectedContent: RootState[keyof RootState];
   selectedContentKey: keyof RootState;
   SelectedOrders?: IOrders;
-  filterValue2?: ITabbedCards['fliterValue2Type'];
-  fliterValue2Type?: string;
   cardSpan?: number;
   cardContentKeys?: IListCardContent[];
   cardIconKeys?: IListCardContent[];
@@ -57,7 +55,6 @@ const TabbedCards: FC<ITabbedCards> = ({
   SelectedContent,
   selectedContentKey,
   SelectedOrders,
-  filterValue2,
   cardSpan = 4
 }) => {
   const [activeTab, setActiveTab] = useState<number>(0);
@@ -109,7 +106,7 @@ const TabbedCards: FC<ITabbedCards> = ({
       const filteredItems = !Filters
         ? items
         : items.slice().filter((item: ITabbedCard) => {
-            return (Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) && (!item.plating || item.plating === filterValue2);
+            return (Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) && (!item.plating || item.plating === Filters.plating);
           });
       if (filteredItems.length > 0) {
         const selectedContent = firstLetterUppercase(type) ? SelectedContent : SelectedContent?.[type];
@@ -125,7 +122,7 @@ const TabbedCards: FC<ITabbedCards> = ({
                     image={menuItem.image}
                     item={menuItem}
                     selected={selectedContent?.includes(menuItem.id) || false}
-                    onSelect={(orderNum?: number) => onSelect(menuItem.id, type, SelectedContent, selectedContentKey, orderNum)}
+                    onSelect={(orderNum?: number) => onSelect(menuItem.id, type, SelectedContent, selectedContentKey, 'push', orderNum)}
                     sx={{ minHeight: `${cardSpan * 2 * 20}px` }}
                     order={
                       menuItem.postType === 'upgrade' && !!menuItem.minimumOrder

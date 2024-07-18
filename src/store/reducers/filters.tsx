@@ -2,12 +2,16 @@
 
 import { IDiets } from 'src/components/DietaryInfo';
 
+import { IMenuItemPlating } from './menu';
+
 export type IFilters = {
   diet: IDiets[];
+  plating: IMenuItemPlating;
 };
 
 const initialState: IFilters = {
-  diet: [] as IDiets[]
+  diet: [] as IDiets[],
+  plating: 'plated'
 };
 
 const filtersReducer = (state = initialState, action: any) => {
