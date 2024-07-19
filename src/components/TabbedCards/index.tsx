@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { Grid, Tab, Tabs } from '@mui/material';
 
 import { RootState } from 'src/store';
+import { IDrinksItem } from 'src/store/reducers/drinks';
 import { IFilters } from 'src/store/reducers/filters';
 import { IMenuItem } from 'src/store/reducers/menu';
 import { IOrders } from 'src/store/reducers/orders';
@@ -24,7 +25,7 @@ export type ITabs2Setup = {
   [key: string]: ITabsSetup[];
 };
 
-interface ITabbedCard extends IMenuItem, IUpgradeParams {}
+interface ITabbedCard extends IMenuItem, IUpgradeParams, IDrinksItem {}
 
 type ITabbedCards = {
   onSelect: (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string, set: 'push' | 'replace', orderNum?: number) => void;
@@ -106,7 +107,12 @@ const TabbedCards: FC<ITabbedCards> = ({
       const filteredItems = !Filters
         ? items
         : items.slice().filter((item: ITabbedCard) => {
-            return (Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) && (!item.plating || item.plating === Filters.plating);
+            return (
+              (Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) &&
+              (!item.plating || item.plating === Filters.plating) &&
+              (!item.drinkType || item.drinkType === Filters.drinkType || Filters.drinkType === 'all') &&
+              (!item.wineType || item.wineType === Filters.wineType || Filters.wineType === 'all')
+            );
           });
       if (filteredItems.length > 0) {
         const selectedContent = firstLetterUppercase(type) ? SelectedContent : SelectedContent?.[type];

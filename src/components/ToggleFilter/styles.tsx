@@ -12,3 +12,8 @@ export const Label = styled(Typography)(() => ({
   textTransform: 'uppercase',
   whiteSpace: 'nowrap'
 }));
+
+export const SecondTier = styled('div')(() => ({
+  display: 'flex',
+  paddingLeft: '10px'
+}));

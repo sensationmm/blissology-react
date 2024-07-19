@@ -30,6 +30,8 @@ import WineBarIcon from '@mui/icons-material/WineBar';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import { SvgIconProps } from '@mui/material';
 
+import ChampageIcon from 'src/assets/Champagne';
+
 const Icons = {
   accommodation: HotelIcon,
   add: AddIcon,
@@ -52,7 +54,7 @@ const Icons = {
   photographer: CameraAltIcon,
   quote: PointOfSaleIcon,
   selected: CheckBoxIcon,
-  sparkling: WineBarIcon,
+  sparkling: ChampageIcon,
   spirits: LocalBarIcon,
   stylist: PaletteIcon,
   suppliers: CameraEnhanceIcon,

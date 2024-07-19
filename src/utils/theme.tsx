@@ -229,7 +229,8 @@ export const blissologyTheme = createTheme({
           borderColor: `${initialThemeSetup.palette.tertiary.dark} !important`,
           borderTopWidth: '1px',
           fontWeight: 600,
-          padding: '5px 20px'
+          padding: '5px 20px',
+          whiteSpace: 'nowrap'
         }
       }
     },

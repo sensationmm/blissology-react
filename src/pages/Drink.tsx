@@ -11,6 +11,7 @@ import { wpRestApiHandler } from 'src/api/wordpress';
 import DrinksInfo from 'src/components/DrinksInfo';
 import Layout from 'src/components/Layout/Layout';
 import TabbedCards from 'src/components/TabbedCards';
+import ToggleFilter from 'src/components/ToggleFilter';
 
 import { useSnackbar } from 'src/hooks/useSnackbar';
 import { useUnsaved } from 'src/hooks/useUnsaved';
@@ -69,18 +70,22 @@ const Drink = () => {
     !resetDrinkChoices && setResetDrinkChoices(cloneDeep(DrinkChoices));
   }, [DrinkChoices]);
 
-  const onSelect = (itemID: number | string, type: string, stateObject: RootState[keyof RootState]) => {
-    const currentChoices = stateObject.slice();
-
-    if (currentChoices.includes(itemID)) {
-      currentChoices.splice(currentChoices.indexOf(itemID), 1);
+  const onSelect = (itemID: number | string | null, type: string, stateObject: RootState[keyof RootState], action: string = 'drinkChoices', set: 'push' | 'replace' = 'push') => {
+    let currentChoices;
+    if (set === 'push') {
+      currentChoices = stateObject.slice();
+      if (currentChoices.includes(itemID)) {
+        currentChoices.splice(currentChoices.indexOf(itemID), 1);
+      } else {
+        currentChoices.push(itemID);
+      }
     } else {
-      currentChoices.push(itemID);
+      currentChoices = itemID !== null ? itemID : 'all';
     }
 
     store.dispatch({
-      payload: { drinkChoices: currentChoices },
-      type: 'drinkChoices/set'
+      payload: action === 'drinkChoices' ? { drinkChoices: currentChoices } : { choices: currentChoices, type: type },
+      type: `${action}/update`
     });
   };
 
@@ -140,6 +145,33 @@ const Drink = () => {
       ]}>
       {!isLoading ? (
         <TabbedCards
+          topLevelFilter={
+            <ToggleFilter
+              id="filter-drinkType"
+              value={Filters.drinkType}
+              onSelect={(value) => onSelect(value, 'drinkType', Filters, 'filters', 'replace')}
+              options={[
+                { label: 'Wine', value: 'wine' },
+                { label: 'Sparkling', value: 'sparkling' },
+                { label: 'Beer', value: 'beer' },
+                { label: 'Spirits', value: 'spirits' }
+              ]}
+              showSecondTierTest={'wine'}
+              secondTier={
+                <ToggleFilter
+                  id="filter-wineType"
+                  value={Filters.wineType}
+                  label=""
+                  onSelect={(value) => onSelect(value, 'wineType', Filters, 'filters', 'replace')}
+                  options={[
+                    { label: 'Red Wine', value: 'red' },
+                    { label: 'White Wine', value: 'white' },
+                    { label: 'Rose Wine', value: 'rose' }
+                  ]}
+                />
+              }
+            />
+          }
           tabsSetup={drinksSetup}
           onSelect={onSelect}
           Filters={Filters}

@@ -7,6 +7,7 @@ const drinkChoicesReducer = (state = initialState, action: any) => {
   switch (action.type) {
     case 'wedding/set':
     case 'drinkChoices/set':
+    case 'drinkChoices/update':
       return action.payload.drinkChoices;
     case 'auth/logout':
       return initialState;

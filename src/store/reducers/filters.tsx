@@ -1,17 +1,22 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { IDiets } from 'src/components/DietaryInfo';
+import { IDrinkType, IWineType } from 'src/components/DrinksInfo';
 
 import { IMenuItemPlating } from './menu';
 
 export type IFilters = {
   diet: IDiets[];
   plating: IMenuItemPlating;
+  drinkType: 'all' | IDrinkType;
+  wineType: 'all' | IWineType;
 };
 
 const initialState: IFilters = {
   diet: [] as IDiets[],
-  plating: 'plated'
+  drinkType: 'all',
+  plating: 'plated',
+  wineType: 'all'
 };
 
 const filtersReducer = (state = initialState, action: any) => {

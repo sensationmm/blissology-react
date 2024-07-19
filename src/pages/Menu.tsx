@@ -65,7 +65,7 @@ const Menu = () => {
     !resetMenuChoices && setResetMenuChoices(cloneDeep(MenuChoices));
   }, [MenuChoices]);
 
-  const onSelect = (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string, set: 'push' | 'replace' = 'push') => {
+  const onSelect = (itemID: number | string | null, type: string, stateObject: RootState[keyof RootState], action: string, set: 'push' | 'replace' = 'push') => {
     let currentChoices;
     if (set === 'push') {
       currentChoices = stateObject[type].slice();
