@@ -7,7 +7,7 @@ export const wpRestApiHandler = function (route: string, data: any, method = 'GE
   if (!route) route = 'posts';
   if (!method) method = 'GET';
 
-  const suffix = method === 'GET' && isPost ? '?_embed=wp:term&_fields=id,title,_links,_embedded,acf&acf_format=standard&per_page=100&orderby=title&order=asc' : '';
+  const suffix = method === 'GET' && isPost ? '?_embed=wp:term&_fields=id,title,description,_links,_embedded,acf&acf_format=standard&per_page=100&orderby=title&order=asc' : '';
 
   return fetch(`${siteConfig.cmsDomain}/wp-json/wp/v2/${route}${suffix}`, {
     method,

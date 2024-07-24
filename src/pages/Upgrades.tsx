@@ -18,9 +18,12 @@ import { capitalize } from 'src/utils/common';
 import { formatUpgradesResponse } from 'src/utils/wordpress/upgrade';
 import { upgradeChoicesPayload } from 'src/utils/wordpress/upgradeChoices';
 
+import { WPTerm } from 'src/types/wp-rest-api';
+
 type IUpgradesSetup = {
   id: string;
   label: string;
+  description: string;
 };
 
 const Upgrades = () => {
@@ -42,10 +45,16 @@ const Upgrades = () => {
   const [resetUpgradeChoices, setResetUpgradeChoices] = useState<RootState['upgradeChoices']>();
   const [resetUpgradeOrders, setResetUpgradeOrders] = useState<RootState['upgradeChoices']>();
   const [openSnackbar] = useSnackbar();
+  const [descriptions, setDescriptions] = useState<WPTerm[]>([]);
 
   const isEdited = JSON.stringify(UpgradeChoices) !== JSON.stringify(resetUpgradeChoices);
 
   useEffect(() => {
+    wpRestApiHandler('upgradeType', undefined, 'GET', token, false).then(async (resp) => {
+      const respJson = await resp.json();
+      setDescriptions(respJson.map((res: WPTerm) => ({ description: res.description, name: res.name })));
+    });
+
     if (Upgrades === emptyUpgradesState && !!token) {
       store.dispatch({
         payload: { isLoading: true },
@@ -144,7 +153,13 @@ const Upgrades = () => {
     });
   };
 
-  const upgradesSetup: IUpgradesSetup[] = Object.keys(Upgrades).map((upgr: string) => ({ id: upgr, label: capitalize(upgr) }));
+  const upgradesSetup: IUpgradesSetup[] = Object.keys(Upgrades).map((upgr: string) => {
+    return {
+      description: descriptions?.filter((d) => d.name === capitalize(upgr))[0]?.description || '',
+      id: upgr,
+      label: capitalize(upgr)
+    };
+  });
 
   useUnsaved({
     isUnsaved: isEdited,

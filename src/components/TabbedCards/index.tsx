@@ -13,11 +13,12 @@ import EmptyCard from 'src/components/EmptyCard';
 import ListCard, { IListCardContent } from 'src/components/ListCard';
 import TabPanel from 'src/components/TabPanel';
 
-import { firstLetterUppercase } from 'src/utils/common';
+import { capitalize, firstLetterUppercase } from 'src/utils/common';
 import { blissologyTheme } from 'src/utils/theme';
 
 export type ITabsSetup = {
   id: string;
+  description?: string;
   label: string;
 };
 
@@ -93,7 +94,9 @@ const TabbedCards: FC<ITabbedCards> = ({
           <div>
             {setup?.map((m, count) => (
               <TabPanel key={`tab-content-${count}`} value={active as number} index={count}>
-                {list[m.id]?.length !== undefined || tabs2Setup === undefined ? renderTabItems(list[m.id], m.id) : renderSecondLevelTabs(m.id)}
+                {list[m.id]?.length !== undefined || tabs2Setup === undefined
+                  ? renderTabItems(list[m.id], m.id, m.description ? { text: m.description, title: capitalize(m.id) } : undefined)
+                  : renderSecondLevelTabs(m.id)}
               </TabPanel>
             ))}
           </div>
@@ -102,7 +105,7 @@ const TabbedCards: FC<ITabbedCards> = ({
     );
   };
 
-  const renderTabItems = (items: ITabbedCard[], type: string) => {
+  const renderTabItems = (items: ITabbedCard[], type: string, titleCard?: { title: string; text?: string }) => {
     if (items.length > 0) {
       const filteredItems = !Filters
         ? items
@@ -118,6 +121,11 @@ const TabbedCards: FC<ITabbedCards> = ({
         const selectedContent = firstLetterUppercase(type) ? SelectedContent : SelectedContent?.[type];
         return (
           <Grid container spacing={2} className="cards">
+            {titleCard && (
+              <Grid item xs={cardSpan}>
+                <ListCard title={titleCard.title} content={titleCard.text} isTitleCard />
+              </Grid>
+            )}
             {filteredItems.map((menuItem: ITabbedCard, index: number) => {
               return (
                 <Grid item xs={cardSpan} key={`menu-${type}-${index}`} sx={{ display: 'flex' }}>

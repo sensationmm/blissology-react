@@ -23,10 +23,16 @@ export type WPAuthErrorResponse = {
   message: string;
 };
 
+export type WPAcf = {
+  [key:string]: string | Array<string|number> | Record<string|number>;
+}
+
 export type WPTerm = {
   id: number;
+  description: string;
   name: string;
   taxonomy: string;
+  acf: WPAcf;
 }
 
 export type WPPost = {
@@ -37,9 +43,7 @@ export type WPPost = {
   _embedded: {
     'wp:term': Array<WPTerm[]>;
   };
-  acf: {
-    [key:string]: string | Array<string|number> | Record<string|number>;
-  }
+  acf: WPAcf;
 }
 
 export type WPChoice = {

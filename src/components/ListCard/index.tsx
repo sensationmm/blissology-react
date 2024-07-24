@@ -24,19 +24,20 @@ type IListCardOrder = {
 
 type IListCard = {
   title: string;
-  content: IListCardContent[];
+  content?: IListCardContent[] | string;
   icons?: IListCardContent[];
   selected?: boolean;
   image?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  item: Record<string, any>;
+  item?: Record<string, any>;
   onSelect?: (orderNum?: number) => void;
   sx?: CardProps['sx'];
   order?: IListCardOrder;
   ordered?: number;
+  isTitleCard?: boolean;
 };
 
-const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected = undefined, order, ordered, sx = {}, onSelect = undefined }) => {
+const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected = undefined, order, ordered, sx = {}, onSelect = undefined, isTitleCard = false }) => {
   const paddingRight = image ? '40%' : selected !== undefined ? '35px' : 0;
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const [orderNum, setOrderNum] = useState<string>(ordered?.toString() || order?.min?.toString() || '');
@@ -46,20 +47,20 @@ const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected 
     const { id, Component, args } = itemKey;
     const argsObj: Record<string, string> = {};
     args?.map((arg) => {
-      argsObj[arg.key] = item[arg.value];
+      argsObj[arg.key] = item?.[arg.value];
     });
 
-    if (Component && id && item[id]) {
+    if (Component && id && item?.[id]) {
       return <Component key={id} {...argsObj} />;
     }
 
-    const string: string = item[id as string] as string;
+    const string: string = item?.[id as string] as string;
 
     if (!string) return;
 
     return (
       <Styled.Description key={`list-card-content-${count}`}>
-        <Styled.Typography variant={'body1'}>{string}</Styled.Typography>
+        <Styled.Typography variant={isTitleCard ? 'h3' : 'body1'}>{string}</Styled.Typography>
       </Styled.Description>
     );
   };
@@ -80,11 +81,12 @@ const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected 
 
   return (
     <Styled.Card sx={{ paddingRight: paddingRight, ...sx }}>
-      <Styled.Typography component="h2" variant="h3" sx={{ mb: '10px' }}>
+      <Styled.Typography component="h2" variant={isTitleCard ? 'h1' : 'h3'} sx={{ mb: '10px' }}>
         {title}
       </Styled.Typography>
 
-      {content && content.length > 0 && content.map(parseItem)}
+      {content &&
+        (typeof content === 'string' ? <Styled.Typography variant={isTitleCard ? 'h3' : 'body1'}>{content}</Styled.Typography> : content.length > 0 && content.map(parseItem))}
       {icons && icons.length > 0 && <Styled.Icons>{icons.map(parseItem)}</Styled.Icons>}
 
       {selected !== undefined && (
