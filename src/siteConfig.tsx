@@ -16,12 +16,12 @@ const colorPalette: IColorPalette = {
 
 const siteTitle = 'Blissology';
 
-const cmsDomain = 'http://hydehouse.blissology.local:50011';
+const cmsDomain = 'http://hydehouse.blissology.local';
 
 const siteConfig: ISiteConfig = {
-  siteTitle,
   cmsDomain,
-  colorPalette
+  colorPalette,
+  siteTitle
 };
 
 export default siteConfig;

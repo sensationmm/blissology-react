@@ -30,7 +30,7 @@ const App: React.FC = () => {
   const [loading, setIsLoading] = useState<boolean>(true);
 
   const getMe = async (username: string, authToken: string) => {
-    const response = await fetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/users/?search=${username}`);
+    const response = await fetch(`http://hydehouse.blissology.local/wp-json/wp/v2/users/?search=${username}`);
     const user = await response.json();
     await getMyWedding(user[0].id);
     store.dispatch({
@@ -40,7 +40,7 @@ const App: React.FC = () => {
   };
 
   const getMyWedding = async (user: string) => {
-    const response = await fetch(`http://hydehouse.blissology.local:50011/wp-json/wp/v2/wedding?author=${user}`);
+    const response = await fetch(`http://hydehouse.blissology.local/wp-json/wp/v2/wedding?author=${user}`);
     const wedding = await response.json();
     store.dispatch({
       payload: {
