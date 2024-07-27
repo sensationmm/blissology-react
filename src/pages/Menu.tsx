@@ -19,6 +19,8 @@ import { useUnsaved } from 'src/hooks/useUnsaved';
 import { formatMenuItems } from 'src/utils/wordpress/menu';
 import { menuChoicesPayload } from 'src/utils/wordpress/menuChoices';
 
+import { WPTerm } from 'src/types/wp-rest-api';
+
 const Menu = () => {
   const authState = (state: RootState) => state.auth;
   const { token } = useSelector(authState);
@@ -35,10 +37,16 @@ const Menu = () => {
 
   const [resetMenuChoices, setResetMenuChoices] = useState<RootState['menuChoices']>();
   const [openSnackbar] = useSnackbar();
+  const [descriptions, setDescriptions] = useState<WPTerm[]>([]);
 
   const isEdited = JSON.stringify(MenuChoices) !== JSON.stringify(resetMenuChoices);
 
   useEffect(() => {
+    wpRestApiHandler('menuType', undefined, 'GET', token, false).then(async (resp) => {
+      const respJson = await resp.json();
+      setDescriptions(respJson.map((res: WPTerm) => ({ description: res.description, name: res.slug })));
+    });
+
     if (Menu === emptyMenuState && !!token) {
       store.dispatch({
         payload: { isLoading: true },
@@ -125,25 +133,53 @@ const Menu = () => {
   };
 
   const menuSetup: ITabsSetup[] = [];
-  Menu.reception.length > 0 && menuSetup.push({ id: 'reception', label: 'Reception' });
-  Object.values(Menu.dinner).flat().length > 0 && menuSetup.push({ id: 'dinner', label: 'Dinner' });
-  Menu.evening.length > 0 && menuSetup.push({ id: 'evening', label: 'Evening' });
-  Object.values(Menu.kids).flat().length > 0 && menuSetup.push({ id: 'kids', label: 'Kids' });
+  Menu.reception.length > 0 &&
+    menuSetup.push({
+      description: descriptions?.filter((d) => d.name === 'canapes')[0]?.description || '',
+      id: 'reception',
+      label: 'Reception'
+    });
+  Object.values(Menu.dinner).flat().length > 0 &&
+    menuSetup.push({
+      description: descriptions?.filter((d) => d.name === 'dinner-menu')[0]?.description || '',
+      id: 'dinner',
+      label: 'Dinner'
+    });
+  Menu.evening.length > 0 &&
+    menuSetup.push({
+      description: descriptions?.filter((d) => d.name === 'evening-menu')[0]?.description || '',
+      id: 'evening',
+      label: 'Evening'
+    });
+  Object.values(Menu.kids).flat().length > 0 &&
+    menuSetup.push({
+      description: descriptions?.filter((d) => d.name === 'kids-menu')[0]?.description || '',
+      id: 'kids',
+      label: 'Kids'
+    });
 
   const secondLevelSetup: ITabs2Setup = {
     dinner: [],
     kids: []
   };
 
-  Menu.dinner.starter?.length > 0 && secondLevelSetup.dinner.push({ id: 'starter', label: 'Starter' });
-  Menu.dinner.main?.length > 0 && secondLevelSetup.dinner.push({ id: 'main', label: 'Main Course' });
-  Menu.dinner.sides?.length > 0 && secondLevelSetup.dinner.push({ id: 'sides', label: 'Side Dishes' });
-  Menu.dinner.dessert?.length > 0 && secondLevelSetup.dinner.push({ id: 'dessert', label: 'Dessert' });
+  Menu.dinner.starter?.length > 0 &&
+    secondLevelSetup.dinner.push({ description: descriptions?.filter((d) => d.name === 'starter')[0]?.description || '', id: 'starter', label: 'Starter' });
+  Menu.dinner.main?.length > 0 &&
+    secondLevelSetup.dinner.push({ description: descriptions?.filter((d) => d.name === 'main')[0]?.description || '', id: 'main', label: 'Main Course' });
+  Menu.dinner.sides?.length > 0 &&
+    secondLevelSetup.dinner.push({ description: descriptions?.filter((d) => d.name === 'sides')[0]?.description || '', id: 'sides', label: 'Side Dishes' });
+  Menu.dinner.dessert?.length > 0 &&
+    secondLevelSetup.dinner.push({ description: descriptions?.filter((d) => d.name === 'dessert')[0]?.description || '', id: 'dessert', label: 'Dessert' });
 
-  Menu.kids.kidsReception?.length > 0 && secondLevelSetup.kids.push({ id: 'kidsReception', label: 'Reception' });
-  Menu.kids.kidsStarter?.length > 0 && secondLevelSetup.kids.push({ id: 'kidsStarter', label: 'Starter' });
-  Menu.kids.kidsMain?.length > 0 && secondLevelSetup.kids.push({ id: 'kidsMain', label: 'Main Course' });
-  Menu.kids.kidsDessert?.length > 0 && secondLevelSetup.kids.push({ id: 'kidsDessert', label: 'Dessert' });
+  Menu.kids.kidsReception?.length > 0 &&
+    secondLevelSetup.kids.push({ description: descriptions?.filter((d) => d.name === 'reception-kids-menu')[0]?.description || '', id: 'kidsReception', label: 'Reception' });
+  Menu.kids.kidsStarter?.length > 0 &&
+    secondLevelSetup.kids.push({ description: descriptions?.filter((d) => d.name === 'starter-kids-menu')[0]?.description || '', id: 'kidsStarter', label: 'Starter' });
+  Menu.kids.kidsMain?.length > 0 &&
+    secondLevelSetup.kids.push({ description: descriptions?.filter((d) => d.name === 'main-course-kids-menu')[0]?.description || '', id: 'kidsMain', label: 'Main Course' });
+  Menu.kids.kidsDessert?.length > 0 &&
+    secondLevelSetup.kids.push({ description: descriptions?.filter((d) => d.name === 'dessert-kids-menu')[0]?.description || '', id: 'kidsDessert', label: 'Dessert' });
 
   useUnsaved({
     isUnsaved: isEdited,

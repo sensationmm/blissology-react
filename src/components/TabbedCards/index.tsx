@@ -94,9 +94,14 @@ const TabbedCards: FC<ITabbedCards> = ({
           <div>
             {setup?.map((m, count) => (
               <TabPanel key={`tab-content-${count}`} value={active as number} index={count}>
-                {list[m.id]?.length !== undefined || tabs2Setup === undefined
-                  ? renderTabItems(list[m.id], m.id, m.description ? { text: m.description, title: capitalize(m.id) } : undefined)
-                  : renderSecondLevelTabs(m.id)}
+                {list[m.id]?.length !== undefined || tabs2Setup === undefined ? (
+                  renderTabItems(list[m.id], m.id, m.description ? { text: m.description, title: capitalize(m.id) } : undefined)
+                ) : (
+                  <>
+                    {m.description && <ListCard title={capitalize(m.id)} content={m.description} isTitleCard sx={{ mb: '20px' }} />}
+                    {renderSecondLevelTabs(m.id)}
+                  </>
+                )}
               </TabPanel>
             ))}
           </div>
@@ -122,7 +127,7 @@ const TabbedCards: FC<ITabbedCards> = ({
         return (
           <Grid container spacing={2} className="cards">
             {titleCard && (
-              <Grid item xs={cardSpan}>
+              <Grid item xs={12}>
                 <ListCard title={titleCard.title} content={titleCard.text} isTitleCard />
               </Grid>
             )}

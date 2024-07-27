@@ -19,6 +19,8 @@ import { capitalize } from 'src/utils/common';
 import { drinkChoicesPayload } from 'src/utils/wordpress/drinkChoices';
 import { formatDrinksResponse } from 'src/utils/wordpress/drinks';
 
+import { WPTerm } from 'src/types/wp-rest-api';
+
 type IDrinksSetup = {
   id: string;
   label: string;
@@ -40,10 +42,16 @@ const Drink = () => {
 
   const [resetDrinkChoices, setResetDrinkChoices] = useState<RootState['drinkChoices']>();
   const [openSnackbar] = useSnackbar();
+  const [descriptions, setDescriptions] = useState<WPTerm[]>([]);
 
   const isEdited = JSON.stringify(DrinkChoices) !== JSON.stringify(resetDrinkChoices);
 
   useEffect(() => {
+    wpRestApiHandler('drinkType', undefined, 'GET', token, false).then(async (resp) => {
+      const respJson = await resp.json();
+      setDescriptions(respJson.map((res: WPTerm) => ({ description: res.description, name: res.name })));
+    });
+
     if (Drinks === emptyDrinksState && !!token) {
       store.dispatch({
         payload: { isLoading: true },
@@ -129,7 +137,11 @@ const Drink = () => {
     });
   };
 
-  const drinksSetup: IDrinksSetup[] = Object.keys(Drinks).map((upgr: string) => ({ id: upgr, label: capitalize(upgr) }));
+  const drinksSetup: IDrinksSetup[] = Object.keys(Drinks).map((upgr: string) => ({
+    description: descriptions?.filter((d) => d.name === capitalize(upgr))[0]?.description || '',
+    id: upgr,
+    label: capitalize(upgr)
+  }));
 
   useUnsaved({
     isUnsaved: isEdited,

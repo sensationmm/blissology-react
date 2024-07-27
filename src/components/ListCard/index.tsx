@@ -80,7 +80,7 @@ const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected 
   };
 
   return (
-    <Styled.Card sx={{ paddingRight: paddingRight, ...sx }}>
+    <Styled.Card isTitleCard={isTitleCard} sx={{ paddingRight: paddingRight, ...sx }}>
       <Styled.Typography component="h2" variant={isTitleCard ? 'h1' : 'h3'} sx={{ mb: '10px' }}>
         {title}
       </Styled.Typography>

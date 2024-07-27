@@ -31,6 +31,7 @@ export type WPTerm = {
   id: number;
   description: string;
   name: string;
+  slug: string;
   taxonomy: string;
   acf: WPAcf;
 }

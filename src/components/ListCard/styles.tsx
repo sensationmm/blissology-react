@@ -15,8 +15,8 @@ export const SelectedIcon = styled('div')(() => ({
   zIndex: 2
 }));
 
-export const Card = styled(MuiCard)(() => ({
-  paddingBottom: '60px',
+export const Card = styled(MuiCard)<{ isTitleCard: boolean }>(({ isTitleCard }) => ({
+  paddingBottom: !isTitleCard ? '60px' : '15px',
   position: 'relative'
 }));
 
