@@ -16,13 +16,13 @@ export type IUpgradeParams = {
     num: number;
     percentage: number;
   };
-  price: number;
+  price: string;
   priceType: IUpgradePriceType;
   priceFor?: {
     number: number;
     unit: string;
   };
-  setupFee: number;
+  setupFee: string;
 };
 
 export interface IUpgradeItem extends IUpgradeParams {

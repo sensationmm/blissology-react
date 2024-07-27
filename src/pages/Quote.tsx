@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { Card, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Card, CircularProgress, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
 import store, { RootState } from 'src/store';
 
@@ -18,22 +18,17 @@ const Quote = () => {
   const state = (state: RootState) => state;
   const {
     auth,
+    drinks,
+    drinkChoices,
     guests: Guests,
     orders: Orders,
     payments: Payments,
     quoteConfig: QuoteConfig,
     rooms: Rooms,
+    ui: UI,
     upgrades: Upgrades,
     upgradeChoices: UpgradeChoices
   } = useSelector(state);
-  // const authState = (state: RootState) => state.auth;
-  // const { token } = useSelector(authState);
-  // const quoteConfig = (state: RootState) => state.quoteConfig;
-  // const QuoteConfig = useSelector(quoteConfig);
-  // const guests = (state: RootState) => state.guests;
-  // const Guests = useSelector(guests);
-  // const upgrades = (state: RootState) => state.upgrades;
-  // const Upgrades = useSelector(upgrades);
 
   useEffect(() => {
     store.dispatch({
@@ -56,7 +51,9 @@ const Quote = () => {
     });
   }, []);
 
-  const quote = generateQuote(QuoteConfig, Guests, Orders, Payments, Rooms, Upgrades, UpgradeChoices);
+  if (UI.isLoading) return <CircularProgress />;
+
+  const quote = generateQuote(QuoteConfig, drinks, drinkChoices, Guests, Orders, Payments, Rooms, Upgrades, UpgradeChoices);
 
   return (
     <Layout title="Your Latest Quote">
@@ -74,7 +71,7 @@ const Quote = () => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {quote.map((item: Record<string, string | null>, count: number) => {
+                  {quote.items.map((item: Record<string, string | null>, count: number) => {
                     const { description, quantity, total, unitPrice } = item;
                     return (
                       <TableRow key={`set-fee-${count}`}>
@@ -94,6 +91,22 @@ const Quote = () => {
         </Grid>
 
         <Grid item xs={4}>
+          {quote.issues.length > 0 && (
+            <Card sx={{ mb: '20px' }}>
+              <Typography variant="h2">Issues</Typography>
+              {quote.issues.map((issue: string, count: number) => {
+                return (
+                  <Typography
+                    key={`issue-${count}`}
+                    variant="body1"
+                    sx={{ borderTop: `1px solid ${blissologyTheme.palette.tertiary.main}`, mt: '10px', pt: '10px', textAlign: 'center' }}>
+                    {issue}
+                  </Typography>
+                );
+              })}
+            </Card>
+          )}
+
           <Card sx={{ mb: '20px' }}>
             <Typography variant="h2">Payments</Typography>
             {Payments.map((payment) => {

@@ -31,11 +31,13 @@ export type IQuotePackageItem = {
 };
 
 export type IQuoteConfig = {
-  setFees: IQuoteConfigItem[];
+  drinksPackages: IQuotePackageItem[];
   packages: IQuotePackageItem[];
+  setFees: IQuoteConfigItem[];
 };
 
 const initialState: IQuoteConfig = {
+  drinksPackages: [],
   packages: [],
   setFees: []
 };

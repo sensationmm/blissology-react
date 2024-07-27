@@ -21,6 +21,7 @@ type WPPackageChoice = {
 
 export const formatQuoteConfigResponse = (quoteConfig: WPQuoteConfig): IQuoteConfig => {
   const qc: IQuoteConfig = {
+    drinksPackages: [],
     packages: [],
     setFees: []
   };
@@ -41,7 +42,7 @@ export const formatQuoteConfigResponse = (quoteConfig: WPQuoteConfig): IQuoteCon
                       unit_price: parseInt(item.unit_price as unknown as string)
                     };
                     qc.setFees.push(parsedItem);
-                  } else if (key === 'packages') {
+                  } else if (key === 'packages' || key === 'drinks_packages') {
                     const parsedItem: IQuotePackageItem = {
                       choices: (item.package_choices || []).map((choice: WPPackageChoice) => ({
                         ...choice,
@@ -55,7 +56,7 @@ export const formatQuoteConfigResponse = (quoteConfig: WPQuoteConfig): IQuoteCon
                       description: item.package_description,
                       priceCalculation: item.package_price_calculation
                     };
-                    qc.packages.push(parsedItem);
+                    qc[key === 'packages' ? 'packages' : 'drinksPackages'].push(parsedItem);
                   }
                 });
             }

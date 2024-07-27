@@ -8,6 +8,7 @@ export interface IDrinksItem {
   drinkType: IDrinkType;
   name: string;
   origin: string;
+  packageIds: Array<number>;
   postType: string;
   wineType?: IWineType;
 }

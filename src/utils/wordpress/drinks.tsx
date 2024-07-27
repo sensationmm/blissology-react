@@ -8,7 +8,17 @@ export const formatDrinksResponse = (drinkItems: WPDrinks): IDrinks => {
   const drinks: IDrinks = {};
 
   drinkItems.forEach((item) => {
-    const categories: string[] = item._embedded ? item._embedded['wp:term']?.map((catList) => catList.map((cat) => cat.name)).flat() : [];
+    const categoryIds: Array<number> = [];
+    const categories: string[] = item._embedded
+      ? item._embedded['wp:term']
+          ?.map((catList) =>
+            catList.map((cat) => {
+              categoryIds.push(cat.id);
+              return cat.name;
+            })
+          )
+          .flat()
+      : [];
 
     const newDrinksItem: IDrinksItem = {
       description: item.acf.upgrade_description,
@@ -16,6 +26,7 @@ export const formatDrinksResponse = (drinkItems: WPDrinks): IDrinks => {
       id: item.id,
       name: item.title.rendered,
       origin: item.acf.origin,
+      packageIds: categoryIds,
       postType: 'drink',
       wineType: item.acf.wine_type
     };
