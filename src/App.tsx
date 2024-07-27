@@ -22,7 +22,7 @@ import { formatDrinkChoicesResponse } from './utils/wordpress/drinkChoices';
 import { formatMenuChoicesResponse } from './utils/wordpress/menuChoices';
 import { formatSuppliersResponse } from './utils/wordpress/supplier';
 import { formatUpgradeChoicesResponse, formatUpgradeOrdersResponse } from './utils/wordpress/upgradeChoices';
-import { formatWeddingGuestsResponse } from './utils/wordpress/wedding';
+import { formatCustomInvoiceReponse, formatWeddingGuestsResponse } from './utils/wordpress/wedding';
 
 const App: React.FC = () => {
   const authState = (state: RootState['auth']) => state.auth;
@@ -44,6 +44,7 @@ const App: React.FC = () => {
     const wedding = await response.json();
     store.dispatch({
       payload: {
+        customInvoiceEntries: formatCustomInvoiceReponse(wedding[0]?.acf?.custom_invoice),
         date: wedding[0]?.acf?.wedding_date,
         deadlines: wedding[0]?.acf?.deadlines,
         drinkChoices: formatDrinkChoicesResponse(wedding[0]?.acf?.drinkChoices),

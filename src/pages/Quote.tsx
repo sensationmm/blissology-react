@@ -27,7 +27,8 @@ const Quote = () => {
     rooms: Rooms,
     ui: UI,
     upgrades: Upgrades,
-    upgradeChoices: UpgradeChoices
+    upgradeChoices: UpgradeChoices,
+    wedding: Wedding
   } = useSelector(state);
 
   useEffect(() => {
@@ -53,7 +54,7 @@ const Quote = () => {
 
   if (UI.isLoading) return <CircularProgress />;
 
-  const quote = generateQuote(QuoteConfig, drinks, drinkChoices, Guests, Orders, Payments, Rooms, Upgrades, UpgradeChoices);
+  const quote = generateQuote(QuoteConfig, drinks, drinkChoices, Guests, Orders, Payments, Rooms, Upgrades, UpgradeChoices, Wedding);
 
   return (
     <Layout title="Your Latest Quote">

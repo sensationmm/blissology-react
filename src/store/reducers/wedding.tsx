@@ -6,14 +6,22 @@ export type IWeddingDeadline = {
   attach_to: Array<string>;
 };
 
+export type IInvoiceEntry = {
+  description: string;
+  quantity: number;
+  unitPrice: number;
+};
+
 export type IWeddingState = {
-  weddingID: number | undefined;
-  weddingName: string | undefined;
+  customInvoiceEntries: IInvoiceEntry[];
   date: string | undefined;
   deadlines: IWeddingDeadline[];
+  weddingID: number | undefined;
+  weddingName: string | undefined;
 };
 
 const initialState: IWeddingState = {
+  customInvoiceEntries: [],
   date: undefined,
   deadlines: [],
   weddingID: undefined,
@@ -25,6 +33,7 @@ const weddingReducer = (state = initialState, action: any) => {
     case 'wedding/set':
       return {
         ...state,
+        customInvoiceEntries: action.payload.customInvoiceEntries,
         date: action.payload.date,
         deadlines: action.payload.deadlines,
         weddingID: action.payload.weddingID,

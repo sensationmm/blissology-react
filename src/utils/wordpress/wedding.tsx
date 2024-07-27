@@ -1,4 +1,5 @@
 import { IGuests } from 'src/store/reducers/guests';
+import { IInvoiceEntry } from 'src/store/reducers/wedding';
 
 export type WPWeddingGuests = {
   guests_daytime: {
@@ -11,6 +12,20 @@ export type WPWeddingGuests = {
     guests_evening_children: number;
     guests_evening_babies: number;
   };
+};
+
+export type WPCustomInvoiceEntries = {
+  description: string;
+  quantity: number;
+  unit_price: number;
+};
+
+export const formatCustomInvoiceReponse = (invoiceEntries: WPCustomInvoiceEntries[]): IInvoiceEntry[] => {
+  return invoiceEntries.map((entry: WPCustomInvoiceEntries) => ({
+    description: entry.description,
+    quantity: entry.quantity,
+    unitPrice: entry.unit_price
+  }));
 };
 
 export const formatWeddingGuestsResponse = (guests: WPWeddingGuests): IGuests => {

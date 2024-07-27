@@ -7,6 +7,7 @@ import { IQuoteConfig, IQuoteConfigItem, IQuotePackageItem } from 'src/store/red
 import { IRoom, IRooms } from 'src/store/reducers/rooms';
 import { IUpgradeChoices } from 'src/store/reducers/upgradeChoices';
 import { IUpgrades } from 'src/store/reducers/upgrades';
+import { IWeddingState } from 'src/store/reducers/wedding';
 
 import { blissDate, currencyFormat, uniqueArrayObjects } from './common';
 
@@ -23,7 +24,8 @@ export const generateQuote = (
   Payments: IPayment[],
   Rooms: IRooms,
   Upgrades: IUpgrades,
-  UpgradeChoices: IUpgradeChoices
+  UpgradeChoices: IUpgradeChoices,
+  Wedding: IWeddingState
 ) => {
   const items = [];
   const issues: Array<string> = [];
@@ -132,6 +134,12 @@ export const generateQuote = (
     const occurrences = roomBreakdown.filter((rb) => JSON.stringify(rb) === stringified).length;
     const lineTotal = addToTotal(occurrences, rbc.costPerNight);
     items.push(quoteTableData(rbc.costCategory as string, occurrences.toString(), currencyFormat(rbc.costPerNight), currencyFormat(lineTotal)));
+  });
+
+  // Custom Adjustments
+  Wedding?.customInvoiceEntries?.map((entry) => {
+    const lineTotal = addToTotal(entry.quantity, entry.unitPrice);
+    items.push(quoteTableData(entry.description, entry.quantity.toString(), entry.unitPrice.toString(), currencyFormat(lineTotal)));
   });
 
   // Payments Received
