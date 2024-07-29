@@ -53,7 +53,7 @@ export const formatMenuItems = (menuItems: WPMenuChoices): IMenu => {
         menuDinnerMain.push(newMenuItem);
       } else if (categories.includes('Starter')) {
         menuDinnerStarter.push(newMenuItem);
-      } else if (categories.includes('Sides')) {
+      } else if (categories.includes('Side Dishes')) {
         menuDinnerSides.push(newMenuItem);
       }
     } else if (categories.includes('Canapes')) {
