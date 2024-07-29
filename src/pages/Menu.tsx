@@ -127,7 +127,7 @@ const Menu = () => {
 
   const onResetChoices = () => {
     store.dispatch({
-      payload: resetMenuChoices,
+      payload: { menuChoices: resetMenuChoices },
       type: 'menuChoices/set'
     });
   };

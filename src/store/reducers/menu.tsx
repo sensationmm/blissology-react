@@ -8,8 +8,9 @@ export type IMenuItem = {
   category: Array<string>;
   dietary: IDiets[];
   description: string;
-  name: string;
   image: string;
+  name: string;
+  packageIds: Array<number>;
   plating: IMenuItemPlating;
   postType: string;
   upcharge?: number;

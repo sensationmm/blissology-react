@@ -19,7 +19,18 @@ export const formatMenuItems = (menuItems: WPMenuChoices): IMenu => {
   const menuKidsReception: IMenuItem[] = [];
 
   menuItems.forEach((item) => {
-    const categories: IMenuItem['category'] = item._embedded ? item._embedded['wp:term']?.map((catList) => catList.map((cat) => cat.name)).flat() : [];
+    const categoryIds: Array<number> = [];
+    const categories: IMenuItem['category'] = item._embedded
+      ? item._embedded['wp:term']
+          ?.map((catList) =>
+            catList.map((cat) => {
+              categoryIds.push(cat.id);
+              return cat.name;
+            })
+          )
+          .flat()
+      : [];
+
     const newMenuItem: IMenuItem = {
       category: categories,
       description: item.acf.description as string,
@@ -27,6 +38,7 @@ export const formatMenuItems = (menuItems: WPMenuChoices): IMenu => {
       id: item.id,
       image: item.acf.image as string,
       name: item.title.rendered,
+      packageIds: categoryIds,
       plating: item.acf.plating_type as IMenuItemPlating,
       postType: 'menuItem',
       upcharge: item.acf.upcharge

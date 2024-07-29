@@ -1,6 +1,8 @@
 import { IDrinkChoices } from 'src/store/reducers/drinkChoices';
 import { IDrinks } from 'src/store/reducers/drinks';
 import { IGuests } from 'src/store/reducers/guests';
+import { IMenu } from 'src/store/reducers/menu';
+import { IMenuChoices } from 'src/store/reducers/menuChoices';
 import { IOrders } from 'src/store/reducers/orders';
 import { IPayment } from 'src/store/reducers/payments';
 import { IQuoteConfig, IQuoteConfigItem, IQuotePackageItem } from 'src/store/reducers/quoteConfig';
@@ -11,6 +13,9 @@ import { IWeddingState } from 'src/store/reducers/wedding';
 
 import { blissDate, currencyFormat, uniqueArrayObjects } from './common';
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type IObject = Record<string, any>;
+
 const quoteTableData = (description: string, quantity: string, unitPrice: string, total: string) => {
   return { description, quantity, total, unitPrice };
 };
@@ -20,6 +25,8 @@ export const generateQuote = (
   Drinks: IDrinks,
   DrinksChoices: IDrinkChoices,
   Guests: IGuests,
+  Menu: IMenu,
+  MenuChoices: IMenuChoices,
   Orders: IOrders,
   Payments: IPayment[],
   Rooms: IRooms,
@@ -44,64 +51,103 @@ export const generateQuote = (
     items.push(quoteTableData(fee.description, '1', currencyFormat(fee.unit_price), currencyFormat(lineTotal)));
   });
 
-  // Food Package
-  QuoteConfig.packages.forEach((packageItem: IQuotePackageItem) => {
-    const quantity = Guests[packageItem.priceCalculation.timeframe][packageItem.priceCalculation.guest_type];
-    const lineTotal = addToTotal(quantity, packageItem.cost);
-    items.push(quoteTableData(packageItem.description, quantity.toString(), currencyFormat(packageItem.cost), currencyFormat(lineTotal)));
-  });
-
-  const hasChosenDrinks = (listToCheck: Array<number>) => {
-    const packageDrinkIds = Object.values(Drinks)
+  // Packages Functions
+  const hasChosenItems = (listToCheck: Array<number>, Objects: IObject[], ObjectChoices: Array<number>, quantity?: number) => {
+    const packageDrinkIds = Object.values(Objects)
       .flat()
-      .filter((drink) => drink.packageIds.some((d) => listToCheck.includes(d)))
-      .map((drink) => drink.id);
+      .map((item) => {
+        if (!Object.prototype.hasOwnProperty.call(item, 'packageIds')) {
+          return Object.values(item).flat();
+        } else {
+          return item;
+        }
+      })
+      .flat()
+      .filter((item: IObject) => {
+        return item.packageIds.some((d: number) => listToCheck.includes(d));
+      })
+      .map((item: IObject) => {
+        // Supplement charges
+        if (ObjectChoices.includes(item.id) && item.upcharge && item.upcharge !== '' && quantity) {
+          const upcharge = parseFloat(item.upcharge);
+          const lineTotal = addToTotal(quantity, upcharge);
+          items.push(quoteTableData(`${item.name} supplement`, quantity.toString(), currencyFormat(upcharge), currencyFormat(lineTotal)));
+        }
+        return item.id;
+      });
 
-    return packageDrinkIds.filter((value) => DrinksChoices.includes(value));
+    return packageDrinkIds.filter((value) => ObjectChoices.includes(value));
   };
 
-  // Drinks Package
-  if (QuoteConfig?.drinksPackages.length > 0) {
-    let drinksPackage: IQuotePackageItem = {} as IQuotePackageItem;
+  const selectTieredPackage = (configKey: keyof IQuoteConfig, Objects: IObject[], ObjectChoices: Array<number>) => {
+    let selectedPackage: IQuotePackageItem = {} as IQuotePackageItem;
     let packagesPickedFrom = 0;
-    QuoteConfig.drinksPackages
+    (QuoteConfig[configKey] as IQuotePackageItem[])
       .slice()
       .reverse()
       .forEach((packageItem: IQuotePackageItem) => {
         const packageConfig = packageItem.choices.map(({ taxonomy, ...rest }) => ({ categoryId: taxonomy.id, ...rest }));
         const packageCategoryIds = packageConfig.map((pkg) => pkg.categoryId);
 
-        const chosenPackageDrinks = hasChosenDrinks(packageCategoryIds);
+        const chosenPackageDrinks = hasChosenItems(packageCategoryIds, Objects, ObjectChoices);
 
         if (chosenPackageDrinks.length > 0) {
           packagesPickedFrom++;
-          drinksPackage = packageItem;
+          selectedPackage = packageItem;
         }
       });
+
+    return { packagesPickedFrom, selectedPackage };
+  };
+
+  const addPackageToInvoice = (activePackage: IQuotePackageItem) => {
+    const quantity = Guests[activePackage.priceCalculation.timeframe][activePackage.priceCalculation.guest_type];
+    const lineTotal = addToTotal(quantity, activePackage.cost);
+    items.push(quoteTableData(activePackage.description, quantity.toString(), currencyFormat(activePackage.cost), currencyFormat(lineTotal)));
+  };
+
+  const getPackageMaxMin = (activePackage: IQuotePackageItem, Package: IObject[], PackageChoices: Array<number>, label: string, packagesPickedFrom?: number) => {
+    activePackage.choices.forEach((choice) => {
+      const quantity = Guests[activePackage.priceCalculation.timeframe][activePackage.priceCalculation.guest_type];
+      const numChosenItems = hasChosenItems([choice.taxonomy.id], Package, PackageChoices, quantity).length;
+      if (numChosenItems > choice.maximum) {
+        if (!choice.additional_allowed) {
+          issues.push(`You have picked too many ${choice.name} in your ${label} package - the maximum is ${choice.maximum} and you have chosen ${numChosenItems}`);
+        } else {
+          const numExtra = numChosenItems - choice.maximum;
+          for (let i = 0; i < numExtra; i++) {
+            const lineTotal = addToTotal(quantity, choice.additional_cost);
+            items.push(quoteTableData(`Additional ${choice.name} choice`, quantity.toString(), currencyFormat(choice.additional_cost), currencyFormat(lineTotal)));
+          }
+        }
+      } else if (numChosenItems < choice.minimum) {
+        issues.push(`You have not picked enough ${choice.name} in your ${label} package - the minimum is ${choice.minimum} and you have chosen ${numChosenItems}`);
+      }
+
+      if (packagesPickedFrom && packagesPickedFrom > 1) {
+        issues.push(`You have picked ${choice.name} from more than one ${label} package - this may incur an extra charge`);
+      }
+    });
+  };
+
+  // Food Package
+  QuoteConfig.packages.forEach((packageItem: IQuotePackageItem) => {
+    if (Object.values(MenuChoices).flat().length !== 0) {
+      addPackageToInvoice(packageItem);
+
+      getPackageMaxMin(packageItem, Menu as unknown as IObject[], Object.values(MenuChoices).flat(), 'food');
+    } else {
+      issues.push(`You haven't chosen your Food Package options`);
+    }
+  });
+
+  // Drinks Package
+  if (QuoteConfig?.drinksPackages.length > 0) {
+    const { packagesPickedFrom, selectedPackage: drinksPackage } = selectTieredPackage('drinksPackages', Drinks as unknown as IObject[], DrinksChoices);
 
     if (Object.keys(drinksPackage).length > 0) {
-      const quantity = Guests[drinksPackage.priceCalculation.timeframe][drinksPackage.priceCalculation.guest_type];
-      const lineTotal = addToTotal(quantity, drinksPackage.cost);
-      items.push(quoteTableData(drinksPackage.description, quantity.toString(), currencyFormat(drinksPackage.cost), currencyFormat(lineTotal)));
-
-      drinksPackage.choices.forEach((choice) => {
-        const numChosenDrinks = hasChosenDrinks([choice.taxonomy.id]).length;
-        if (numChosenDrinks > choice.maximum) {
-          if (!choice.additional_allowed) {
-            issues.push(`You have picked too many ${choice.name} in your drinks package - the maximum is ${choice.maximum} and you have chosen ${numChosenDrinks}`);
-          } else {
-            const numExtra = numChosenDrinks - choice.maximum;
-            const lineTotal = addToTotal(numExtra, choice.additional_cost);
-            items.push(quoteTableData('Extra Drinks Package choices', numExtra.toString(), currencyFormat(choice.additional_cost), currencyFormat(lineTotal)));
-          }
-        } else if (numChosenDrinks < choice.minimum) {
-          issues.push(`You have not picked enough ${choice.name} in your drinks package - the minimum is ${choice.minimum} and you have chosen ${numChosenDrinks}`);
-        }
-
-        if (packagesPickedFrom > 1) {
-          issues.push(`You have picked wines from more than one drinks package - this may incur an extra charge`);
-        }
-      });
+      addPackageToInvoice(drinksPackage);
+      getPackageMaxMin(drinksPackage, Drinks as unknown as IObject[], DrinksChoices, 'drinks', packagesPickedFrom);
     } else {
       issues.push(`You haven't chosen your Drinks Package options`);
     }
@@ -139,7 +185,7 @@ export const generateQuote = (
   // Custom Adjustments
   Wedding?.customInvoiceEntries?.map((entry) => {
     const lineTotal = addToTotal(entry.quantity, entry.unitPrice);
-    items.push(quoteTableData(entry.description, entry.quantity.toString(), entry.unitPrice.toString(), currencyFormat(lineTotal)));
+    items.push(quoteTableData(entry.description, entry.quantity.toString(), currencyFormat(entry.unitPrice), currencyFormat(lineTotal)));
   });
 
   // Payments Received
