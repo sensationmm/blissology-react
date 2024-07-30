@@ -172,7 +172,15 @@ export const blissologyTheme = createTheme({
     MuiTableBody: {
       styleOverrides: {
         root: {
-          borderBottom: 0, //`2px solid ${initialThemeSetup.palette.tertiary.dark}`,
+          '&.invoice': {
+            '.MuiTableRow-root': {
+              '&:last-of-type': {
+                borderBottom: 0,
+                borderTop: `2px solid ${initialThemeSetup.palette.tertiary.dark}`
+              }
+            }
+          },
+          borderBottom: 0,
           borderTop: `2px solid ${initialThemeSetup.palette.tertiary.dark}`
         }
       }
@@ -187,16 +195,16 @@ export const blissologyTheme = createTheme({
         }
       }
     },
-    MuiTableRow: {
-      styleOverrides: {
-        root: {
-          '&:last-of-type': {
-            borderBottom: 0,
-            borderTop: `2px solid ${initialThemeSetup.palette.tertiary.dark}`
-          }
-        }
-      }
-    },
+    // MuiTableRow: {
+    //   styleOverrides: {
+    //     root: {
+    //       '&:last-of-type': {
+    //         borderBottom: 0,
+    //         borderTop: `2px solid ${initialThemeSetup.palette.tertiary.dark}`
+    //       }
+    //     }
+    //   }
+    // },
     MuiTabs: {
       styleOverrides: {
         root: {

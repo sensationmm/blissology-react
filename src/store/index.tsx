@@ -10,6 +10,7 @@ import menuChoicesReducer from './reducers/menuChoices';
 import ordersReducer from './reducers/orders';
 import paymentsReducer from './reducers/payments';
 import quoteConfigReducer from './reducers/quoteConfig';
+import roomAllocationsReducer from './reducers/roomAllocations';
 import roomsReducer from './reducers/rooms';
 import suppliersReducer from './reducers/suppliers';
 import uiReducer from './reducers/ui';
@@ -29,6 +30,7 @@ const store = configureStore({
     orders: ordersReducer,
     payments: paymentsReducer,
     quoteConfig: quoteConfigReducer,
+    roomAllocations: roomAllocationsReducer,
     rooms: roomsReducer,
     suppliers: suppliersReducer,
     ui: uiReducer,

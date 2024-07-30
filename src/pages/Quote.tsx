@@ -73,7 +73,7 @@ const Quote = () => {
                     <TableCell align="right">Total</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
+                <TableBody className="invoice">
                   {quote.items.map((item: Record<string, string | null>, count: number) => {
                     const { description, quantity, total, unitPrice } = item;
                     return (

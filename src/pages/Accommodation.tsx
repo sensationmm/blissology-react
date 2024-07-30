@@ -1,24 +1,40 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import { cloneDeep } from 'lodash';
 import { useSelector } from 'react-redux';
+import { mixed, object, string } from 'yup';
 
+import { MenuItem, Select, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import Card from '@mui/material/Card';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
 
 import store, { RootState } from 'src/store';
+import { IRoomAllocation } from 'src/store/reducers/roomAllocations';
 import { initialState as emptyRoomsState, IRoom, IRooms } from 'src/store/reducers/rooms';
 
 import { wpRestApiHandler } from 'src/api/wordpress';
 
 import Layout from 'src/components/Layout/Layout';
+import ReduxTextField from 'src/components/ReduxTextField';
 
+import { useSnackbar } from 'src/hooks/useSnackbar';
+import { useUnsaved } from 'src/hooks/useUnsaved';
+import { capitalize } from 'src/utils/common';
 import { formatRoomsResponse } from 'src/utils/wordpress/rooms';
+import { getYupErrors } from 'src/utils/yup';
 
 const Accommodation = () => {
+  const weddingState = (state: RootState) => state.wedding;
+  const { weddingID } = useSelector(weddingState);
   const authState = (state: RootState) => state.auth;
   const { token } = useSelector(authState);
   const roomsState = (state: RootState) => state.rooms;
   const Rooms: IRooms = useSelector(roomsState);
+  const roomAllocationsState = (state: RootState) => state.roomAllocations;
+  const RoomAllocations: IRoomAllocation[] = useSelector(roomAllocationsState);
+  const [errors, setErrors] = useState<Record<string, string>>();
+  const [openSnackbar] = useSnackbar();
+  const [resetAllocations, setResetAllocations] = useState<RootState['roomAllocations']>();
+
+  const isEdited = JSON.stringify(RoomAllocations) !== JSON.stringify(resetAllocations);
 
   useEffect(() => {
     if (Rooms === emptyRoomsState && !!token) {
@@ -43,22 +59,153 @@ const Accommodation = () => {
     }
   }, []);
 
+  useEffect(() => {
+    setResetAllocations(cloneDeep(RoomAllocations));
+  }, []);
+
+  const updateRoomAllocation = (id: number, key: string, value: string) => {
+    store.dispatch({
+      payload: { id: id, key: key, value: value },
+      type: 'roomAllocations/update'
+    });
+  };
+
+  const saveRoomAllocations = async () => {
+    store.dispatch({
+      payload: { isLoading: true },
+      type: 'ui/setLoading'
+    });
+
+    const allocationSchema = object({
+      contact_email: string().email().nullable(),
+      contact_name: string().nullable(),
+      guest_name: string().nullable(),
+      payment: mixed().oneOf(['guest', 'invoice'])
+    });
+
+    // TODO: yup validate not working yet
+    await allocationSchema
+      .validate(RoomAllocations, { abortEarly: false })
+      .then(() => {
+        wpRestApiHandler(
+          `wedding/${weddingID}`,
+          {
+            acf: {
+              room_allocations: RoomAllocations
+            }
+          },
+          'POST',
+          token
+        )
+          .then((resp) => {
+            if (resp.ok) {
+              return resp.json();
+            }
+
+            return false;
+          })
+          .then(() => {
+            openSnackbar(`Room allocations edited successfully`);
+          })
+          .finally(() => {
+            store.dispatch({
+              payload: { isLoading: false },
+              type: 'ui/setLoading'
+            });
+          });
+      })
+      .catch((error) => {
+        setErrors(getYupErrors(error));
+        store.dispatch({
+          payload: { isLoading: false },
+          type: 'ui/setLoading'
+        });
+        openSnackbar('Fix the errors and try again', 'error');
+      });
+  };
+
+  const resetRoomAllocations = () => {
+    store.dispatch({
+      payload: { roomAllocations: resetAllocations },
+      type: 'roomAllocations/set'
+    });
+  };
+
+  useUnsaved({
+    isUnsaved: isEdited,
+    onConfirm: resetRoomAllocations
+  });
+
   return (
-    <Layout title="Accommodation">
-      <Grid container spacing={2}>
-        {Object.values(Rooms)
-          .slice()
-          // .sort((a, b) => (a.title > b.title ? 1 : -1))
-          .map((room: IRoom, index: number) => (
-            <Grid item xs={4} key={index}>
-              <Card>
-                <Typography color="textSecondary" gutterBottom>
-                  {room.name}
-                </Typography>
-              </Card>
-            </Grid>
-          ))}
-      </Grid>
+    <Layout
+      title="Accommodation"
+      actions={[
+        { color: 'secondary', disabled: !isEdited, label: 'Reset', onClick: resetRoomAllocations },
+        { disabled: !isEdited, label: 'Save', onClick: saveRoomAllocations }
+      ]}>
+      <Card sx={{ padding: 0 }}>
+        <TableContainer>
+          <Table sx={{ width: '100%' }}>
+            <TableHead>
+              <TableRow>
+                <TableCell>Room</TableCell>
+                <TableCell>Guest Name</TableCell>
+                <TableCell>Contact Email</TableCell>
+                <TableCell>Contact Number</TableCell>
+                <TableCell>Payment</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {Object.values(RoomAllocations)
+                .slice()
+                .sort((a: IRoomAllocation, b: IRoomAllocation) => ((a.id || 1) > (b.id || 2) ? 1 : -1))
+                .map((roomAllocation: IRoomAllocation, index: number) => {
+                  const room: IRoom = Object.values(Rooms).find((r) => r.id === roomAllocation.room_id) || ({} as IRoom);
+                  return (
+                    <TableRow key={`room-${index}`}>
+                      <TableCell component="th" scope="row">
+                        {room.name}
+                      </TableCell>
+                      <TableCell>
+                        <ReduxTextField
+                          id={`allocation-${index}-guestName`}
+                          initialValue={roomAllocation.guest_name}
+                          onBlur={(val) => updateRoomAllocation(index, 'guest_name', val)}
+                          error={Object.prototype.hasOwnProperty.call(errors || {}, 'guest_name')}
+                          helperText={capitalize(errors?.guest_name || '')}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <ReduxTextField
+                          id={`allocation-${index}-contactEmail`}
+                          initialValue={roomAllocation.contact_email}
+                          onBlur={(val) => updateRoomAllocation(index, 'contact_email', val)}
+                          error={Object.prototype.hasOwnProperty.call(errors || {}, 'contact_email')}
+                          helperText={capitalize(errors?.contact_email || '')}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <ReduxTextField
+                          id={`allocation-${index}-contactNumber`}
+                          initialValue={roomAllocation.contact_number}
+                          onBlur={(val) => updateRoomAllocation(index, 'contact_number', val)}
+                          error={Object.prototype.hasOwnProperty.call(errors || {}, 'contact_number')}
+                          helperText={capitalize(errors?.contact_number || '')}
+                        />
+                      </TableCell>
+                      <TableCell>
+                        <Select onChange={(e) => updateRoomAllocation(index, 'payment', e.target.value)} value={roomAllocation.payment} sx={{ width: '100%' }}>
+                          <MenuItem value={'guest'}>Guest Pays</MenuItem>
+                          <MenuItem value={'invoice'}>Add to Invoice</MenuItem>
+                        </Select>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Card>
     </Layout>
   );
 };
