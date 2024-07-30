@@ -195,6 +195,7 @@ const Menu = () => {
       ]}>
       {!isLoading ? (
         <TabbedCards
+          activeFilters={['diet', 'plating']}
           topLevelFilter={
             <ToggleFilter
               id="filter-diets"

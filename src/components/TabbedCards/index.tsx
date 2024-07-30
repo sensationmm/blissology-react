@@ -28,6 +28,8 @@ export type ITabs2Setup = {
 
 interface ITabbedCard extends IMenuItem, IUpgradeParams, IDrinksItem {}
 
+type IFilter = 'diet' | 'drinkType' | 'plating' | 'wineType';
+
 type ITabbedCards = {
   onSelect: (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string, set: 'push' | 'replace', orderNum?: number) => void;
   tabsSetup: ITabsSetup[];
@@ -42,6 +44,7 @@ type ITabbedCards = {
   cardSpan?: number;
   cardContentKeys?: IListCardContent[];
   cardIconKeys?: IListCardContent[];
+  activeFilters?: IFilter[];
 };
 
 const TabbedCards: FC<ITabbedCards> = ({
@@ -57,7 +60,8 @@ const TabbedCards: FC<ITabbedCards> = ({
   SelectedContent,
   selectedContentKey,
   SelectedOrders,
-  cardSpan = 4
+  cardSpan = 4,
+  activeFilters = []
 }) => {
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeTab2, setActiveTab2] = useState<number>(0);
@@ -116,10 +120,10 @@ const TabbedCards: FC<ITabbedCards> = ({
         ? items
         : items.slice().filter((item: ITabbedCard) => {
             return (
-              (Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) &&
-              (!item.plating || item.plating === Filters.plating) &&
-              (!item.drinkType || item.drinkType === Filters.drinkType || Filters.drinkType === 'all') &&
-              (!item.wineType || item.wineType === Filters.wineType || Filters.wineType === 'all')
+              (!activeFilters.includes('diet') || Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) &&
+              (!activeFilters.includes('plating') || !item.plating || item.plating === Filters.plating) &&
+              (!activeFilters.includes('drinkType') || !item.drinkType || item.drinkType === Filters.drinkType || Filters.drinkType === 'all') &&
+              (!activeFilters.includes('wineType') || !item.wineType || item.wineType === Filters.wineType || Filters.wineType === 'all')
             );
           });
       if (filteredItems.length > 0) {

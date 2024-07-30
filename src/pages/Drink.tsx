@@ -157,6 +157,7 @@ const Drink = () => {
       ]}>
       {!isLoading ? (
         <TabbedCards
+          activeFilters={['wineType', 'drinkType']}
           topLevelFilter={
             <ToggleFilter
               id="filter-drinkType"
