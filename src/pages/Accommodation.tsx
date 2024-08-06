@@ -84,9 +84,9 @@ const Accommodation = () => {
     });
 
     // TODO: yup validate not working yet
-    await allocationSchema
-      .validate(RoomAllocations, { abortEarly: false })
-      .then(() => {
+    await /*allocationSchema
+      // .validate(RoomAllocations, { abortEarly: false })
+      .then(() => {*/
         wpRestApiHandler(
           `wedding/${weddingID}`,
           {
@@ -96,31 +96,27 @@ const Accommodation = () => {
           },
           'POST',
           token
-        )
-          .then((resp) => {
-            if (resp.ok) {
-              return resp.json();
-            }
-
-            return false;
-          })
-          .then(() => {
-            openSnackbar(`Room allocations edited successfully`);
-          })
-          .finally(() => {
+        ).then(async (resp) => {
+          const respJson = await resp.json();
+    
+          store.dispatch({
+            payload: { isLoading: false },
+            type: 'ui/setLoading'
+          });
+    
+          if (!respJson.data?.status) {
+            openSnackbar('Room allocations updated');
+            return respJson;
+          } else {
+            openSnackbar(respJson.message, 'error');
+          }
+        }).catch((error) => {
+            setErrors(getYupErrors(error));
             store.dispatch({
               payload: { isLoading: false },
               type: 'ui/setLoading'
             });
-          });
-      })
-      .catch((error) => {
-        setErrors(getYupErrors(error));
-        store.dispatch({
-          payload: { isLoading: false },
-          type: 'ui/setLoading'
-        });
-        openSnackbar('Fix the errors and try again', 'error');
+            openSnackbar('Fix the errors and try again', 'error');
       });
   };
 
@@ -159,42 +155,42 @@ const Accommodation = () => {
               {Object.values(RoomAllocations)
                 .slice()
                 .sort((a: IRoomAllocation, b: IRoomAllocation) => ((a.id || 1) > (b.id || 2) ? 1 : -1))
-                .map((roomAllocation: IRoomAllocation, index: number) => {
+                .map((roomAllocation: IRoomAllocation) => {
                   const room: IRoom = Object.values(Rooms).find((r) => r.id === roomAllocation.room_id) || ({} as IRoom);
                   return (
-                    <TableRow key={`room-${index}`}>
+                    <TableRow key={`room-${roomAllocation.room_id}`}>
                       <TableCell component="th" scope="row">
                         {room.name}
                       </TableCell>
                       <TableCell>
                         <ReduxTextField
-                          id={`allocation-${index}-guestName`}
+                          id={`allocation-${roomAllocation.room_id}-guestName`}
                           initialValue={roomAllocation.guest_name}
-                          onBlur={(val) => updateRoomAllocation(index, 'guest_name', val)}
+                          onBlur={(val) => updateRoomAllocation(roomAllocation.room_id, 'guest_name', val)}
                           error={Object.prototype.hasOwnProperty.call(errors || {}, 'guest_name')}
                           helperText={capitalize(errors?.guest_name || '')}
                         />
                       </TableCell>
                       <TableCell>
                         <ReduxTextField
-                          id={`allocation-${index}-contactEmail`}
+                          id={`allocation-${roomAllocation.room_id}-contactEmail`}
                           initialValue={roomAllocation.contact_email}
-                          onBlur={(val) => updateRoomAllocation(index, 'contact_email', val)}
+                          onBlur={(val) => updateRoomAllocation(roomAllocation.room_id, 'contact_email', val)}
                           error={Object.prototype.hasOwnProperty.call(errors || {}, 'contact_email')}
                           helperText={capitalize(errors?.contact_email || '')}
                         />
                       </TableCell>
                       <TableCell>
                         <ReduxTextField
-                          id={`allocation-${index}-contactNumber`}
+                          id={`allocation-${roomAllocation.room_id}-contactNumber`}
                           initialValue={roomAllocation.contact_number}
-                          onBlur={(val) => updateRoomAllocation(index, 'contact_number', val)}
+                          onBlur={(val) => updateRoomAllocation(roomAllocation.room_id, 'contact_number', val)}
                           error={Object.prototype.hasOwnProperty.call(errors || {}, 'contact_number')}
                           helperText={capitalize(errors?.contact_number || '')}
                         />
                       </TableCell>
                       <TableCell>
-                        <Select onChange={(e) => updateRoomAllocation(index, 'payment', e.target.value)} value={roomAllocation.payment} sx={{ width: '100%' }}>
+                        <Select onChange={(e) => updateRoomAllocation(roomAllocation.room_id, 'payment', e.target.value)} value={roomAllocation.payment} sx={{ width: '100%' }}>
                           <MenuItem value={'guest'}>Guest Pays</MenuItem>
                           <MenuItem value={'invoice'}>Add to Invoice</MenuItem>
                         </Select>

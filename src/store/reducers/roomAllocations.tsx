@@ -17,15 +17,10 @@ const roomAllocationsReducer = (state = initialState, action: any) => {
     case 'roomAllocations/set':
       return Object.values(action.payload.roomAllocations) as IRoomAllocation[];
     case 'roomAllocations/update': {
-      const allocation = state[action.payload.id];
 
-      return {
-        ...state,
-        [action.payload.id]: {
-          ...allocation,
-          [action.payload.key]: action.payload.value
-        }
-      };
+      const newAllocations = Object.values(state).map(alloc => action.payload.id === alloc.room_id ? ({...alloc, [action.payload.key]: action.payload.value}) : alloc)
+
+      return newAllocations;
     }
     case 'auth/logout':
       return initialState;

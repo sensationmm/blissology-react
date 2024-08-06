@@ -26,6 +26,7 @@ const Quote = () => {
     orders: Orders,
     payments: Payments,
     quoteConfig: QuoteConfig,
+    roomAllocations: RoomAllocations,
     rooms: Rooms,
     ui: UI,
     upgrades: Upgrades,
@@ -54,9 +55,9 @@ const Quote = () => {
     });
   }, []);
 
-  if (UI.isLoading) return <CircularProgress />;
+  // if (UI.isLoading) return <CircularProgress />;
 
-  const quote = generateQuote(QuoteConfig, drinks, drinkChoices, Guests, Menu, MenuChoices, Orders, Payments, Rooms, Upgrades, UpgradeChoices, Wedding);
+  const quote = generateQuote(QuoteConfig, drinks, drinkChoices, Guests, Menu, MenuChoices, Orders, Payments, RoomAllocations, Rooms, Upgrades, UpgradeChoices, Wedding);
 
   return (
     <Layout title="Your Latest Quote">

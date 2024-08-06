@@ -6,6 +6,7 @@ import { IMenuChoices } from 'src/store/reducers/menuChoices';
 import { IOrders } from 'src/store/reducers/orders';
 import { IPayment } from 'src/store/reducers/payments';
 import { IQuoteConfig, IQuoteConfigItem, IQuotePackageItem } from 'src/store/reducers/quoteConfig';
+import { IRoomAllocation } from 'src/store/reducers/roomAllocations';
 import { IRoom, IRooms } from 'src/store/reducers/rooms';
 import { IUpgradeChoices } from 'src/store/reducers/upgradeChoices';
 import { IUpgrades } from 'src/store/reducers/upgrades';
@@ -29,6 +30,7 @@ export const generateQuote = (
   MenuChoices: IMenuChoices,
   Orders: IOrders,
   Payments: IPayment[],
+  RoomAllocations: IRoomAllocation[],
   Rooms: IRooms,
   Upgrades: IUpgrades,
   UpgradeChoices: IUpgradeChoices,
@@ -171,9 +173,14 @@ export const generateQuote = (
       items.push(quoteTableData(`${upgrade.name} setup fee`, '1', currencyFormat(parseFloat(upgrade.setupFee)), currencyFormat(lineTotal)));
     }
   });
-
+  
   // Accommodation
-  const roomBreakdown = Object.values(Rooms).map(({ costCategory, costPerNight }) => ({ costCategory, costPerNight }));
+  // Remove guest-payable rooms
+  const invoicedRoomBreakdown = Object.values(Rooms).filter(r => {
+    const roomAllocation = RoomAllocations.find(ra => ra.room_id === r.id);
+    return roomAllocation?.payment === 'invoice';
+  });
+  const roomBreakdown = invoicedRoomBreakdown.map(({ costCategory, costPerNight }) => ({ costCategory, costPerNight }));
   const roomBreakdownCombined = uniqueArrayObjects(roomBreakdown) as IRooms;
   roomBreakdownCombined.map((rbc: IRoom) => {
     const stringified = JSON.stringify(rbc);
