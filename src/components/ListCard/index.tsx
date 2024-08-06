@@ -2,7 +2,7 @@ import { FC, useState } from 'react';
 
 import { Button, CardProps, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText, Grid, Input, InputAdornment, InputLabel, Typography } from '@mui/material';
 
-import { IUpgradeParams } from 'src/store/reducers/upgrades';
+import { IUpgradeItemOptions, IUpgradeParams } from 'src/store/reducers/upgrades';
 
 import Icon from 'src/components/Icon';
 
@@ -19,7 +19,7 @@ export type IListCardContent = { id?: string; Component?: FC<any>; args?: IListC
 type IListCardOrder = {
   required: boolean;
   min?: number;
-  type?: IUpgradeParams['minimumOrder']['hasMinimum'];
+  type?: IUpgradeParams['minimumOrder']['hasMinimum'] | string;
 };
 
 type IListCard = {
@@ -35,9 +35,10 @@ type IListCard = {
   order?: IListCardOrder;
   ordered?: number;
   isTitleCard?: boolean;
+  options?:  IUpgradeItemOptions[];
 };
 
-const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected = undefined, order, ordered, sx = {}, onSelect = undefined, isTitleCard = false }) => {
+const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected = undefined, order, ordered, sx = {}, onSelect = undefined, isTitleCard = false, options = [] }) => {
   const paddingRight = image ? '40%' : selected !== undefined ? '35px' : 0;
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const [orderNum, setOrderNum] = useState<string>(ordered?.toString() || order?.min?.toString() || '');
@@ -94,7 +95,7 @@ const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected 
           {ordered && (
             <Typography variant="body2" sx={{ padding: '3px' }}>
               {ordered}
-              {order?.type === 'percentage' ? '%' : ' people'}
+              {order?.type === 'percentage' ? '%' : ` ${order?.type}`}
             </Typography>
           )}
           <Icon iconKey={selected ? 'selected' : 'unselected'} color="primary" />
@@ -114,7 +115,7 @@ const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected 
         <DialogContent>
           <Grid container alignItems={'center'}>
             <Grid item xs={3} alignItems={'center'}>
-              <InputLabel>Order for:</InputLabel>
+              <InputLabel>Order:</InputLabel>
             </Grid>
             <Grid item xs={9}>
               <Input
@@ -131,7 +132,7 @@ const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected 
                 <Grid item xs={9}>
                   <FormHelperText error={orderError}>
                     Minimum order: {order.min}
-                    {order.type === 'percentage' ? '% of guests' : ' people'}
+                    {order.type === 'percentage' ? '% of guests' : ` ${order?.type}`}
                   </FormHelperText>
                 </Grid>
               </>

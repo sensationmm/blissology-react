@@ -136,6 +136,8 @@ const TabbedCards: FC<ITabbedCards> = ({
               </Grid>
             )}
             {filteredItems.map((menuItem: ITabbedCard, index: number) => {
+              const hasMinimum = menuItem.minimumOrder?.hasMinimum !== 'none';
+
               return (
                 <Grid item xs={cardSpan} key={`menu-${type}-${index}`} sx={{ display: 'flex' }}>
                   <ListCard
@@ -148,15 +150,16 @@ const TabbedCards: FC<ITabbedCards> = ({
                     onSelect={(orderNum?: number) => onSelect(menuItem.id, type, SelectedContent, selectedContentKey, 'push', orderNum)}
                     sx={{ minHeight: `${cardSpan * 2 * 20}px` }}
                     order={
-                      menuItem.postType === 'upgrade' && !!menuItem.minimumOrder
+                      menuItem.postType === 'upgrade' && (!!menuItem.minimumOrder || !!menuItem.priceFor)
                         ? {
-                            min: menuItem.minimumOrder?.hasMinimum === 'people' ? menuItem.minimumOrder.num : menuItem.minimumOrder.percentage,
+                            min: ['people','items'].includes(menuItem.minimumOrder?.hasMinimum) ? menuItem.minimumOrder.num : menuItem.minimumOrder.percentage,
                             required: menuItem.postType === 'upgrade' || menuItem.minimumOrder.hasMinimum !== 'none',
-                            type: menuItem.minimumOrder.hasMinimum
+                            type: hasMinimum ? menuItem.minimumOrder?.hasMinimum : menuItem.priceFor?.unit
                           }
                         : undefined
                     }
                     ordered={SelectedOrders && Object.keys(SelectedOrders).includes(menuItem.id.toString()) ? SelectedOrders[menuItem.id] : undefined}
+                    options={menuItem.hasOptions || menuItem.hasOptionsPrices ? menuItem.options : undefined}
                   />
                 </Grid>
               );

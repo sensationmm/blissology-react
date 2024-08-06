@@ -162,11 +162,24 @@ export const generateQuote = (
     .filter((upgrade) => myChoices.includes(upgrade.id));
   myUpgrades.forEach((upgrade) => {
     let quantity = Orders[upgrade.id];
+    const extraPriceScaled = upgrade.priceType === 'set' && upgrade.priceFor?.number && upgrade.additionalUnit.cost;
+
     if (upgrade.minimumOrder.hasMinimum === 'percentage') {
       quantity = Math.round((quantity * Guests.daytime.adults) / 100);
     }
+
+    if(extraPriceScaled) {
+      quantity = upgrade.priceFor?.number || 1;
+    }
     const lineTotal = addToTotal(quantity, parseFloat(upgrade.price));
     items.push(quoteTableData(upgrade.name, quantity.toString(), currencyFormat(parseFloat(upgrade.price)), currencyFormat(lineTotal)));
+
+    if(extraPriceScaled && Orders[upgrade.id] > (upgrade.priceFor?.number || 0)) {
+      quantity = Orders[upgrade.id] - (upgrade.priceFor?.number || 0);
+
+    const lineTotal = addToTotal(quantity, parseFloat(upgrade.additionalUnit.cost.toString()));
+    items.push(quoteTableData(`${upgrade.name} ${upgrade.additionalUnit.unit}`, quantity.toString(), currencyFormat(parseFloat(upgrade.additionalUnit.cost.toString())), currencyFormat(lineTotal)));
+    }
 
     if (upgrade.setupFee && parseFloat(upgrade.setupFee) !== 0) {
       const lineTotal = addToTotal(1, parseFloat(upgrade.setupFee));

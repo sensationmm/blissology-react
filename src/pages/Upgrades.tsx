@@ -47,7 +47,7 @@ const Upgrades = () => {
   const [openSnackbar] = useSnackbar();
   const [descriptions, setDescriptions] = useState<WPTerm[]>([]);
 
-  const isEdited = JSON.stringify(UpgradeChoices) !== JSON.stringify(resetUpgradeChoices);
+  const isEdited = JSON.stringify(UpgradeChoices) !== JSON.stringify(resetUpgradeChoices) || JSON.stringify(UpgradeOrders) !== JSON.stringify(resetUpgradeOrders);
 
   useEffect(() => {
     wpRestApiHandler('upgradeType', undefined, 'GET', token, false).then(async (resp) => {
@@ -138,6 +138,7 @@ const Upgrades = () => {
 
       if (!respJson.data?.status) {
         setResetUpgradeChoices(cloneDeep(UpgradeChoices));
+        setResetUpgradeOrders(cloneDeep(UpgradeOrders));
         openSnackbar('Upgrades choices updated');
         return respJson;
       } else {
