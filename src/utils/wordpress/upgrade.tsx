@@ -39,7 +39,10 @@ export const formatUpgradesResponse = (upgradeItems: WPUpgrades): IUpgrades => {
         unit: item.acf.upgrade_price_for.unit
       },
       priceType: item.acf.upgrade_price_type,
-      setupFee: item.acf.upgrade_setup_fee
+      setupFee: item.acf.upgrade_setup_fee,
+      hasOptions: item.acf.has_options,
+      hasOptionsPrices: item.acf.has_options_prices,
+      options: item.acf.options || item.acf.options_prices
     };
 
     categories.forEach((cat) => {

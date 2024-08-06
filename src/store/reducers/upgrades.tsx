@@ -23,6 +23,14 @@ export type IUpgradeParams = {
     unit: string;
   };
   setupFee: string;
+  hasOptions: boolean;
+  hasOptionsPrices: boolean;
+  options?: IUpgradeItemOptions[];
+};
+
+export type IUpgradeItemOptions = {
+  option: string;
+  price?: string;
 };
 
 export interface IUpgradeItem extends IUpgradeParams {
