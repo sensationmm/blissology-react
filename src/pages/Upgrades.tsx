@@ -91,7 +91,8 @@ const Upgrades = () => {
     stateObject: RootState[keyof RootState],
     action: string,
     set: 'push' | 'replace' = 'replace',
-    orderNum: number | undefined
+    orderNum: number | undefined,
+    option: string | undefined
   ) => {
     let currentChoices;
     if (set === 'push') {
@@ -103,7 +104,7 @@ const Upgrades = () => {
         delete currentOrders[itemID];
       } else {
         currentChoices.push(itemID);
-        currentOrders[itemID] = orderNum;
+        currentOrders[itemID] = { num: orderNum, opt: option };
       }
 
       store.dispatch({

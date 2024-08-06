@@ -23,6 +23,8 @@ export const formatUpgradesResponse = (upgradeItems: WPUpgrades): IUpgrades => {
         text: item.acf.upgrades_extra_info.text,
         title: item.acf.upgrades_extra_info.title
       },
+      hasOptions: item.acf.has_options,
+      hasOptionsPrices: item.acf.has_options_prices,
       id: item.id,
       image: item.acf.upgrades_image,
       isUpgrade: item.acf.is_upgrade,
@@ -32,6 +34,7 @@ export const formatUpgradesResponse = (upgradeItems: WPUpgrades): IUpgrades => {
         percentage: item.acf.upgrade_minimum_order.percentage
       },
       name: item.title.rendered,
+      options: item.acf.options || item.acf.options_prices,
       postType: 'upgrade',
       price: item.acf.upgrade_price,
       priceFor: {
@@ -39,10 +42,7 @@ export const formatUpgradesResponse = (upgradeItems: WPUpgrades): IUpgrades => {
         unit: item.acf.upgrade_price_for.unit
       },
       priceType: item.acf.upgrade_price_type,
-      setupFee: item.acf.upgrade_setup_fee,
-      hasOptions: item.acf.has_options,
-      hasOptionsPrices: item.acf.has_options_prices,
-      options: item.acf.options || item.acf.options_prices
+      setupFee: item.acf.upgrade_setup_fee
     };
 
     categories.forEach((cat) => {

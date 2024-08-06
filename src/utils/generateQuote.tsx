@@ -161,24 +161,35 @@ export const generateQuote = (
     .flat()
     .filter((upgrade) => myChoices.includes(upgrade.id));
   myUpgrades.forEach((upgrade) => {
-    let quantity = Orders[upgrade.id];
+    let quantity = Orders[upgrade.id].num;
+
     const extraPriceScaled = upgrade.priceType === 'set' && upgrade.priceFor?.number && upgrade.additionalUnit.cost;
 
     if (upgrade.minimumOrder.hasMinimum === 'percentage') {
       quantity = Math.round((quantity * Guests.daytime.adults) / 100);
     }
 
-    if(extraPriceScaled) {
+    if (extraPriceScaled) {
       quantity = upgrade.priceFor?.number || 1;
     }
-    const lineTotal = addToTotal(quantity, parseFloat(upgrade.price));
-    items.push(quoteTableData(upgrade.name, quantity.toString(), currencyFormat(parseFloat(upgrade.price)), currencyFormat(lineTotal)));
 
-    if(extraPriceScaled && Orders[upgrade.id] > (upgrade.priceFor?.number || 0)) {
-      quantity = Orders[upgrade.id] - (upgrade.priceFor?.number || 0);
+    const price = !upgrade.hasOptionsPrices ? upgrade.price : upgrade.options?.find((opt) => opt.option === Orders[upgrade.id].opt)?.price || '0';
 
-    const lineTotal = addToTotal(quantity, parseFloat(upgrade.additionalUnit.cost.toString()));
-    items.push(quoteTableData(`${upgrade.name} ${upgrade.additionalUnit.unit}`, quantity.toString(), currencyFormat(parseFloat(upgrade.additionalUnit.cost.toString())), currencyFormat(lineTotal)));
+    const lineTotal = addToTotal(quantity, parseFloat(price));
+    items.push(quoteTableData(upgrade.name, quantity.toString(), currencyFormat(parseFloat(price)), currencyFormat(lineTotal)));
+
+    if (extraPriceScaled && Orders[upgrade.id].num > (upgrade.priceFor?.number || 0)) {
+      quantity = Orders[upgrade.id].num - (upgrade.priceFor?.number || 0);
+
+      const lineTotal = addToTotal(quantity, parseFloat(upgrade.additionalUnit.cost.toString()));
+      items.push(
+        quoteTableData(
+          `${upgrade.name} ${upgrade.additionalUnit.unit}`,
+          quantity.toString(),
+          currencyFormat(parseFloat(upgrade.additionalUnit.cost.toString())),
+          currencyFormat(lineTotal)
+        )
+      );
     }
 
     if (upgrade.setupFee && parseFloat(upgrade.setupFee) !== 0) {
@@ -186,11 +197,11 @@ export const generateQuote = (
       items.push(quoteTableData(`${upgrade.name} setup fee`, '1', currencyFormat(parseFloat(upgrade.setupFee)), currencyFormat(lineTotal)));
     }
   });
-  
+
   // Accommodation
   // Remove guest-payable rooms
-  const invoicedRoomBreakdown = Object.values(Rooms).filter(r => {
-    const roomAllocation = RoomAllocations.find(ra => ra.room_id === r.id);
+  const invoicedRoomBreakdown = Object.values(Rooms).filter((r) => {
+    const roomAllocation = RoomAllocations.find((ra) => ra.room_id === r.id);
     return roomAllocation?.payment === 'invoice';
   });
   const roomBreakdown = invoicedRoomBreakdown.map(({ costCategory, costPerNight }) => ({ costCategory, costPerNight }));

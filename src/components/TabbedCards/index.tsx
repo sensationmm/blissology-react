@@ -31,7 +31,7 @@ interface ITabbedCard extends IMenuItem, IUpgradeParams, IDrinksItem {}
 type IFilter = 'diet' | 'drinkType' | 'plating' | 'wineType';
 
 type ITabbedCards = {
-  onSelect: (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string, set: 'push' | 'replace', orderNum?: number) => void;
+  onSelect: (itemID: number | string, type: string, stateObject: RootState[keyof RootState], action: string, set: 'push' | 'replace', orderNum?: number, option?: string) => void;
   tabsSetup: ITabsSetup[];
   tabs2Setup?: ITabs2Setup;
   topLevelFilter?: JSX.Element;
@@ -128,6 +128,7 @@ const TabbedCards: FC<ITabbedCards> = ({
           });
       if (filteredItems.length > 0) {
         const selectedContent = firstLetterUppercase(type) ? SelectedContent : SelectedContent?.[type];
+
         return (
           <Grid container spacing={2} className="cards">
             {titleCard && (
@@ -137,6 +138,7 @@ const TabbedCards: FC<ITabbedCards> = ({
             )}
             {filteredItems.map((menuItem: ITabbedCard, index: number) => {
               const hasMinimum = menuItem.minimumOrder?.hasMinimum !== 'none';
+              const hasOrder = SelectedOrders && Object.keys(SelectedOrders).includes(menuItem.id.toString());
 
               return (
                 <Grid item xs={cardSpan} key={`menu-${type}-${index}`} sx={{ display: 'flex' }}>
@@ -147,18 +149,19 @@ const TabbedCards: FC<ITabbedCards> = ({
                     image={menuItem.image}
                     item={menuItem}
                     selected={selectedContent?.includes(menuItem.id) || false}
-                    onSelect={(orderNum?: number) => onSelect(menuItem.id, type, SelectedContent, selectedContentKey, 'push', orderNum)}
+                    onSelect={(orderNum?: number, option?: string) => onSelect(menuItem.id, type, SelectedContent, selectedContentKey, 'push', orderNum, option)}
                     sx={{ minHeight: `${cardSpan * 2 * 20}px` }}
                     order={
                       menuItem.postType === 'upgrade' && (!!menuItem.minimumOrder || !!menuItem.priceFor)
                         ? {
-                            min: ['people','items'].includes(menuItem.minimumOrder?.hasMinimum) ? menuItem.minimumOrder.num : menuItem.minimumOrder.percentage,
+                            min: ['people', 'items'].includes(menuItem.minimumOrder?.hasMinimum) ? menuItem.minimumOrder.num : menuItem.minimumOrder.percentage,
                             required: menuItem.postType === 'upgrade' || menuItem.minimumOrder.hasMinimum !== 'none',
                             type: hasMinimum ? menuItem.minimumOrder?.hasMinimum : menuItem.priceFor?.unit
                           }
                         : undefined
                     }
-                    ordered={SelectedOrders && Object.keys(SelectedOrders).includes(menuItem.id.toString()) ? SelectedOrders[menuItem.id] : undefined}
+                    ordered={hasOrder ? SelectedOrders[menuItem.id].num : undefined}
+                    orderedOption={hasOrder ? SelectedOrders[menuItem.id].opt : undefined}
                     options={menuItem.hasOptions || menuItem.hasOptionsPrices ? menuItem.options : undefined}
                   />
                 </Grid>

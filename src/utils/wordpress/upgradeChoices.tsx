@@ -13,7 +13,7 @@ export const formatUpgradeOrdersResponse = (upgrades: WPUpgradeChoices): IOrders
   const orderObject: IOrders = {};
   upgrades?.forEach((choices) => {
     if (!['', undefined].includes(choices?.order as unknown as string)) {
-      orderObject[choices.choice] = choices.order as number;
+      orderObject[choices.choice] = { num: choices.order as number, opt: choices.option };
     }
   });
 
@@ -23,6 +23,6 @@ export const formatUpgradeOrdersResponse = (upgrades: WPUpgradeChoices): IOrders
 export const upgradeChoicesPayload = (upgrades: IUpgradeChoices, orders: IOrders): WPUpgradeChoices => {
   return upgrades?.map((choice) => {
     const order = orders[choice];
-    return { choice: choice, order: order };
+    return { choice: choice, option: order.opt, order: order.num };
   });
 };

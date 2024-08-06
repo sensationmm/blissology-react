@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export type IOrders = {
-  [key: number]: number;
+  [key: number]: { num: number; opt?: string };
 };
 
 const initialState: IOrders = {};

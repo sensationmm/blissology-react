@@ -1,6 +1,21 @@
 import { FC, useState } from 'react';
 
-import { Button, CardProps, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText, Grid, Input, InputAdornment, InputLabel, Typography } from '@mui/material';
+import {
+  Button,
+  CardProps,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormHelperText,
+  Grid,
+  Input,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  Typography
+} from '@mui/material';
 
 import { IUpgradeItemOptions, IUpgradeParams } from 'src/store/reducers/upgrades';
 
@@ -30,18 +45,34 @@ type IListCard = {
   image?: string;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   item?: Record<string, any>;
-  onSelect?: (orderNum?: number) => void;
+  onSelect?: (orderNum?: number, option?: string) => void;
   sx?: CardProps['sx'];
   order?: IListCardOrder;
   ordered?: number;
+  orderedOption?: string;
   isTitleCard?: boolean;
-  options?:  IUpgradeItemOptions[];
+  options?: IUpgradeItemOptions[];
 };
 
-const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected = undefined, order, ordered, sx = {}, onSelect = undefined, isTitleCard = false, options = [] }) => {
+const ListCard: FC<IListCard> = ({
+  title,
+  content,
+  icons,
+  image,
+  item,
+  selected = undefined,
+  order,
+  ordered,
+  orderedOption,
+  sx = {},
+  onSelect = undefined,
+  isTitleCard = false,
+  options = []
+}) => {
   const paddingRight = image ? '40%' : selected !== undefined ? '35px' : 0;
   const [showDetails, setShowDetails] = useState<boolean>(false);
   const [orderNum, setOrderNum] = useState<string>(ordered?.toString() || order?.min?.toString() || '');
+  const [orderOption, setOrderOption] = useState<string>(options[0]?.option || '');
   const [orderError, setOrderError] = useState<boolean>(false);
 
   const parseItem = (itemKey: IListCardContent, count: number) => {
@@ -76,7 +107,7 @@ const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected 
     } else {
       setShowDetails(false);
       setOrderError(false);
-      onSelect?.(parseInt(orderNum));
+      onSelect?.(parseInt(orderNum), orderOption);
     }
   };
 
@@ -93,7 +124,9 @@ const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected 
       {selected !== undefined && (
         <Styled.SelectedIcon onClick={order && !!order.required && !selected ? handleSelect : () => onSelect?.()}>
           {ordered && (
-            <Typography variant="body2" sx={{ padding: '3px' }}>
+            <Typography variant="body2" sx={{ fontWeight: 'bold', padding: '3px' }} color="primary">
+              {orderedOption}
+              {!!orderedOption && !!ordered && ' - '}
               {ordered}
               {order?.type === 'percentage' ? '%' : ` ${order?.type}`}
             </Typography>
@@ -113,7 +146,23 @@ const ListCard: FC<IListCard> = ({ title, content, icons, image, item, selected 
           Confirm Order
         </DialogTitle>
         <DialogContent>
-          <Grid container alignItems={'center'}>
+          <Grid container alignItems={'center'} spacing={2}>
+            {options.length > 0 && (
+              <>
+                <Grid item xs={3}>
+                  <InputLabel>Options:</InputLabel>
+                </Grid>
+                <Grid item xs={9}>
+                  <Select onChange={(e) => setOrderOption(e.target.value)} value={orderOption} sx={{ width: '100%' }} size="small">
+                    {options.map((opt, index) => (
+                      <MenuItem key={`option-${index}`} value={opt.option}>
+                        {opt.option} (£{opt.price})
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </Grid>
+              </>
+            )}
             <Grid item xs={3} alignItems={'center'}>
               <InputLabel>Order:</InputLabel>
             </Grid>
