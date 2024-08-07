@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import { Grid, Tab, Tabs } from '@mui/material';
 
@@ -63,6 +64,8 @@ const TabbedCards: FC<ITabbedCards> = ({
   cardSpan = 4,
   activeFilters = []
 }) => {
+  const weddingState = (state: RootState) => state.wedding;
+  const { quoteLocked } = useSelector(weddingState);
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeTab2, setActiveTab2] = useState<number>(0);
 
@@ -115,11 +118,14 @@ const TabbedCards: FC<ITabbedCards> = ({
   };
 
   const renderTabItems = (items: ITabbedCard[], type: string, titleCard?: { title: string; text?: string }) => {
+    const selectedContent = firstLetterUppercase(type) ? SelectedContent : SelectedContent?.[type];
+
     if (items.length > 0) {
       const filteredItems = !Filters
         ? items
         : items.slice().filter((item: ITabbedCard) => {
             return (
+              (!quoteLocked || selectedContent?.includes(item.id)) &&
               (!activeFilters.includes('diet') || Filters.diet.length === 0 || Filters.diet.every((value) => item.dietary.includes(value))) &&
               (!activeFilters.includes('plating') || !item.plating || item.plating === Filters.plating) &&
               (!activeFilters.includes('drinkType') || !item.drinkType || item.drinkType === Filters.drinkType || Filters.drinkType === 'all') &&
@@ -127,8 +133,6 @@ const TabbedCards: FC<ITabbedCards> = ({
             );
           });
       if (filteredItems.length > 0) {
-        const selectedContent = firstLetterUppercase(type) ? SelectedContent : SelectedContent?.[type];
-
         return (
           <Grid container spacing={2} className="cards">
             {titleCard && (

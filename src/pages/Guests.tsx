@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { cloneDeep } from 'lodash';
 import { useSelector } from 'react-redux';
 
-import { Button, Card, CircularProgress, TextField } from '@mui/material';
+import { Card, CircularProgress, TextField } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 
@@ -10,11 +10,11 @@ import store, { RootState } from 'src/store';
 
 import { wpRestApiHandler } from 'src/api/wordpress';
 
-import Actions from 'src/components/Actions/Actions';
 import Layout from 'src/components/Layout/Layout';
 import ReduxTextField from 'src/components/ReduxTextField';
 
 import { useSnackbar } from 'src/hooks/useSnackbar';
+import { useUnsaved } from 'src/hooks/useUnsaved';
 import { capitalize } from 'src/utils/common';
 import { weddingGuestsPayload } from 'src/utils/wordpress/wedding';
 
@@ -25,7 +25,7 @@ const Guests = () => {
 
   const Guests = useSelector(guestsState);
   const { userID, token } = useSelector(authState);
-  const { weddingID } = useSelector(weddingState);
+  const { weddingID, quoteLocked } = useSelector(weddingState);
   const [resetGuests, setResetGuests] = useState<RootState['guests']>();
   const [openSnackbar] = useSnackbar();
 
@@ -82,13 +82,25 @@ const Guests = () => {
 
   const resetGuestNumbers = () => {
     store.dispatch({
-      payload: resetGuests,
+      payload: { guests: resetGuests },
       type: 'guests/set'
     });
   };
 
+  const isEdited = JSON.stringify(Guests) !== JSON.stringify(resetGuests);
+
+  useUnsaved({
+    isUnsaved: isEdited,
+    onConfirm: resetGuestNumbers
+  });
+
   return (
-    <Layout title="Guest List">
+    <Layout
+      title="Guest List"
+      actions={[
+        { color: 'secondary', disabled: !isEdited, label: 'Reset', onClick: resetGuestNumbers },
+        { disabled: !isEdited, label: 'Save Guest Numbers', onClick: saveGuestNumbers }
+      ]}>
       <div>
         {Object.keys(Guests).map((guestsType) => (
           <Card key={`guests-${guestsType}`} sx={{ mt: '20px', p: '15px' }}>
@@ -108,7 +120,7 @@ const Guests = () => {
                         id={fieldId}
                         label={capitalize(personType)}
                         initialValue={Guests[guestsType][personType]}
-                        disabled={personType === 'total'}
+                        disabled={personType === 'total' || quoteLocked}
                         onBlur={(val) => updateGuestValue(fieldId, val, Guests[guestsType][personType])}
                       />
                     </Grid>
@@ -129,15 +141,6 @@ const Guests = () => {
             </Grid>
           </Card>
         ))}
-
-        <Actions>
-          <Button variant="contained" onClick={saveGuestNumbers}>
-            Save Guest Numbers
-          </Button>
-          <Button variant="contained" color="secondary" onClick={resetGuestNumbers}>
-            Reset
-          </Button>
-        </Actions>
       </div>
     </Layout>
   );

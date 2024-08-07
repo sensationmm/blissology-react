@@ -23,7 +23,7 @@ import { getYupErrors } from 'src/utils/yup';
 
 const Accommodation = () => {
   const weddingState = (state: RootState) => state.wedding;
-  const { weddingID } = useSelector(weddingState);
+  const { weddingID, quoteLocked } = useSelector(weddingState);
   const authState = (state: RootState) => state.auth;
   const { token } = useSelector(authState);
   const roomsState = (state: RootState) => state.rooms;
@@ -76,47 +76,49 @@ const Accommodation = () => {
       type: 'ui/setLoading'
     });
 
-    const allocationSchema = object({
-      contact_email: string().email().nullable(),
-      contact_name: string().nullable(),
-      guest_name: string().nullable(),
-      payment: mixed().oneOf(['guest', 'invoice'])
-    });
+    // const allocationSchema = object({
+    //   contact_email: string().email().nullable(),
+    //   contact_name: string().nullable(),
+    //   guest_name: string().nullable(),
+    //   payment: mixed().oneOf(['guest', 'invoice'])
+    // });
 
     // TODO: yup validate not working yet
     await /*allocationSchema
       // .validate(RoomAllocations, { abortEarly: false })
       .then(() => {*/
-        wpRestApiHandler(
-          `wedding/${weddingID}`,
-          {
-            acf: {
-              room_allocations: RoomAllocations
-            }
-          },
-          'POST',
-          token
-        ).then(async (resp) => {
-          const respJson = await resp.json();
-    
-          store.dispatch({
-            payload: { isLoading: false },
-            type: 'ui/setLoading'
-          });
-    
-          if (!respJson.data?.status) {
-            openSnackbar('Room allocations updated');
-            return respJson;
-          } else {
-            openSnackbar(respJson.message, 'error');
-          }
-        }).catch((error) => {
-            setErrors(getYupErrors(error));
-            store.dispatch({
-              payload: { isLoading: false },
-              type: 'ui/setLoading'
-            });
-            openSnackbar('Fix the errors and try again', 'error');
+    wpRestApiHandler(
+      `wedding/${weddingID}`,
+      {
+        acf: {
+          room_allocations: RoomAllocations
+        }
+      },
+      'POST',
+      token
+    )
+      .then(async (resp) => {
+        const respJson = await resp.json();
+
+        store.dispatch({
+          payload: { isLoading: false },
+          type: 'ui/setLoading'
+        });
+
+        if (!respJson.data?.status) {
+          openSnackbar('Room allocations updated');
+          return respJson;
+        } else {
+          openSnackbar(respJson.message, 'error');
+        }
+      })
+      .catch((error) => {
+        setErrors(getYupErrors(error));
+        store.dispatch({
+          payload: { isLoading: false },
+          type: 'ui/setLoading'
+        });
+        openSnackbar('Fix the errors and try again', 'error');
       });
   };
 
@@ -190,7 +192,11 @@ const Accommodation = () => {
                         />
                       </TableCell>
                       <TableCell>
-                        <Select onChange={(e) => updateRoomAllocation(roomAllocation.room_id, 'payment', e.target.value)} value={roomAllocation.payment} sx={{ width: '100%' }}>
+                        <Select
+                          disabled={quoteLocked}
+                          onChange={(e) => updateRoomAllocation(roomAllocation.room_id, 'payment', e.target.value)}
+                          value={roomAllocation.payment}
+                          sx={{ width: '100%' }}>
                           <MenuItem value={'guest'}>Guest Pays</MenuItem>
                           <MenuItem value={'invoice'}>Add to Invoice</MenuItem>
                         </Select>

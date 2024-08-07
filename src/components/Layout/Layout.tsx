@@ -45,7 +45,7 @@ const Layout: FC<ILayoutProps> = ({ title, children, actions }) => {
   const location = useLocation();
   const { menuOpen, isLoading } = useSelector(uiState);
   const { isLoggedIn } = useSelector(authState);
-  const { weddingName, date, deadlines } = useSelector(weddingState);
+  const { weddingName, date, deadlines, quoteLocked } = useSelector(weddingState);
   const page = location.pathname.split('/')[1];
 
   if (!isLoggedIn && location.pathname !== '/') return <Navigate to="/" replace={true} />;
@@ -179,16 +179,22 @@ const Layout: FC<ILayoutProps> = ({ title, children, actions }) => {
             {title && (
               <Styled.HeaderBar>
                 <Typography variant="h1">{title}</Typography>
-                <Grid container spacing={2} sx={{ width: 'auto' }}>
-                  <Grid item>{getAlert()}</Grid>
-                  {actions?.map(({ label, ...rest }, count) => (
-                    <Grid item key={`action-${count}`}>
-                      <Button variant="contained" {...rest}>
-                        {label}
-                      </Button>
-                    </Grid>
-                  ))}
-                </Grid>
+                {!quoteLocked ? (
+                  <Grid container spacing={2} sx={{ width: 'auto' }}>
+                    <Grid item>{getAlert()}</Grid>
+                    {actions?.map(({ label, ...rest }, count) => (
+                      <Grid item key={`action-${count}`}>
+                        <Button variant="contained" {...rest}>
+                          {label}
+                        </Button>
+                      </Grid>
+                    ))}
+                  </Grid>
+                ) : (
+                  <Alert severity="success" className="condensed">
+                    Quote Finalised
+                  </Alert>
+                )}
               </Styled.HeaderBar>
             )}
             {children}

@@ -56,6 +56,13 @@ export const blissologyTheme = createTheme({
           },
           backgroundColor: palette.secondary.main,
           color: '#fff'
+        },
+        standardSuccess: {
+          '.MuiAlert-icon': {
+            color: '#fff'
+          },
+          backgroundColor: palette.secondary.main,
+          color: '#fff'
         }
       }
     },

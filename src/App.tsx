@@ -52,6 +52,7 @@ const App: React.FC = () => {
         menuChoices: formatMenuChoicesResponse(wedding[0]?.acf?.menuChoices),
         orders: formatUpgradeOrdersResponse(wedding[0]?.acf?.upgradeChoices),
         payments: wedding[0]?.acf?.payments || [],
+        quoteLocked: wedding[0]?.acf?.quote_locked || false,
         roomAllocations: wedding[0]?.acf?.room_allocations || [],
         suppliers: formatSuppliersResponse(wedding[0]?.acf?.suppliers),
         upgradeChoices: formatUpgradeChoicesResponse(wedding[0]?.acf?.upgradeChoices),

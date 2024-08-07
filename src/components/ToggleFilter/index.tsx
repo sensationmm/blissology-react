@@ -37,7 +37,12 @@ const ToggleFilter: FC<IToggleFilter> = ({ id, label = 'Filter by', onSelect, op
 
       {value === showSecondTierTest && (
         <Styled.SecondTier>
-          <IconButton edge="start" onClick={() => onSelect(null)}>
+          <IconButton
+            edge="start"
+            onClick={() => {
+              onSelect(null);
+              secondTier?.props.onSelect(null);
+            }}>
             <Icon iconKey="close" />
           </IconButton>
 

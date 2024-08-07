@@ -16,6 +16,7 @@ export type IWeddingState = {
   customInvoiceEntries: IInvoiceEntry[];
   date: string | undefined;
   deadlines: IWeddingDeadline[];
+  quoteLocked: boolean;
   weddingID: number | undefined;
   weddingName: string | undefined;
 };
@@ -24,6 +25,7 @@ const initialState: IWeddingState = {
   customInvoiceEntries: [],
   date: undefined,
   deadlines: [],
+  quoteLocked: false,
   weddingID: undefined,
   weddingName: undefined
 };
@@ -36,6 +38,7 @@ const weddingReducer = (state = initialState, action: any) => {
         customInvoiceEntries: action.payload.customInvoiceEntries,
         date: action.payload.date,
         deadlines: action.payload.deadlines,
+        quoteLocked: action.payload.quoteLocked,
         weddingID: action.payload.weddingID,
         weddingName: action.payload.weddingName
       };

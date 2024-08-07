@@ -1,4 +1,5 @@
 import { FC, useState } from 'react';
+import { useSelector } from 'react-redux';
 
 import {
   Button,
@@ -17,6 +18,7 @@ import {
   Typography
 } from '@mui/material';
 
+import { RootState } from 'src/store';
 import { IUpgradeItemOptions, IUpgradeParams } from 'src/store/reducers/upgrades';
 
 import Icon from 'src/components/Icon';
@@ -74,6 +76,8 @@ const ListCard: FC<IListCard> = ({
   const [orderNum, setOrderNum] = useState<string>(ordered?.toString() || order?.min?.toString() || '');
   const [orderOption, setOrderOption] = useState<string>(options[0]?.option || '');
   const [orderError, setOrderError] = useState<boolean>(false);
+  const weddingState = (state: RootState) => state.wedding;
+  const { quoteLocked } = useSelector(weddingState);
 
   const parseItem = (itemKey: IListCardContent, count: number) => {
     const { id, Component, args } = itemKey;
@@ -111,6 +115,12 @@ const ListCard: FC<IListCard> = ({
     }
   };
 
+  const onClick = () => {
+    if (!quoteLocked) {
+      order && !!order.required && !selected ? handleSelect() : onSelect?.();
+    }
+  };
+
   return (
     <Styled.Card isTitleCard={isTitleCard} sx={{ paddingRight: paddingRight, ...sx }}>
       <Styled.Typography component="h2" variant={isTitleCard ? 'h1' : 'h3'} sx={{ mb: '10px' }}>
@@ -122,7 +132,7 @@ const ListCard: FC<IListCard> = ({
       {icons && icons.length > 0 && <Styled.Icons>{icons.map(parseItem)}</Styled.Icons>}
 
       {selected !== undefined && (
-        <Styled.SelectedIcon onClick={order && !!order.required && !selected ? handleSelect : () => onSelect?.()}>
+        <Styled.SelectedIcon onClick={() => onClick()}>
           {ordered && (
             <Typography variant="body2" sx={{ fontWeight: 'bold', padding: '3px' }} color="primary">
               {orderedOption}
@@ -131,7 +141,7 @@ const ListCard: FC<IListCard> = ({
               {order?.type === 'percentage' ? '%' : ` ${order?.type}`}
             </Typography>
           )}
-          <Icon iconKey={selected ? 'selected' : 'unselected'} color="primary" />
+          {!quoteLocked && <Icon iconKey={selected ? 'selected' : 'unselected'} color="primary" />}
         </Styled.SelectedIcon>
       )}
 
