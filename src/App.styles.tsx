@@ -1,10 +1,8 @@
 import { styled } from '@mui/material';
 
-import { blissologyTheme } from './utils/theme';
-
-export const Loader = styled('div')({
+export const Loader = styled('div')(({ theme }) => ({
   alignItems: 'center',
-  backgroundColor: blissologyTheme.palette.primary.main,
+  backgroundColor: theme.palette.primary.main,
   display: 'flex',
   height: '100vh',
   justifyContent: 'center',
@@ -13,4 +11,4 @@ export const Loader = styled('div')({
   top: 0,
   width: '100vw',
   zIndex: 100000
-});
+}));

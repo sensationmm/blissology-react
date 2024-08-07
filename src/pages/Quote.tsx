@@ -1,23 +1,17 @@
-import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 
-import { Card, CircularProgress, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
+import { Card, Grid, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
 
-import store, { RootState } from 'src/store';
-
-import { wpRestApiHandler } from 'src/api/wordpress';
+import { RootState } from 'src/store';
 
 import Layout from 'src/components/Layout/Layout';
 
 import { blissDate, currencyFormat } from 'src/utils/common';
 import { generateQuote } from 'src/utils/generateQuote';
-import { blissologyTheme } from 'src/utils/theme';
-import { formatQuoteConfigResponse } from 'src/utils/wordpress/quote';
 
 const Quote = () => {
   const state = (state: RootState) => state;
   const {
-    auth,
     drinks,
     drinkChoices,
     guests: Guests,
@@ -28,32 +22,10 @@ const Quote = () => {
     quoteConfig: QuoteConfig,
     roomAllocations: RoomAllocations,
     rooms: Rooms,
-    ui: UI,
     upgrades: Upgrades,
     upgradeChoices: UpgradeChoices,
     wedding: Wedding
   } = useSelector(state);
-
-  useEffect(() => {
-    store.dispatch({
-      payload: { isLoading: true },
-      type: 'ui/setLoading'
-    });
-    wpRestApiHandler(`options/all`, undefined, 'GET', auth.token, false).then(async (resp) => {
-      const respJson = await resp.json();
-
-      const dispatchPayload = formatQuoteConfigResponse(respJson);
-
-      await store.dispatch({
-        payload: dispatchPayload,
-        type: 'quoteConfig/update'
-      });
-      store.dispatch({
-        payload: { isLoading: false },
-        type: 'ui/setLoading'
-      });
-    });
-  }, []);
 
   // if (UI.isLoading) return <CircularProgress />;
 
@@ -103,7 +75,7 @@ const Quote = () => {
                   <Typography
                     key={`issue-${count}`}
                     variant="body1"
-                    sx={{ borderTop: `1px solid ${blissologyTheme.palette.tertiary.main}`, mt: '10px', pt: '10px', textAlign: 'center' }}>
+                    sx={{ borderTop: (theme) => `1px solid ${theme.palette.tertiary.main}`, mt: '10px', pt: '10px', textAlign: 'center' }}>
                     {issue}
                   </Typography>
                 );
@@ -115,7 +87,7 @@ const Quote = () => {
             <Typography variant="h2">Payments</Typography>
             {Payments.map((payment) => {
               return (
-                <Grid key={`payment_${payment.id}`} container sx={{ borderTop: `1px solid ${blissologyTheme.palette.tertiary.main}`, mt: '10px', pt: '10px' }}>
+                <Grid key={`payment_${payment.id}`} container sx={{ borderTop: (theme) => `1px solid ${theme.palette.tertiary.main}`, mt: '10px', pt: '10px' }}>
                   <Grid item xs={6}>
                     <Typography variant="body1">{payment.label}</Typography>
                   </Grid>

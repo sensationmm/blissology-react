@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 
-import { Grid, Tab, Tabs } from '@mui/material';
+import { Grid, Tab, Tabs, useTheme } from '@mui/material';
 
 import { RootState } from 'src/store';
 import { IDrinksItem } from 'src/store/reducers/drinks';
@@ -15,7 +15,6 @@ import ListCard, { IListCardContent } from 'src/components/ListCard';
 import TabPanel from 'src/components/TabPanel';
 
 import { capitalize, firstLetterUppercase } from 'src/utils/common';
-import { blissologyTheme } from 'src/utils/theme';
 
 export type ITabsSetup = {
   id: string;
@@ -68,6 +67,7 @@ const TabbedCards: FC<ITabbedCards> = ({
   const { quoteLocked } = useSelector(weddingState);
   const [activeTab, setActiveTab] = useState<number>(0);
   const [activeTab2, setActiveTab2] = useState<number>(0);
+  const theme = useTheme();
 
   useEffect(() => {
     setActiveTab2(0);
@@ -86,7 +86,7 @@ const TabbedCards: FC<ITabbedCards> = ({
         <div
           style={{
             alignItems: 'center',
-            background: isTopLevel ? blissologyTheme.palette.tertiary.main : blissologyTheme.palette.tertiary.light,
+            backgroundColor: isTopLevel ? theme.palette.tertiary.main : theme.palette.tertiary.light,
             display: 'flex',
             justifyContent: 'space-between',
             paddingRight: isTopLevel ? '5px' : ''

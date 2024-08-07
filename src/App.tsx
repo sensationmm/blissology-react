@@ -17,9 +17,11 @@ import SnackbarProvider from 'src/components/Snackbar';
 import { readCookie } from 'src/utils/cookie';
 import { blissologyTheme } from 'src/utils/theme';
 
+import { wpRestApiHandler } from './api/wordpress';
 import { UnsavedProvider } from './providers/UnsavedProvider';
 import { formatDrinkChoicesResponse } from './utils/wordpress/drinkChoices';
 import { formatMenuChoicesResponse } from './utils/wordpress/menuChoices';
+import { formatQuoteConfigResponse } from './utils/wordpress/quote';
 import { formatSuppliersResponse } from './utils/wordpress/supplier';
 import { formatUpgradeChoicesResponse, formatUpgradeOrdersResponse } from './utils/wordpress/upgradeChoices';
 import { formatCustomInvoiceReponse, formatWeddingGuestsResponse } from './utils/wordpress/wedding';
@@ -28,11 +30,14 @@ const App: React.FC = () => {
   const authState = (state: RootState['auth']) => state.auth;
   const { isLoggedIn, token, userName } = useSelector(authState);
   const [loading, setIsLoading] = useState<boolean>(true);
+  const [primaryColor, setPrimaryColor] = useState('');
+  const [secondaryColor, setSecondaryColor] = useState('');
 
   const getMe = async (username: string, authToken: string) => {
     const response = await fetch(`http://hydehouse.blissology.local/wp-json/wp/v2/users/?search=${username}`);
     const user = await response.json();
     await getMyWedding(user[0].id);
+    await getOptions(authToken);
     store.dispatch({
       payload: { token: authToken, userID: user[0].id, userName: username },
       type: 'auth/login'
@@ -62,6 +67,24 @@ const App: React.FC = () => {
       type: 'wedding/set'
     });
   };
+
+  const getOptions = (authToken: string) =>
+    wpRestApiHandler(`options/all`, undefined, 'GET', authToken, false).then(async (resp) => {
+      const respJson = await resp.json();
+
+      const dispatchPayload = formatQuoteConfigResponse(respJson);
+      setPrimaryColor(respJson.color_primary);
+      setSecondaryColor(respJson.color_secondary);
+
+      await store.dispatch({
+        payload: dispatchPayload,
+        type: 'quoteConfig/update'
+      });
+      store.dispatch({
+        payload: { isLoading: false },
+        type: 'ui/setLoading'
+      });
+    });
 
   const validateUser = async () => {
     setIsLoading(true);
@@ -99,7 +122,7 @@ const App: React.FC = () => {
   const router = createBrowserRouter([{ element: <Login />, path: '/' }].concat(navigation.map((item) => ({ element: <item.Component />, path: item.url }))));
 
   return (
-    <ThemeProvider theme={blissologyTheme}>
+    <ThemeProvider theme={() => blissologyTheme(primaryColor, secondaryColor)}>
       <UnsavedProvider>
         <SnackbarProvider>
           <RouterProvider router={router} />
