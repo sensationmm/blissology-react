@@ -80,6 +80,8 @@ const Layout: FC<ILayoutProps> = ({ title, children, actions }) => {
     );
   };
 
+  const disableEdit = quoteLocked && !['/questions', '/suppliers'].includes(location.pathname);
+
   return (
     <>
       <Box sx={{ display: 'flex' }}>
@@ -179,7 +181,7 @@ const Layout: FC<ILayoutProps> = ({ title, children, actions }) => {
             {title && (
               <Styled.HeaderBar>
                 <Typography variant="h1">{title}</Typography>
-                {!quoteLocked ? (
+                {!disableEdit ? (
                   <Grid container spacing={2} sx={{ width: 'auto' }}>
                     <Grid item>{getAlert()}</Grid>
                     {actions?.map(({ label, ...rest }, count) => (

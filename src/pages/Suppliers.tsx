@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash';
 import { useSelector } from 'react-redux';
 import { object, string } from 'yup';
 
-import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import Grid from '@mui/material/Grid';
 
 import store, { RootState } from 'src/store';
@@ -34,7 +34,7 @@ const Suppliers = () => {
   const [errors, setErrors] = useState<Record<string, string>>();
 
   const Suppliers: ISupplier[] = useSelector(suppliersState);
-  const { userID, token } = useSelector(authState);
+  const { token } = useSelector(authState);
   const { weddingID } = useSelector(weddingState);
   const [openSnackbar] = useSnackbar();
 
@@ -61,10 +61,6 @@ const Suppliers = () => {
     }
   };
   const [editSupplier, setEditSupplier] = useState<IEditSupplier>(newSupplier);
-
-  if (userID === null) {
-    return <CircularProgress />;
-  }
 
   const saveSuppliers = async () => {
     store.dispatch({

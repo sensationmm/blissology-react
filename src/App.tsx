@@ -21,6 +21,7 @@ import { wpRestApiHandler } from './api/wordpress';
 import { UnsavedProvider } from './providers/UnsavedProvider';
 import { formatDrinkChoicesResponse } from './utils/wordpress/drinkChoices';
 import { formatMenuChoicesResponse } from './utils/wordpress/menuChoices';
+import { formatQuestionAnswersResponse } from './utils/wordpress/questionsConfig';
 import { formatQuoteConfigResponse } from './utils/wordpress/quote';
 import { formatSuppliersResponse } from './utils/wordpress/supplier';
 import { formatUpgradeChoicesResponse, formatUpgradeOrdersResponse } from './utils/wordpress/upgradeChoices';
@@ -57,6 +58,7 @@ const App: React.FC = () => {
         menuChoices: formatMenuChoicesResponse(wedding[0]?.acf?.menuChoices),
         orders: formatUpgradeOrdersResponse(wedding[0]?.acf?.upgradeChoices),
         payments: wedding[0]?.acf?.payments || [],
+        questions: formatQuestionAnswersResponse(wedding[0]?.acf?.questions_answers) || [],
         quoteLocked: wedding[0]?.acf?.quote_locked || false,
         roomAllocations: wedding[0]?.acf?.room_allocations || [],
         suppliers: formatSuppliersResponse(wedding[0]?.acf?.suppliers),
@@ -122,7 +124,7 @@ const App: React.FC = () => {
   const router = createBrowserRouter([{ element: <Login />, path: '/' }].concat(navigation.map((item) => ({ element: <item.Component />, path: item.url }))));
 
   return (
-    <ThemeProvider theme={() => blissologyTheme(primaryColor, secondaryColor)}>
+    <ThemeProvider theme={blissologyTheme(primaryColor, secondaryColor)}>
       <UnsavedProvider>
         <SnackbarProvider>
           <RouterProvider router={router} />

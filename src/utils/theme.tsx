@@ -39,6 +39,14 @@ export const blissologyTheme = (colorPrimary: string, colorSecondary: string) =>
     ...initialThemeSetup(colorPrimary, colorSecondary),
     // eslint-disable-next-line sort-keys
     components: {
+      MuiAccordion: {
+        styleOverrides: {
+          root: {
+            backgroundColor: '#ffffff',
+            borderTop: `4px solid ${initialThemeSetup(colorPrimary, colorSecondary).palette.primary.main}`
+          }
+        }
+      },
       MuiAlert: {
         styleOverrides: {
           root: {

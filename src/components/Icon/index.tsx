@@ -21,6 +21,7 @@ import MusicNoteIcon from '@mui/icons-material/MusicNote';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import PaletteIcon from '@mui/icons-material/Palette';
 import PointOfSaleIcon from '@mui/icons-material/PointOfSale';
+import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import SportsBarIcon from '@mui/icons-material/SportsBar';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
@@ -52,6 +53,7 @@ const Icons = {
   menu: MenuIcon,
   notification: NotificationsIcon,
   photographer: CameraAltIcon,
+  questions: QuestionAnswerIcon,
   quote: PointOfSaleIcon,
   selected: CheckBoxIcon,
   sparkling: ChampageIcon,

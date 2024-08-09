@@ -3,6 +3,7 @@ import Dashboard from 'src/pages/Dashboard';
 import Drink from 'src/pages/Drink';
 import Guests from 'src/pages/Guests';
 import Menu from 'src/pages/Menu';
+import Questions from 'src/pages/Questions';
 import Quote from 'src/pages/Quote';
 import Suppliers from 'src/pages/Suppliers';
 import Upgrades from 'src/pages/Upgrades';
@@ -64,6 +65,12 @@ const navigation: INavigation[] = [
     icon: 'accommodation',
     label: 'Accommodation',
     url: '/accommodation'
+  },
+  {
+    Component: Questions,
+    icon: 'questions',
+    label: 'Questions',
+    url: '/questions'
   }
 ];
 
