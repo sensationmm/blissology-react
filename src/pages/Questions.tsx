@@ -126,7 +126,17 @@ const Questions = () => {
                     <Typography sx={{ width: '58%' }} variant="h2">
                       {category}
                     </Typography>
-                    <Typography sx={{ alignItems: 'center', color: 'text.secondary', display: 'flex', justifyContent: 'flex-end', width: '100%' }}>
+                    <Typography
+                      variant="body2"
+                      sx={{
+                        alignItems: 'center',
+                        color: 'text.secondary',
+                        display: 'flex',
+                        fontWeight: 'bold',
+                        justifyContent: 'flex-end',
+                        textTransform: 'uppercase',
+                        width: '100%'
+                      }}>
                       {questions[category].length} question{questions[category].length !== 1 ? 's' : ''}
                       {unanswered > 0 && ` (${unanswered} unanswered)`}
                     </Typography>
