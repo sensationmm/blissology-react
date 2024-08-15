@@ -34,7 +34,7 @@ const initialThemeSetup = (colorPrimary: string, colorSecondary: string) =>
     }
   });
 
-export const blissologyTheme = (colorPrimary: string, colorSecondary: string) =>
+export const blissologyTheme = (colorPrimary: string = '#a519df', colorSecondary: string = '#787878') =>
   createTheme({
     ...initialThemeSetup(colorPrimary, colorSecondary),
     // eslint-disable-next-line sort-keys

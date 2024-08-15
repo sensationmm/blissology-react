@@ -25,12 +25,6 @@ const navigation: INavigation[] = [
     url: '/dashboard'
   },
   {
-    Component: Quote,
-    icon: 'quote',
-    label: 'Quotes',
-    url: '/quote'
-  },
-  {
     Component: Guests,
     icon: 'guests',
     label: 'Guests',
@@ -71,6 +65,12 @@ const navigation: INavigation[] = [
     icon: 'questions',
     label: 'Questions',
     url: '/questions'
+  },
+  {
+    Component: Quote,
+    icon: 'quote',
+    label: 'Quotes',
+    url: '/quote'
   }
 ];
 
