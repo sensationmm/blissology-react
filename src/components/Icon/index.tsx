@@ -25,6 +25,7 @@ import QuestionAnswerIcon from '@mui/icons-material/QuestionAnswer';
 import RestaurantMenuIcon from '@mui/icons-material/RestaurantMenu';
 import SportsBarIcon from '@mui/icons-material/SportsBar';
 import SupportAgentIcon from '@mui/icons-material/SupportAgent';
+import TableRestaurantIcon from '@mui/icons-material/TableRestaurant';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import WaterDropIcon from '@mui/icons-material/WaterDrop';
 import WineBarIcon from '@mui/icons-material/WineBar';
@@ -60,6 +61,7 @@ const Icons = {
   spirits: LocalBarIcon,
   stylist: PaletteIcon,
   suppliers: CameraEnhanceIcon,
+  table: TableRestaurantIcon,
   unselected: CheckBoxOutlineBlankIcon,
   upgrade: WorkspacePremiumIcon,
   videographer: VideocamIcon,
