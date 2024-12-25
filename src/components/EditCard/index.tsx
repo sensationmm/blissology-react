@@ -1,10 +1,12 @@
 import { FC, useState } from 'react';
 
-import { Button, Card, Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 
 import { capitalize } from 'src/utils/common';
 
 import * as Styled from './styles';
+
+import IconCard from '../IconCard';
 
 type ICardContent = {
   text: string;
@@ -27,9 +29,7 @@ const EditCard: FC<IEditCard> = ({ title, subtitle, content, subContent, icon, c
   const [showConfirmDelete, setShowConfirmDelete] = useState<boolean>(false);
 
   return (
-    <Card onMouseEnter={() => setShowControls(true)} onMouseLeave={() => setShowControls(false)}>
-      {icon && <Styled.Icon>{icon}</Styled.Icon>}
-
+    <IconCard icon={icon} onMouseEnter={() => setShowControls(true)} onMouseLeave={() => setShowControls(false)}>
       {subtitle && <Styled.Subtitle variant="body2">{capitalize(subtitle)}</Styled.Subtitle>}
       <Typography variant="h2" sx={{ mb: '10px' }}>
         {title}
@@ -76,7 +76,7 @@ const EditCard: FC<IEditCard> = ({ title, subtitle, content, subContent, icon, c
           )}
         </Styled.Controls>
       )}
-    </Card>
+    </IconCard>
   );
 };
 

@@ -11,6 +11,8 @@ import Typography from '@mui/material/Typography';
 import { RootState } from 'src/store';
 import { IWeddingDeadline } from 'src/store/reducers/wedding';
 
+import Icon from 'src/components/Icon';
+import IconCard from 'src/components/IconCard';
 import Layout from 'src/components/Layout/Layout';
 
 import { blissDate, wpDateToTimestamp } from 'src/utils/common';
@@ -23,9 +25,9 @@ const Dashboard = () => {
   const authState = (state: RootState) => state.auth;
   const weddingState = (state: RootState) => state.wedding;
   const { userID } = useSelector(authState);
-  const { deadlines } = useSelector(weddingState);
+  const { date, deadlines, weddingName } = useSelector(weddingState);
 
-  if (userID === null) {
+  if (userID === null && date !== null) {
     return <CircularProgress />;
   }
 
@@ -33,7 +35,11 @@ const Dashboard = () => {
     <Layout>
       <Grid container spacing={2}>
         <Grid item xs={8}>
-          <Typography variant="h1">Welcome!</Typography>
+          <Typography variant="h1">Welcome {weddingName}!</Typography>
+
+          <IconCard icon={<Icon iconKey="timer" color="tertiary" fontSize="inherit" />}>
+            Countdown to your Big Day {differenceInDays(wpDateToTimestamp(date), new Date())} days to go
+          </IconCard>
         </Grid>
         <Grid item xs={4}>
           <Typography variant="h2">Upcoming Deadlines</Typography>

@@ -1,6 +1,7 @@
 import { FC } from 'react';
 
 import AddIcon from '@mui/icons-material/Add';
+import AvTimerIcon from '@mui/icons-material/AvTimer';
 import CakeIcon from '@mui/icons-material/Cake';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import CameraEnhanceIcon from '@mui/icons-material/CameraEnhance';
@@ -62,6 +63,7 @@ const Icons = {
   stylist: PaletteIcon,
   suppliers: CameraEnhanceIcon,
   table: TableRestaurantIcon,
+  timer: AvTimerIcon,
   unselected: CheckBoxOutlineBlankIcon,
   upgrade: WorkspacePremiumIcon,
   videographer: VideocamIcon,

@@ -1,16 +1,6 @@
 import { styled, Typography } from '@mui/material';
 
-import { CardIcon } from 'src/components/AddCard/styles';
-
 import { hexToRgb } from 'src/utils/common';
-
-export const Icon = styled(CardIcon)(() => ({
-  bottom: '10px',
-  opacity: 0.2,
-  position: 'absolute',
-  right: '10px',
-  zIndex: 1
-}));
 
 export const Subtitle = styled(Typography)(({ theme }) => ({
   color: theme.palette.tertiary.main,

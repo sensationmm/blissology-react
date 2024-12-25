@@ -31,8 +31,8 @@ const App: React.FC = () => {
   const authState = (state: RootState['auth']) => state.auth;
   const { isLoggedIn, token, userName } = useSelector(authState);
   const [loading, setIsLoading] = useState<boolean>(true);
-  const [primaryColor, setPrimaryColor] = useState('');
-  const [secondaryColor, setSecondaryColor] = useState('');
+  const [primaryColor, setPrimaryColor] = useState();
+  const [secondaryColor, setSecondaryColor] = useState();
 
   const getMe = async (username: string, authToken: string) => {
     const response = await fetch(`http://hydehouse.blissology.local/wp-json/wp/v2/users/?search=${username}`);

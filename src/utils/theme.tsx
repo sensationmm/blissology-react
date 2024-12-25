@@ -85,7 +85,8 @@ export const blissologyTheme = (colorPrimary: string = '#a519df', colorSecondary
           root: {
             backgroundColor: '#ffffff',
             borderTop: `4px solid ${initialThemeSetup(colorPrimary, colorSecondary).palette.primary.main}`,
-            padding: '15px'
+            padding: '15px',
+            position: 'relative'
           }
         }
       },
